@@ -1,0 +1,35 @@
+{
+  "buildFiles": [
+    "D:\\takumi\\Source\\android\\app\\src\\main\\cpp\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\thanh\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "D:\\takumi\\Source\\android\\app\\.cxx\\RelWithDebInfo\\5156zn3c\\x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\thanh\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "D:\\takumi\\Source\\android\\app\\.cxx\\RelWithDebInfo\\5156zn3c\\x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "main::@6890427a1f51a3e7e1df": {
+      "artifactName": "main",
+      "abi": "x86_64",
+      "output": "D:\\takumi\\Source\\android\\app\\build\\intermediates\\cxx\\RelWithDebInfo\\5156zn3c\\obj\\x86_64\\libmain.so",
+      "runtimeFiles": [
+        "D:\\takumi\\Source\\android\\app\\src\\main\\jniLibs\\x86_64\\libSDL2.so",
+        "D:\\takumi\\Source\\android\\app\\src\\main\\jniLibs\\x86_64\\libSDL2_image.so",
+        "D:\\takumi\\Source\\android\\app\\src\\main\\jniLibs\\x86_64\\libSDL2_mixer.so",
+        "D:\\takumi\\Source\\android\\app\\src\\main\\jniLibs\\x86_64\\libSDL2_ttf.so",
+        "D:\\takumi\\Source\\android\\app\\src\\main\\jniLibs\\x86_64\\libSDL_net.so",
+        "D:\\takumi\\Source\\android\\app\\src\\main\\jniLibs\\x86_64\\libmpg123.so",
+        "D:\\takumi\\Source\\android\\app\\src\\main\\jniLibs\\x86_64\\libbotan.so"
+      ]
+    }
+  }
+}
