@@ -1,0 +1,5 @@
+01:23:50 [SocketManager] Server started at port [63003]
+01:23:56 [KEN][0] AddServer (192.168.99.200)
+01:23:56 [KEN][0] ServerInfo (KEN-CS) (55920) (19)
+01:23:59 [KEN][1] AddServer (192.168.99.200)
+01:23:59 [KEN][1] ServerInfo (KEN-1) (55901) (0)

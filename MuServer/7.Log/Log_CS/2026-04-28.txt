@@ -1,0 +1,9 @@
+16:49:39 [KEN] Server started at port [63000]
+16:49:39 [KEN] ServerList loaded successfully
+16:49:46 [KEN] JoinServer online
+16:49:53 [KEN] GameServer online (DUYDAT) (0)
+17:56:04 [KEN] Server started at port [63000]
+17:56:04 [KEN] ServerList loaded successfully
+17:56:11 [KEN] JoinServer online
+17:56:19 [KEN] GameServer online (DUYDAT) (19)
+17:56:24 [KEN] GameServer online (DUYDAT) (0)

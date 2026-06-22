@@ -1,0 +1,28 @@
+13:32:18 [KEN] Server started at port [63000]
+13:32:18 [KEN] ServerList loaded successfully
+13:32:35 [KEN] GameServer online (DUYDAT) (0)
+13:37:16 [KEN] JoinServer online
+13:38:00 [KEN] GameServer offline (DUYDAT) (0)
+13:38:01 [KEN] GameServer online (DUYDAT) (0)
+13:48:06 [KEN] Server started at port [63000]
+13:48:06 [KEN] ServerList loaded successfully
+13:48:13 [KEN] JoinServer online
+13:48:21 [KEN] GameServer online (DUYDAT) (0)
+18:26:49 [KEN] Server started at port [63000]
+18:26:49 [KEN] ServerList loaded successfully
+18:26:56 [KEN] JoinServer online
+18:27:04 [KEN] GameServer online (DUYDAT) (0)
+18:32:21 [KEN] Server started at port [63000]
+18:32:21 [KEN] ServerList loaded successfully
+18:32:28 [KEN] JoinServer online
+18:32:36 [KEN] GameServer online (DUYDAT) (0)
+18:50:46 [KEN] JoinServer offline
+18:57:33 [KEN] GameServer offline (DUYDAT) (0)
+19:00:43 [KEN] Server started at port [63000]
+19:00:43 [KEN] ServerList loaded successfully
+19:00:50 [KEN] JoinServer online
+19:00:58 [KEN] GameServer online (DUYDAT) (0)
+19:23:21 [KEN] Server started at port [63000]
+19:23:21 [KEN] ServerList loaded successfully
+19:23:28 [KEN] JoinServer online
+19:23:36 [KEN] GameServer online (DUYDAT) (0)
