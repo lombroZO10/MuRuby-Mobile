@@ -1,3 +1,0 @@
-D:/takumi/Source/android/app/.cxx/RelWithDebInfo/6l6a2z4v/armeabi-v7a/CMakeFiles/main.dir
-D:/takumi/Source/android/app/.cxx/RelWithDebInfo/6l6a2z4v/armeabi-v7a/CMakeFiles/edit_cache.dir
-D:/takumi/Source/android/app/.cxx/RelWithDebInfo/6l6a2z4v/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -254,7 +254,7 @@ static void InitializeTakumiProtectState()
         gProtect.m_MainInfo.GSPortMin = 55901;
         gProtect.m_MainInfo.GSPortMax = 55999;
         std::strcpy(gProtect.m_MainInfo.CustomerName, "takumi12");
-        std::strcpy(gProtect.m_MainInfo.IpAddress, "171.235.182.88");
+        std::strcpy(gProtect.m_MainInfo.IpAddress, "192.168.56.10");
         gProtect.m_MainInfo.IpAddressPort = 63000;
         std::strcpy(gProtect.m_MainInfo.ClientVersion, "1.04.05");
         std::strcpy(gProtect.m_MainInfo.ClientSerial, "TbYehR2hFUPBKgZj");
@@ -8947,7 +8947,7 @@ static bool InitializeAndroidGame()
     int configuredPort = GameConfig::GetInstance().GetServerPort();
     if (serverIP.empty() || serverIP == L"127.127.127.127" || serverIP == L"192.168.1.33" || serverIP == L"192.168.99.200")
     {
-        serverIP = L"171.235.182.88";
+        serverIP = L"192.168.56.10";
     }
     if ((configuredPort <= 0) || (configuredPort == 55901) || (configuredPort == 44405) || (configuredPort == 44406))
     {
@@ -9736,7 +9736,7 @@ int SDL_main(int argc, char* argv[])
     int configuredPort = GameConfig::GetInstance().GetServerPort();
     if (serverIP.empty() || serverIP == L"127.127.127.127" || serverIP == L"192.168.1.33" || serverIP == L"192.168.99.200")
     {
-        serverIP = L"171.235.182.88";
+        serverIP = L"192.168.56.10";
     }
     if (configuredPort <= 0 || configuredPort == 55901 || configuredPort == 44405 || configuredPort == 44406)
     {

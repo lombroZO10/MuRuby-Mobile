@@ -1,3 +1,0 @@
-D:/takumi/New folder (2)/fix1-8/Source/android/app/.cxx/RelWithDebInfo/3t733g1u/x86_64/CMakeFiles/main.dir
-D:/takumi/New folder (2)/fix1-8/Source/android/app/.cxx/RelWithDebInfo/3t733g1u/x86_64/CMakeFiles/edit_cache.dir
-D:/takumi/New folder (2)/fix1-8/Source/android/app/.cxx/RelWithDebInfo/3t733g1u/x86_64/CMakeFiles/rebuild_cache.dir

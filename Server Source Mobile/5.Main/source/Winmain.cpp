@@ -1561,7 +1561,7 @@ bool ExceptionCallback(_EXCEPTION_POINTERS* pExceptionInfo )
 	return true;
 }
 #endif
-char* szServerIpAddress = "171.235.182.88";
+char* szServerIpAddress = "192.168.56.10";
 WORD g_ServerPort = 63000;
 BYTE Version[SIZE_PROTOCOLVERSION] = { '1' + 1, '0' + 2, '4' + 3, '0' + 4, '5' + 5 };
 BYTE Serial[SIZE_PROTOCOLSERIAL + 1] = { "TbYehR2hFUPBKgZj" };

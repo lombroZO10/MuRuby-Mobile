@@ -5,16 +5,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# android/app/src/main/cpp -> D:/takumi/Source
+# Resolve paths from this repository instead of relying on the original
+# developer's D: drive layout.
 get_filename_component(PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../.." ABSOLUTE)
-set(CLIENT_ROOT     "${PROJECT_ROOT}/5.Main")
+set(CLIENT_ROOT "${PROJECT_ROOT}/Server Source Mobile/5.Main" CACHE PATH "Path to the Takumi client source")
 set(GAME_SRC_DIR    "${CLIENT_ROOT}/source")
 set(DEPS_ROOT       "${CLIENT_ROOT}/dependencies")
 get_filename_component(JNI_LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}" ABSOLUTE)
-set(SOKOL_ROOT "D:/firstproject/sokol-master" CACHE PATH "Path to the local sokol checkout")
-set(BGFX_ROOT "D:/firstproject/bgfx-master" CACHE PATH "Path to the local bgfx checkout")
-set(BX_ROOT   "D:/firstproject/bx" CACHE PATH "Path to the local bx checkout")
-set(BIMG_ROOT "D:/firstproject/bimg" CACHE PATH "Path to the local bimg checkout")
+set(SOKOL_ROOT "${PROJECT_ROOT}/sokol-master" CACHE PATH "Path to the local sokol checkout")
+set(BGFX_ROOT "${PROJECT_ROOT}/bgfx-master" CACHE PATH "Path to the local bgfx checkout")
+set(BX_ROOT   "${PROJECT_ROOT}/bx" CACHE PATH "Path to the local bx checkout")
+set(BIMG_ROOT "${PROJECT_ROOT}/bimg" CACHE PATH "Path to the local bimg checkout")
 option(MU_ENABLE_BGFX "Build optional bgfx/bx/bimg support scaffolding" OFF)
 
 message(STATUS "PROJECT_ROOT = ${PROJECT_ROOT}")
@@ -28,7 +29,11 @@ message(STATUS "BIMG_ROOT    = ${BIMG_ROOT}")
 message(STATUS "MU_ENABLE_BGFX = ${MU_ENABLE_BGFX}")
 
 if(NOT EXISTS "${SOKOL_ROOT}/sokol_time.h")
-    message(FATAL_ERROR "Missing sokol_time.h in SOKOL_ROOT='${SOKOL_ROOT}'. Expected a local sokol checkout, e.g. D:/firstproject/sokol-master.")
+    message(FATAL_ERROR "Missing sokol_time.h in SOKOL_ROOT='${SOKOL_ROOT}'.")
+endif()
+
+if(NOT EXISTS "${GAME_SRC_DIR}/android_main.cpp")
+    message(FATAL_ERROR "Missing Takumi Android sources in CLIENT_ROOT='${CLIENT_ROOT}'.")
 endif()
 
 add_compile_definitions(__ANDROID__ ANDROID NDEBUG _NDEBUG _NO_EDITOR USE_OPENGL_ES __NDK_FPABI__= SOKOL_GLES3)
