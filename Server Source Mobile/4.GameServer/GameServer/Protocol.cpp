@@ -1698,7 +1698,7 @@ void ProtocolCore(BYTE head,BYTE* lpMsg,int size,int aIndex,int encrypt,int seri
 						gCommandManager.CommandMasterReset(lpObj, " ", 0);
 						return;
 					}
-					gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Bạn đã đạt GHRS hãy Relife để có thể tiếp tục Reset!");
+					gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Você atingiu o limite de resets. Faça um Relife para continuar resetando!");
 					lpObj->AutoResetEnable = 0;
 					GCAutoResetInfoSend(lpObj); //Send Info Relife ve Client
 					return;
@@ -2099,7 +2099,7 @@ void CGChatWhisperRecv(PMSG_CHAT_WHISPER_RECV* lpMsg,int aIndex) // OK
 		{
 			if (lpObj->PartyNumber == lpTarget->PartyNumber)
 			{
-				gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Ban da trong nhom roi !!");
+				gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Você já está em um grupo!");
 				return;
 			}
 		}
@@ -6273,17 +6273,17 @@ void CSEND_CHANGEPASS(CSENDGS_DOIMK* lpMsg, int aIndex)
 	LPOBJ lpObj = &gObj[aIndex];
 	if (lpMsg->TYPE != 0x01)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Đổi Mật Khẩu] Sai Dữ Liệu !!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Alterar senha] Dados inválidos!");
 		return;
 	}
 	if (strlen(lpMsg->PASS_OLD) < 1 || strlen(lpMsg->PASS_NEW) < 1)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Đổi Mật Khẩu] Hãy Nhập Mật Khẩu Đầy Đủ !!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Alterar senha] Preencha todos os campos!");
 		return;
 	}
 	if (strcmp(lpMsg->PASS_OLD, lpMsg->PASS_NEW) == 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Đổi Mật Khẩu] MK Cũ & MK Mới đang giong nhau !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Alterar senha] A nova senha deve ser diferente da senha atual!");
 		return;
 	}
 
@@ -6306,17 +6306,17 @@ void DSSENDGS_DOIMK_KQ(DSGS_DOIMK_KQ* lpMsg)
 	LPOBJ lpObj = &gObj[lpMsg->gIndex];
 	if (lpMsg->result == 1)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Đổi Mật Khẩu] TK không chính xác !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Alterar senha] Conta inválida!");
 		return;
 	}
 	if (lpMsg->result == 2)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Đổi Mật Khẩu] MK cũ không đúng !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Alterar senha] A senha atual está incorreta!");
 		return;
 	}
 	if (lpMsg->result == 3)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Đổi Mật Khẩu] Bạn đã đổi MK thành công !!!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Alterar senha] Senha alterada com sucesso!");
 		return;
 	}
 }

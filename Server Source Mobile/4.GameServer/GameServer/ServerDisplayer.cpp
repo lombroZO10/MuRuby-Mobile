@@ -49,8 +49,8 @@ CServerDisplayer::CServerDisplayer() // OK
 	this->m_brush[4] = CreateSolidBrush(RGB(210, 210, 210));	//Black //<- fondo de eventos e informacion
 #endif
 
-	strcpy_s(this->m_DisplayerText[0],"STANDBY MODE");
-	strcpy_s(this->m_DisplayerText[1],"ACTIVE MODE");
+	strcpy_s(this->m_DisplayerText[0],"MODO DE ESPERA");
+	strcpy_s(this->m_DisplayerText[1],"MODO ATIVO");
 }
 
 CServerDisplayer::~CServerDisplayer() // OK
@@ -420,7 +420,7 @@ void CServerDisplayer::PaintEventTime() // OK
 	int days;
 
 	SetTextColor(hdc, RGB(0, 173, 181));
-	TextOut(hdc, rect.left + 5, rect.top + 5, "EVENTS:", 7);
+	TextOut(hdc, rect.left + 5, rect.top + 5, "EVENTOS:", 7);
 	int CountTime = -1;
 	for (int i = 0; i < this->CountTimeEventS; i++)
 	{
@@ -448,7 +448,7 @@ void CServerDisplayer::PaintEventTime() // OK
 			if (hours > 23)
 			{
 				days = hours / 24;
-				wsprintf(text2, "%d day(s)+", days);
+				wsprintf(text2, "%d dia(s)+", days);
 			}
 			else
 			{
@@ -525,7 +525,7 @@ void CServerDisplayer::PaintInvasionTime() // OK
 	int days;
 
 	SetTextColor(hdc, RGB(30, 173, 181));
-	TextOut(hdc, rect.left + 100, rect.top + 2, "INVASION:", 9);
+	TextOut(hdc, rect.left + 100, rect.top + 2, "INVASOES:", 8);
 	int CountTime = -1;
 	for (int i = 0; i < 30; i++)
 	{
@@ -627,7 +627,7 @@ void CServerDisplayer::PaintCustomArenaTime() // OK
 	int days;
 
 	SetTextColor(hdc,RGB(0, 173, 181));
-	TextOut(hdc,rect.left+5,rect.top+2,"CUSTOM ARENA:",13);
+	TextOut(hdc,rect.left+5,rect.top+2,"ARENA CUSTOM:",12);
 
 	int CountTime = -1;
 	for (int i = 0; i < 30; i++)
@@ -730,7 +730,7 @@ Exit:
 	int days;
 
 	SetTextColor(hdc,RGB(0, 173, 181));
-	TextOut(hdc,rect.left+5,rect.top + 2,"EVENTS:",7);
+	TextOut(hdc,rect.left+5,rect.top + 2,"EVENTOS:",7);
 
 	SetTextColor(hdc,RGB(0,102,204));
 	wsprintf(text1, "Loren Deep: ");
@@ -753,7 +753,7 @@ Exit:
 		if (hours > 23)
 		{
 			days = hours/24;
-			wsprintf(text2, "%d day(s)+", days);
+			wsprintf(text2, "%d dia(s)+", days);
 		}
 		else
 		{
@@ -801,7 +801,7 @@ Exit:
 		if (hours > 23)
 		{
 			days = hours/24;
-			wsprintf(text2, "%d day(s)+", days);
+			wsprintf(text2, "%d dia(s)+", days);
 		}
 		else
 		{
@@ -1015,7 +1015,7 @@ void CServerDisplayer::LogTextPaintConnect() // OK
 	FillRect(hdc,&rect,this->m_brush[4]);
 
 	SetTextColor(hdc,RGB(0, 173, 181));
-	TextOut(hdc,rect.left+5,rect.top+2,"CONNECTION LOG:",15);
+	TextOut(hdc,rect.left+5,rect.top+2,"LOG DE CONEXAO:",14);
 
 	int line = MAX_LOGCONNECT_TEXT_LINE;
 
@@ -1214,6 +1214,6 @@ void CServerDisplayer::InitTimeEvent()
 	gCustomEventTime.AddDataEventsTime("Moss Merch", &this->EventMoss); this->CountTimeEventS++;
 	gCustomEventTime.AddDataEventsTime("Boss Guild", &this->EventBossGuild); this->CountTimeEventS++;
 	gCustomEventTime.AddDataEventsTime("CTC Mini", &this->EventCTCMini); this->CountTimeEventS++;
-	gCustomEventTime.AddDataEventsTime("Loan Chien", &this->EventLoanChien); this->CountTimeEventS++;
+	gCustomEventTime.AddDataEventsTime("Battle Royale", &this->EventLoanChien); this->CountTimeEventS++;
 
 }

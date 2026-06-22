@@ -297,7 +297,7 @@ void SauChangeItem::ProcItemSend(int aIndex, int SlotItem)
 	}
 	if (gObj[aIndex].SAU_StatusMix > 0)
 	{
-		gNotice.GCNoticeSend(aIndex, eMessageBox, 0, 0, 0, 0, 0, "Vui Long Dong Dung Luyen Va Mo Lai!!");// That Bai
+		gNotice.GCNoticeSend(aIndex, eMessageBox, 0, 0, 0, 0, 0, "Feche a janela de refinamento e abra-a novamente!");// That Bai
 		return;
 	}
 	//==Cache Item Chinh
@@ -426,7 +426,7 @@ void SauChangeItem::BackItem(int aIndex, int BackSlot)
 		if (lpObj->SAU_ItemChinh.IsItem())
 		{
 			SlotRecv = gItemManager.InventoryInsertItem(aIndex, lpObj->SAU_ItemKetQua[0]); // Roll back lai Item
-			gLog.Output(LOG_GENERAL, "[Doi Item] Char [%s] Doi Thanh Cong Item[%s] Sang [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
+			gLog.Output(LOG_GENERAL, "[Troca de Item] Personagem [%s] trocou com sucesso [%s] por [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
 			lpObj->SAU_ItemChinh.Clear();
 			for (int n = 0; n < 6; n++)
 			{
@@ -447,7 +447,7 @@ void SauChangeItem::BackItem(int aIndex, int BackSlot)
 		if (lpObj->SAU_ItemChinh.IsItem())
 		{
 			SlotRecv = gItemManager.InventoryInsertItem(aIndex, lpObj->SAU_ItemKetQua[1]); // Roll back lai Item
-			gLog.Output(LOG_GENERAL, "[Doi Item] Char [%s] Doi Thanh Cong Item [%s] Sang [%s] ", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
+			gLog.Output(LOG_GENERAL, "[Troca de Item] Personagem [%s] trocou com sucesso [%s] por [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
 			lpObj->SAU_ItemChinh.Clear();
 			for (int n = 0; n < 6; n++)
 			{
@@ -469,7 +469,7 @@ void SauChangeItem::BackItem(int aIndex, int BackSlot)
 		if (lpObj->SAU_ItemChinh.IsItem())
 		{
 			SlotRecv = gItemManager.InventoryInsertItem(aIndex, lpObj->SAU_ItemKetQua[2]); // Roll back lai Item
-			gLog.Output(LOG_GENERAL, "[Doi Item] Char [%s] Doi Thanh Cong Item [%s] Sang [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
+			gLog.Output(LOG_GENERAL, "[Troca de Item] Personagem [%s] trocou com sucesso [%s] por [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
 			lpObj->SAU_ItemChinh.Clear();
 			for (int n = 0; n < 6; n++)
 			{
@@ -490,7 +490,7 @@ void SauChangeItem::BackItem(int aIndex, int BackSlot)
 		if (lpObj->SAU_ItemChinh.IsItem())
 		{
 			SlotRecv = gItemManager.InventoryInsertItem(aIndex, lpObj->SAU_ItemKetQua[3]); // Roll back lai Item
-			gLog.Output(LOG_GENERAL, "[Doi Item] Char [%s] Doi Thanh Cong Item [%s] Sang [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
+			gLog.Output(LOG_GENERAL, "[Troca de Item] Personagem [%s] trocou com sucesso [%s] por [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
 			lpObj->SAU_ItemChinh.Clear();
 			for (int n = 0; n < 6; n++)
 			{
@@ -513,7 +513,7 @@ void SauChangeItem::BackItem(int aIndex, int BackSlot)
 		if (lpObj->SAU_ItemChinh.IsItem())
 		{
 			SlotRecv = gItemManager.InventoryInsertItem(aIndex, lpObj->SAU_ItemKetQua[4]); // Roll back lai Item
-			gLog.Output(LOG_GENERAL, "[Doi Item] Char [%s] Doi Thanh Cong Item [%s] Sang [%s] ", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
+			gLog.Output(LOG_GENERAL, "[Troca de Item] Personagem [%s] trocou com sucesso [%s] por [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
 			lpObj->SAU_ItemChinh.Clear();
 			for (int n = 0; n < 6; n++)
 			{
@@ -536,7 +536,7 @@ void SauChangeItem::BackItem(int aIndex, int BackSlot)
 		if (lpObj->SAU_ItemChinh.IsItem())
 		{
 			SlotRecv = gItemManager.InventoryInsertItem(aIndex, lpObj->SAU_ItemKetQua[5]); // Roll back lai Item
-			gLog.Output(LOG_GENERAL, "[Doi Item] Char [%s] Doi Thanh Cong Item [%s] Sang [%s] ", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
+			gLog.Output(LOG_GENERAL, "[Troca de Item] Personagem [%s] trocou com sucesso [%s] por [%s]", lpObj->Name, gItemLevel.GetItemName(lpObj->SAU_ItemChinh.m_Index, lpObj->SAU_ItemChinh.m_Level), gItemLevel.GetItemName(lpObj->SAU_ItemKetQua[BackSlot - 1].m_Index, lpObj->SAU_ItemKetQua[BackSlot - 1].m_Level));
 			lpObj->SAU_ItemChinh.Clear();
 			for (int n = 0; n < 6; n++)
 			{

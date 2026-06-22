@@ -533,13 +533,13 @@ void DanhHieu::BUY_DANH_HIEU(LPOBJ lpObj, BUY_DANH_HIEU_REQ* aRecv)
 			|| lpObj->ChaosLock != 0
 			|| lpObj->SkillSummonPartyTime != 0)
 		{
-			gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Bạn không thể sử dụng nó ngay bây giờ.");
+			gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Você não pode usar isso neste momento.");
 			return;
 		}
 		// Delay Khi Click
 		if ((GetTickCount() - lpObj->ClickClientSend) < 500)
 		{
-			gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Vui Lòng thao tác chậm lại");
+			gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Execute as ações mais lentamente.");
 			return;
 		}
 		//---------------------------------------------------------
@@ -547,7 +547,7 @@ void DanhHieu::BUY_DANH_HIEU(LPOBJ lpObj, BUY_DANH_HIEU_REQ* aRecv)
 		{
 			if (lpObj->rDanhHieu > MAX_DANH_HIEU)
 			{
-				gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Bạn đã đạt cấp độ tối đa");
+				gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Você atingiu o nível máximo.");
 				return;
 			}
 
@@ -555,17 +555,17 @@ void DanhHieu::BUY_DANH_HIEU(LPOBJ lpObj, BUY_DANH_HIEU_REQ* aRecv)
 
 			if (gemc < GetCount(lpObj))
 			{
-				gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Quay Lại Khi Bạn Có Đủ [%d] [%s]!(Không Tính Cụm)", GetCount(lpObj), gItemManager.GetItemName(GET_ITEM(GetType(lpObj), GetIndex(lpObj))));
+				gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Volte quando possuir [%d] [%s]! Pacotes não são contabilizados.", GetCount(lpObj), gItemManager.GetItemName(GET_ITEM(GetType(lpObj), GetIndex(lpObj))));
 				return;
 			}
 
 			if (lpObj->Coin1 < GetCoint(lpObj))
 			{
-				gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Bạn Không đủ %d WcoinC để nâng cấp!!!", GetCoint(lpObj));
+				gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Você não possui %d WCoinC para realizar a melhoria!", GetCoint(lpObj));
 				return;
 			}
 
-			GDSetCoinSend(lpObj->Index, -GetCoint(lpObj), 0, 0, "Danh Hieu");
+			GDSetCoinSend(lpObj->Index, -GetCoint(lpObj), 0, 0, "Título");
 			gCashShop.CGCashShopPointRecv(lpObj->Index);
 			gItemManager.DeleteInventoryItemCount(lpObj, GET_ITEM(GetType(lpObj), GetIndex(lpObj)), 0, GetCount(lpObj));
 			lpObj->rDanhHieu++; // Thay Đổi

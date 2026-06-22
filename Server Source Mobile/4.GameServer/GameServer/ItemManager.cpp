@@ -4601,7 +4601,7 @@ void CItemManager::CGItemSellRecv(PMSG_ITEM_SELL_RECV* lpMsg,int aIndex) // OK
 				lpObj->Money += value;
 				if (lpItem->m_Serial > 00000000)
 				{
-					gLog.Output(LOG_SHOP, " %s | %s |Phi Shop:Index: %04d: Item %s + %d, Skill: %d, Luck: %d, Tính Năng: %d, Hoàn Hảo: %d,Thần: %d, Hamorny: %03d, Item 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Serial: %08X)"
+					gLog.Output(LOG_SHOP, "%s | %s |Loja Pessoal:Índice: %04d: Item %s + %d, Habilidade: %d, Sorte: %d, Opção: %d, Excellent: %d, Ancient: %d, Harmony: %03d, Item 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Série: %08X)"
 						, lpObj->Account
 						, lpObj->Name, lpItem->m_Index
 						, gItemManager.GetItemName(lpItem->m_Index)

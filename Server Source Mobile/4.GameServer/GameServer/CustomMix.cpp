@@ -212,7 +212,7 @@ void CCustomMix::SendInfoCustomMix(int aIndex, int IndexMix)
 
 	if (it == this->m_BData_Mix.end())
 	{
-		LogAdd(LOG_RED, "Khong co du lieu indexmix %d", IndexMix);
+		LogAdd(LOG_RED, "Não existem dados para a combinação %d", IndexMix);
 		return;
 	}
 
@@ -224,7 +224,7 @@ void CCustomMix::SendInfoCustomMix(int aIndex, int IndexMix)
 
 	if (itInfo == this->m_BData_Mix_Info.end())
 	{
-		LogAdd(LOG_RED, "Khong co du lieu info indexmix %d", IndexMix);
+		LogAdd(LOG_RED, "Não existem informações para a combinação %d", IndexMix);
 		return;
 	}
 	pMsg.Name1 = itInfo->second.Name1;

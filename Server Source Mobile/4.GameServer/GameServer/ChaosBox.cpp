@@ -275,7 +275,7 @@ void CChaosBox::ChaosItemMix(LPOBJ lpObj) // OK
 
 		GDCreateItemSend(lpObj->Index,0xFF,0,0,ItemIndex,ItemLevel,0,ItemOption1,ItemOption2,ItemOption3,-1,0,0,0,0,0,0xFF,0);
 
-		gLog.Output(LOG_CHAOS_MIX, "[Vũ khí chaos][Success][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d) - [Item] - [%s +%d] - [%d,%d,%d]",
+		gLog.Output(LOG_CHAOS_MIX, "[Arma Chaos][Sucesso][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d) - [Item] - [%s +%d] - [%d,%d,%d]",
 			lpObj->Account,
 			lpObj->Name,
 			lpObj->ChaosSuccessRate,
@@ -526,7 +526,7 @@ void CChaosBox::PlusItemLevelMix(LPOBJ lpObj,int type) // OK
 
 	if (lpObj->ChaosBox[ItemSlot].m_Level >= gServerInfo.m_TatQuayDo)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Hiện Tại Giới Hạn Đồ Chỉ Đến Level +%d!", gServerInfo.m_TatQuayDo);
+		gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "O limite atual de melhoria é +%d!", gServerInfo.m_TatQuayDo);
 		this->GCChaosMixSend(lpObj->Index, 240, 0);
 		return;
 	}
@@ -623,7 +623,7 @@ void CChaosBox::PlusItemLevelMix(LPOBJ lpObj,int type) // OK
 		}
 
 		char buff2[256];
-		wsprintf(buff2, "[%s] Nâng cấp [%s] thất bại !", lpObj->Name, gItemManager.GetItemName(item.m_Index));
+		wsprintf(buff2, "[%s] Falha na atualização de [%s]!", lpObj->Name, gItemManager.GetItemName(item.m_Index));
 
 		if (gServerInfo.m_AnnounceChaosMix == 2)
 		{
@@ -974,7 +974,7 @@ void CChaosBox::Wing2Mix(LPOBJ lpObj,int type) // OK
 			gItemOptionRate.MakeNewOption(ItemIndex, ItemNewOption, &ItemNewOption);
 			GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, ItemIndex, 0, 0, 0, ItemOption2, ItemOption3, -1, (ItemNewOption + (32 * (GetLargeRand() % 2))), 0, 0, 0, 0, 0xFF, 0);
 			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(902), lpObj->Name, gItemManager.GetItemName(ItemIndex));
-			gLog.Output(LOG_CHAOS_MIX, "[Wing2Mix][Thành Công][%s][%s] Item: %s + %d, %d  %d  %d,(Tỉ lệ: %d, Zen: %d) Từ %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Serial: %08X)"
+			gLog.Output(LOG_CHAOS_MIX, "[Wing2Mix][Sucesso][%s][%s] Item: %s + %d, %d %d %d,(Taxa: %d, Zen: %d) Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Série: %08X)"
 				, lpObj->Account, lpObj->Name, gItemManager.GetItemName(ItemIndex), ItemLevel, ItemOption1, ItemOption2, ItemOption3 * 4, lpObj->ChaosSuccessRate, lpObj->ChaosMoney
 				, gItemManager.GetItemName(item.m_Index)
 				, item.m_Level
@@ -1026,7 +1026,7 @@ void CChaosBox::Wing2Mix(LPOBJ lpObj,int type) // OK
 			gItemOptionRate.MakeNewOption(ItemIndex, ItemNewOption, &ItemNewOption);
 			GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, ItemIndex, 0, 0, 0, ItemOption2, ItemOption3, -1, (ItemNewOption + 32), 0, 0, 0, 0, 0xFF, 0);
 			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(902), lpObj->Name, gItemManager.GetItemName(ItemIndex));
-			gLog.Output(LOG_CHAOS_MIX, "[Wing2Mix][Thành Công][%s][%s] Item: %s + %d, %d  %d  %d,(Tỉ lệ: %d, Zen: %d) Từ %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Serial: %08X)"
+			gLog.Output(LOG_CHAOS_MIX, "[Wing2Mix][Sucesso][%s][%s] Item: %s + %d, %d %d %d,(Taxa: %d, Zen: %d) Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Série: %08X)"
 				, lpObj->Account, lpObj->Name, gItemManager.GetItemName(ItemIndex), ItemLevel, ItemOption1, ItemOption2, ItemOption3 * 4, lpObj->ChaosSuccessRate, lpObj->ChaosMoney
 				, gItemManager.GetItemName(item.m_Index)
 				, item.m_Level
@@ -1051,7 +1051,7 @@ void CChaosBox::Wing2Mix(LPOBJ lpObj,int type) // OK
 		this->GCChaosBoxSend(lpObj, 0);
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(890), lpObj->Name);
-			gLog.Output(LOG_CHAOS_MIX, "[Wing2Mix][Xịt][%s/%s]  %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+			gLog.Output(LOG_CHAOS_MIX, "[Wing2Mix][Falha][%s/%s] %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -1350,7 +1350,7 @@ void CChaosBox::Wing1Mix(LPOBJ lpObj) // OK
 		//GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, ItemIndex, 0, 0, 0, ItemOption2, ItemOption3, -1, 0, 0, 0, 0, 0, 0xFF, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(902), lpObj->Name, gItemManager.GetItemName(ItemIndex));		
 
-		gLog.Output(LOG_CHAOS_MIX, "[Wing1Mix][Thành Công][%s][%s] Item: %s + %d, %d  %d  %d,(Tỉ lệ: %d, Zen: %d) Từ %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Wing1Mix][Sucesso][%s][%s] Item: %s + %d, %d %d %d,(Taxa: %d, Zen: %d) Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Série: %08X)"
 			, lpObj->Account, lpObj->Name, gItemManager.GetItemName(ItemIndex), ItemLevel, ItemOption1, ItemOption2, ItemOption3 * 4, lpObj->ChaosSuccessRate, lpObj->ChaosMoney
 			, gItemManager.GetItemName(item.m_Index)
 			, item.m_Level
@@ -1376,7 +1376,7 @@ void CChaosBox::Wing1Mix(LPOBJ lpObj) // OK
 		this->GCChaosBoxSend(lpObj, 0);
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(889), lpObj->Name);
-		gLog.Output(LOG_CHAOS_MIX, "[Wing1Mix][Xịt][%s/%s]  %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Wing1Mix][Falha][%s/%s] %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 			, lpObj->Account
 			, lpObj->Name
 			, gItemManager.GetItemName(item.m_Index)
@@ -1485,7 +1485,7 @@ void CChaosBox::PetMix(LPOBJ lpObj,int type) // OK
 	{
 		GDCreateItemSend(lpObj->Index, 0xFE, 0, 0, (GET_ITEM(13, 4) + type), 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0xFF, 0);
 		
-		gLog.Output(LOG_CHAOS_MIX, "[PetMix][Thành Công][%s][%s] - (Item: %d, ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name,gItemManager.GetItemName((GET_ITEM(13, 4) + type)), lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
+		gLog.Output(LOG_CHAOS_MIX, "[PetMix][Sucesso][%s][%s] - (Item: %d, ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name,gItemManager.GetItemName((GET_ITEM(13, 4) + type)), lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 		
 	}
 	else
@@ -1495,7 +1495,7 @@ void CChaosBox::PetMix(LPOBJ lpObj,int type) // OK
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(894), lpObj->Name);
 		
-		gLog.Output(LOG_CHAOS_MIX, "[PetMix][Xịt][%s][%s] - (Type: %d, ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, type, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
+		gLog.Output(LOG_CHAOS_MIX, "[PetMix][Falha][%s][%s] - (Tipo: %d, ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, type, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 	
 	}
 }
@@ -1829,8 +1829,8 @@ void CChaosBox::BrokenHornMix(LPOBJ lpObj) // OK
 	if((GetLargeRand()%100) < lpObj->ChaosSuccessRate)
 	{
 		GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, GET_ITEM(13, 36), 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0xFF, 0);
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s đã nâng cấp thành công Sừng Gãy", lpObj->Name);
-		gLog.Output(LOG_CHAOS_MIX, "[Sừng Gãy][Thành Công][%s][%s] -Item: %s(ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name,gItemManager.GetItemName(GET_ITEM(13,37)), lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s atualizou com sucesso o Broken Horn", lpObj->Name);
+		gLog.Output(LOG_CHAOS_MIX, "[Broken Horn][Sucesso][%s][%s] -Item: %s(ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name,gItemManager.GetItemName(GET_ITEM(13,37)), lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 	}
 	else
 	{
@@ -1838,7 +1838,7 @@ void CChaosBox::BrokenHornMix(LPOBJ lpObj) // OK
 		this->GCChaosBoxSend(lpObj, 0);
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(895), lpObj->Name);
-		gLog.Output(LOG_CHAOS_MIX, "[Sừng Gãy][Xịt][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
+		gLog.Output(LOG_CHAOS_MIX, "[Broken Horn][Falha][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 		
 	}
 }
@@ -1913,8 +1913,8 @@ void CChaosBox::HornOfFenrirMix(LPOBJ lpObj) // OK
 	if((GetLargeRand()%100) < lpObj->ChaosSuccessRate)
 	{
 		GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, GET_ITEM(13, 37), 0, 255, 1, 0, 0, -1, 0, 0, 0, 0, 0, 0xFF, 0);
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s nâng cấp thành công Sói Tinh", lpObj->Name);
-		gLog.Output(LOG_CHAOS_MIX, "[Sói Tinh][Thành Công][%s][%s] -Item: %s(ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name,gItemManager.GetItemName(GET_ITEM(13, 37)), lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s criou um Fenrir com sucesso", lpObj->Name);
+		gLog.Output(LOG_CHAOS_MIX, "[Fenrir][Sucesso][%s][%s] -Item: %s(ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name,gItemManager.GetItemName(GET_ITEM(13, 37)), lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 
 	}
 	else
@@ -1923,7 +1923,7 @@ void CChaosBox::HornOfFenrirMix(LPOBJ lpObj) // OK
 		this->GCChaosBoxSend(lpObj, 0);
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(896), lpObj->Name);	
-		gLog.Output(LOG_CHAOS_MIX, "[HornOfFenrirMix][Xịt][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
+		gLog.Output(LOG_CHAOS_MIX, "[HornOfFenrirMix][Falha][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 	}
 }
 
@@ -2029,8 +2029,8 @@ void CChaosBox::HornOfFenrirUpgradeMix(LPOBJ lpObj) // OK
 	{
 		BYTE ItemNewOption = ((WeaponCount == 0) ? ((ArmorCount == 0) ? 0 : 2) : 1);
 		GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, GET_ITEM(13, 37), 0, 255, 1, 0, 0, -1, ItemNewOption, 0, 0, 0, 0, 0xFF, 0);
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s đã nâng cấp thành công Sói Tấn Công", lpObj->Name);
-		gLog.Output(LOG_CHAOS_MIX, "[Nâng Sói][Thành Công][%s/%s] Item: %s  Từ: %s+%d,  %d %d %d %d, Thần: %d, HC %03d 380: %03d, SK %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s criou um Fenrir de Ataque com sucesso", lpObj->Name);
+		gLog.Output(LOG_CHAOS_MIX, "[Upgrade de Fenrir][Sucesso][%s/%s] Item: %s Origem: %s+%d, %d %d %d %d, Ancient: %d, HC %03d 380: %03d, SK %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				,gItemManager.GetItemName(GET_ITEM(13, 37)) 
@@ -2063,7 +2063,7 @@ void CChaosBox::HornOfFenrirUpgradeMix(LPOBJ lpObj) // OK
 		this->GCChaosMixSend(lpObj->Index,0,0);
 
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(896), lpObj->Name);
-		gLog.Output(LOG_CHAOS_MIX, "[Nâng Sói][Xịt][%s/%s] Item: %s+%d  %d %d %d %d, Thần: %d, GC: %03d, 380: %03d, SK: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Upgrade de Fenrir][Falha][%s/%s] Item: %s+%d %d %d %d %d, Ancient: %d, GC: %03d, 380: %03d, SK: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -2155,8 +2155,8 @@ void CChaosBox::HornOfFenrirGoldMix(LPOBJ lpObj) // OK
 	if ((GetLargeRand() % 100) < lpObj->ChaosSuccessRate)
 	{
 		GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, GET_ITEM(13, 37), 0, 255, 1, 0, 0, -1, 4, 0, 0, 0, 0, 0xFF, 0);
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s nâng cấp thành công Sói Tinh Hoàng Kim", lpObj->Name);
-		gLog.Output(LOG_CHAOS_MIX, "[Sói Hoàng Kim][Thành Công][%s][%s] -Item: %s  (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, gItemManager.GetItemName(GET_ITEM(13, 37)), lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s criou um Golden Fenrir com sucesso", lpObj->Name);
+		gLog.Output(LOG_CHAOS_MIX, "[Golden Fenrir][Sucesso][%s][%s] -Item: %s (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, gItemManager.GetItemName(GET_ITEM(13, 37)), lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 
 	}
 	else
@@ -2164,8 +2164,8 @@ void CChaosBox::HornOfFenrirGoldMix(LPOBJ lpObj) // OK
 		this->ChaosBoxInit(lpObj);
 		this->GCChaosBoxSend(lpObj, 0);
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s nâng cấp Xịt Sói Tinh Hoàng Kim", lpObj->Name);
-		gLog.Output(LOG_CHAOS_MIX, "[Sói Hoàng Kim][Xịt][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s falhou ao criar um Golden Fenrir", lpObj->Name);
+		gLog.Output(LOG_CHAOS_MIX, "[Golden Fenrir][Falha][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 
 		}
 	}
@@ -2343,7 +2343,7 @@ void CChaosBox::JewelOfHarmonyItemSmeltMix(LPOBJ lpObj) // OK
 	{
 		if (ItemCount != 1)
 		{
-			gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Vật phẩm không phù hợp !");
+			gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Item incompatível!");
 			this->GCChaosMixSend(lpObj->Index, 7, 0);
 			return;
 		}
@@ -2367,7 +2367,7 @@ void CChaosBox::JewelOfHarmonyItemSmeltMix(LPOBJ lpObj) // OK
 
 		GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, ItemIndex, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0xFF, 0);
 		CItem item = lpObj->ChaosBox[ItemSlot];
-	gLog.Output(LOG_CHAOS_MIX, "[Đá Tinh Luyện][Thành Công][%s/%s] Từ: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+	gLog.Output(LOG_CHAOS_MIX, "[Refining Stone][Sucesso][%s/%s] Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -2397,7 +2397,7 @@ void CChaosBox::JewelOfHarmonyItemSmeltMix(LPOBJ lpObj) // OK
 
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
 		CItem item = lpObj->ChaosBox[ItemSlot];
-				gLog.Output(LOG_CHAOS_MIX, "[Đá Tinh Luyện][Thất bại][%s/%s] Từ: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+				gLog.Output(LOG_CHAOS_MIX, "[Refining Stone][Falha][%s/%s] Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -2444,7 +2444,7 @@ void CChaosBox::JewelOfHarmonyItemRestoreMix(LPOBJ lpObj) // OK
 	{
 		if (ItemCount != 1)
 		{
-			gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Vật phẩm không phù hợp !");
+			gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Item incompatível!");
 			this->GCChaosMixSend(lpObj->Index, 7, 0);
 			return;
 		}
@@ -2484,7 +2484,7 @@ void CChaosBox::JewelOfHarmonyItemRestoreMix(LPOBJ lpObj) // OK
 	this->ChaosBoxInit(lpObj);
 	gItemManager.ChaosBoxAddItem(lpObj->Index, item, 0);
 	this->GCChaosMixSend(lpObj->Index, 1, &item);
-	gLog.Output(LOG_CHAOS_MIX, "[Xóa gia cường][Thành Công][%s/%s] Item: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+	gLog.Output(LOG_CHAOS_MIX, "[Remover Harmony][Sucesso][%s/%s] Item: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -2595,7 +2595,7 @@ void CChaosBox::Item380Mix(LPOBJ lpObj) // OK
 		this->ChaosBoxInit(lpObj);
 		gItemManager.ChaosBoxAddItem(lpObj->Index, item, 0);
 		this->GCChaosMixSend(lpObj->Index, 1, &item);
-		gLog.Output(LOG_CHAOS_MIX, "[Item380Mix][Thành Công][%s/%s]  %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Item380Mix][Sucesso][%s/%s] %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -2622,7 +2622,7 @@ void CChaosBox::Item380Mix(LPOBJ lpObj) // OK
 		this->ChaosBoxItemKeep(lpObj, ItemSlot);
 		this->GCChaosBoxSend(lpObj, 0);
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
-	gLog.Output(LOG_CHAOS_MIX, "[Item380Mix][Xịt][%s/%s] ITEM: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+	gLog.Output(LOG_CHAOS_MIX, "[Item380Mix][Falha][%s/%s] ITEM: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -2864,7 +2864,7 @@ void CChaosBox::FeatherOfCondorMix(LPOBJ lpObj) // OK
 	{
 		GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, GET_ITEM(13, 53), 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0xFF, 0);
 		
-		gLog.Output(LOG_CHAOS_MIX, "[Lông Vũ 3][Thành Công][%s/%s]Từ: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Feather of Condor][Sucesso][%s/%s]Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -2891,7 +2891,7 @@ void CChaosBox::FeatherOfCondorMix(LPOBJ lpObj) // OK
 		this->ChaosBoxInit(lpObj);
 		this->GCChaosBoxSend(lpObj, 0);
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
-				gLog.Output(LOG_CHAOS_MIX, "[FeatherOfCondorMix][Thất bại][%s/%s] Từ: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+				gLog.Output(LOG_CHAOS_MIX, "[FeatherOfCondorMix][Falha][%s/%s] Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -3072,7 +3072,7 @@ void CChaosBox::Wing3Mix(LPOBJ lpObj) // OK
 		GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, ItemIndex, 0, 0, 0, ItemOption2, ItemOption3, -1, (ItemNewOption + (16 * (GetLargeRand() % 3))), 0, 0, 0, 0, 0xFF, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(902), lpObj->Name, gItemManager.GetItemName(ItemIndex));
 
-		gLog.Output(LOG_CHAOS_MIX, "[Wing3Mix][Thành Công][%s/%s] Tạo Thành: %s, Luck: %d, Op: %d, Hoàn hảo: %d,  Từ: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Wing3Mix][Sucesso][%s/%s] Resultado: %s, Sorte: %d, Op: %d, Excellent: %d, Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				,gItemManager.GetItemName(ItemIndex),ItemOption2,ItemOption3,ItemNewOption
@@ -3103,7 +3103,7 @@ void CChaosBox::Wing3Mix(LPOBJ lpObj) // OK
 		this->GCChaosMixSend(lpObj->Index, 0, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(891), lpObj->Name);
 
-		gLog.Output(LOG_CHAOS_MIX, "[Wing3Mix][Xịt][%s/%s] Từ: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Wing3Mix][Falha][%s/%s] Origem: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -3171,7 +3171,7 @@ void CChaosBox::CustomItemMix(LPOBJ lpObj, int HeadCode) // OK
 
 		if (GetTongNguyenLieu > NguyenLieuDatVao) // Khong du nguyen lieu Mix
 		{
-			//LogAdd(LOG_RED, "Khong du Nguyen Lieu %d <> %d", GetTongNguyenLieu , NguyenLieuDatVao);
+			//LogAdd(LOG_RED, "Materiais insuficientes: %d de %d", GetTongNguyenLieu , NguyenLieuDatVao);
 			this->GCChaosMixSend(lpObj->Index, 7, 0);
 			return;
 		}
@@ -3234,7 +3234,7 @@ void CChaosBox::CustomItemMix(LPOBJ lpObj, int HeadCode) // OK
 			//LogAdd(LOG_RED, "ItemCreate %d", NumberData);
 			if (!ItemCreate)
 			{
-				LogAdd(LOG_RED, "Khong co item kq %d", HeadCode);
+				LogAdd(LOG_RED, "Item de resultado não configurado: %d", HeadCode);
 				return;
 			}
 			ItemIndex = ItemCreate->ItemIndex;
@@ -3315,7 +3315,7 @@ void CChaosBox::CustomItemMix(LPOBJ lpObj, int HeadCode) // OK
 			ITEM_INFO ItemInfo;
 			gItemManager.GetInfo(ItemIndex, &ItemInfo);
 			char thongbaomix[256];
-			wsprintf(thongbaomix, "[%s] Nâng cấp [%s] thành công !", lpObj->Name, ItemInfo.Name);
+			wsprintf(thongbaomix, "[%s] Atualização [%s] bem-sucedida!", lpObj->Name, ItemInfo.Name);
 			if (gServerInfo.m_AnnounceChaosMix == 2 && gServerInfo.m_CustommixThanhCong == 1)
 			{
 				gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, thongbaomix);
@@ -3326,7 +3326,7 @@ void CChaosBox::CustomItemMix(LPOBJ lpObj, int HeadCode) // OK
 			}
 
 			//gLog.Output(LOG_CHAOS_MIX, "[CustomMix][Success][%s][%s] [%d] - (ChaosSuccessRate: %d, ChaosMoney: %d) HeadCode %d", lpObj->Account, lpObj->Name, ItemIndex, lpObj->ChaosSuccessRate, lpObj->ChaosMoney, HeadCode);
-			gLog.Output(LOG_CHAOS_MIX, "CustomMix[%s/%s]HeadCode %d - ID:[%d]:Chế tạo %s+%d,  %d %d  %d, %d,  %03d, %03d, %03d, %03d, %03d, Rate: %d%% )"
+			gLog.Output(LOG_CHAOS_MIX, "CustomMix[%s/%s]HeadCode %d - ID:[%d]:Criar %s+%d, %d %d %d, %d, %03d, %03d, %03d, %03d, %03d, Taxa: %d%%)"
 				, lpObj->Account
 				, lpObj->Name, HeadCode,ItemIndex,
 				gItemManager.GetItemName(ItemIndex), (ItemCreate->Level != -1) ? ItemCreate->Level : rand() % 6,
@@ -3842,7 +3842,7 @@ void CChaosBox::SocketItemMountSeedSphereMix(LPOBJ lpObj,BYTE info) // OK
 
 	this->GCChaosMixSend(lpObj->Index,1,&item);
 
-	gLog.Output(LOG_CHAOS_MIX, "[Khảm Ngọc][Thành Công][%s/%s] Item: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+	gLog.Output(LOG_CHAOS_MIX, "[Inserir Socket][Sucesso][%s/%s] Item: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -3929,7 +3929,7 @@ void CChaosBox::SocketItemUnMountSeedSphereMix(LPOBJ lpObj,BYTE info) // OK
 	this->ChaosBoxInit(lpObj);
 	gItemManager.ChaosBoxAddItem(lpObj->Index, item, 0);
 	this->GCChaosMixSend(lpObj->Index, 1, &item);
-			gLog.Output(LOG_CHAOS_MIX, "[Tháo Ngọc][Thành Công][%s/%s] Item: %s+%d,  %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+			gLog.Output(LOG_CHAOS_MIX, "[Remover Socket][Sucesso][%s/%s] Item: %s+%d, %d %d %d %d %d, HC: %03d, 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, gItemManager.GetItemName(item.m_Index)
@@ -4521,7 +4521,7 @@ void CChaosBox::MonsterWingMix(LPOBJ lpObj) // OK
 		GDCreateItemSend(lpObj->Index, 0xFF, 0, 0, ItemIndex, 0, 0, 0, ItemOption2, ItemOption3, -1, (ItemNewOption + (16 * (GetLargeRand() % 2))), 0, 0, 0, 0, 0xFF, 0);
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(902), lpObj->Name, gItemManager.GetItemName(ItemIndex));
 
-		gLog.Output(LOG_CHAOS_MIX, "[Wing2.5Mix][Thành Công][Account: %s, Name: %s] Item: %s, Level: %d, Skill: %d, Luck: %d, Tính năng: %d, Hoàn hảo: %d, Thần: %d, Hamorny: %03d, Item 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Wing2.5Mix][Sucesso][Conta: %s, Nome: %s] Item: %s, Nível: %d, Habilidade: %d, Sorte: %d, Opção: %d, Excellent: %d, Ancient: %d, Harmony: %03d, Item 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 			, lpObj->Account
 			, lpObj->Name
 			, gItemManager.GetItemName(item.m_Index)
@@ -4552,7 +4552,7 @@ void CChaosBox::MonsterWingMix(LPOBJ lpObj) // OK
 
 		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(903), lpObj->Name);
 
-		gLog.Output(LOG_CHAOS_MIX, "[Wing2.5Mix][Thất Bại][Account: %s, Name: %s] Item: %s, Level: %d, Skill: %d, Luck: %d, Tính năng: %d, Hoàn hảo: %d, Thần: %d, Hamorny: %03d, Item 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Rate: %d%%, Money: %d, Serial: %08X)"
+		gLog.Output(LOG_CHAOS_MIX, "[Wing2.5Mix][Falha][Conta: %s, Nome: %s] Item: %s, Nível: %d, Habilidade: %d, Sorte: %d, Opção: %d, Excellent: %d, Ancient: %d, Harmony: %03d, Item 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Taxa: %d%%, Dinheiro: %d, Série: %08X)"
 			, lpObj->Account
 			, lpObj->Name
 			, gItemManager.GetItemName(item.m_Index)

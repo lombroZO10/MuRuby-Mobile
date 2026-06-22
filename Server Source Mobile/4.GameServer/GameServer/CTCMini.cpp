@@ -265,7 +265,7 @@ void CCTCmini::MainProc() // OK
 		{
 			if (this->m_RemainTimeWinner == 40)
 			{
-				GCServerMsgStringSendToMap(MapCTC, 0, "[Công Thành chiến Mini] Chuẩn bị tiến hành trao thưởng!");
+				GCServerMsgStringSendToMap(MapCTC, 0, "[Mini Castle Siege] Preparando as recompensas!");
 			}
 
 
@@ -280,8 +280,8 @@ void CCTCmini::MainProc() // OK
 				else
 				{
 					LogAdd(LOG_EVENT, "[CTC Mini] Guild Winner: %s", lpGuildInfo->Name);
-					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Guild [%s] đã chiến thắng!", lpGuildInfo->Name);
-					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "Các thành viên tham gia sẽ được thưởng %d WC, %d WP, %d GP, %d Ruud", b_GuildWin.WCoin, b_GuildWin.WCoinP, b_GuildWin.GobinP, b_GuildWin.Ruud);
+					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Mini Castle Siege] A guilda [%s] venceu!", lpGuildInfo->Name);
+					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "Os participantes receberão %d WC, %d WP, %d GP e %d Ruud", b_GuildWin.WCoin, b_GuildWin.WCoinP, b_GuildWin.GobinP, b_GuildWin.Ruud);
 
 					for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
 					{
@@ -308,7 +308,7 @@ void CCTCmini::MainProc() // OK
 
 			if (this->m_RemainTimeWinner <= 0)
 			{
-				GCServerMsgStringSendToMap(MapCTC, 0, "[Công Thành chiến Mini] Đã kết thúc !");
+				GCServerMsgStringSendToMap(MapCTC, 0, "[Mini Castle Siege] Evento encerrado!");
 				LogAdd(LOG_EVENT, "[CTC Mini] Finish 1");
 				for (int n = 0; n < MAX_CTC_CHAR; n++)
 				{
@@ -325,7 +325,7 @@ void CCTCmini::MainProc() // OK
 		else
 		{
 			LogAdd(LOG_EVENT, "[CTC Mini] Finish 2");
-			GCServerMsgStringSendToMap(MapCTC, 0, "[Công Thành chiến Mini] Đã kết thúc không có Guild chiến thắng !");
+			GCServerMsgStringSendToMap(MapCTC, 0, "[Mini Castle Siege] Evento encerrado sem guilda vencedora!");
 			this->m_RemainTimeWinner = 0;
 			this->Clear();
 		}
@@ -355,19 +355,19 @@ void CCTCmini::ProcState_EMPTY() // OK
 		{
 			this->MinutesLeft = minutes;
 
-			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Bắt đầu sau %d phút !", (MinutesLeft + 1));
+			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Mini Castle Siege] Começa em %d minutos!", (MinutesLeft + 1));
 		}
 		if (this->m_Active == 0) { this->m_Active = 1; }
 	}
 
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= 5)
 	{
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Bắt đầu sau %d giây !", m_RemainTime);
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Mini Castle Siege] Começa em %d segundos!", m_RemainTime);
 	}
 
 	if (this->m_RemainTime <= 0)
 	{
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Sự kiện bắt đầu !"); //Bat Dau Su Kien
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Mini Castle Siege] O evento começou!"); //Bat Dau Su Kien
 
 		this->SetState(CTC_STATE_START);
 	}
@@ -384,13 +384,13 @@ void CCTCmini::ProcState_START() // OK
 		{
 			this->MinutesLeft = minutes;
 
-			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Sẽ kết thúc sau %d phút !", (MinutesLeft + 1));
+			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Mini Castle Siege] Termina em %d minutos!", (MinutesLeft + 1));
 		}
 	}
 
 	if (this->m_RemainTime <= 0)
 	{
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Đã kết thúc !");
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Mini Castle Siege] Evento encerrado!");
 		this->SetGuildTop(); //Set Guild Chien Thang
 		this->m_RemainTimeWinner = 40; //Thoi Gian dem nguoc trao thuong
 		this->m_Active = 0;
@@ -464,7 +464,7 @@ void CCTCmini::SetState_START() // OK
 
 	this->SendKillCTCMini(0, 0);
 
-	LogAdd(LOG_EVENT, "[CTC Mini] Bắt Đầu Event Công Thành Chiến Mini");
+	LogAdd(LOG_EVENT, "[Mini Castle Siege] O evento começou");
 
 }
 
@@ -510,7 +510,7 @@ void CCTCmini::CGPacketCTCMini(CTCMINI_CGPACKET* aRecv, int aIndex)
 	LPOBJ lpObj = &gObj[aIndex];
 
 	if ((GetTickCount() - lpObj->ClickClientSend) < 2000) {
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Bạn thao tác quá nhanh vui lòng chờ đợi !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Você está executando ações muito rápido. Aguarde!");
 		return;
 	}
 
@@ -518,26 +518,26 @@ void CCTCmini::CGPacketCTCMini(CTCMINI_CGPACKET* aRecv, int aIndex)
 
 	if (this->m_Active == 0 || this->m_Active == 2) //Verifica se o evento está em andamento
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Chưa đến thời gian sự kiện");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "O evento ainda não está disponível");
 		return;
 	}
 
 	if (lpGuildInfo == NULL)
 	{
 
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Không thấy thông tin Guild của bạn");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Mini Castle Siege] Não foi possível localizar sua guilda");
 		return;
 	}
 
 	if (lpObj->GuildNumber == 0) //Verifica se o personagem faz parte de uma guild
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Bạn chưa vào Guild nên không thể tham gia !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Mini Castle Siege] Você precisa estar em uma guilda para participar!");
 		return;
 	}
 
 	if (lpGuildInfo->TotalCount < this->GuildMinPlayer) //So Thanh Vien Toi Thieu Tham Gia
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Công Thành chiến Mini] Guild bạn không đủ người than gia !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Mini Castle Siege] Sua guilda não possui participantes suficientes!");
 		return;
 	}
 
@@ -761,7 +761,7 @@ void CCTCmini::AddChar(int cIndex, int CongVao) // OK
 		this->Char[n].Index = cIndex;
 		memcpy(this->Char[n].Name, gObj[cIndex].Name, sizeof(gObj[cIndex].Name));
 		this->Char[n].CongVao = CongVao;
-		LogAdd(LOG_RED, "Nhân Vật [%s] Vào Cổng [%d]", this->Char[n].Name, CongVao);
+		LogAdd(LOG_RED, "Personagem [%s] entrou pelo portão [%d]", this->Char[n].Name, CongVao);
 		return;
 	}
 }
@@ -1193,7 +1193,7 @@ int CCTCmini::SoTruDaChiem(int GuildNumber, int aIndex) // OK
 			if (Guild[n].Number == GuildNumber)
 			{
 				this->Guild[n].Owner = 1; //Set Guild Da Chime duoc 2 tru 
-				GCServerMsgStringSendToMap(MapCTC, 0, "[Công Thành chiến Mini] Guild %s đã chiếm đóng thành công 2 trụ!", this->Guild[n].GuildOwner);
+				GCServerMsgStringSendToMap(MapCTC, 0, "[Mini Castle Siege] A guilda %s conquistou as duas torres!", this->Guild[n].GuildOwner);
 			}
 			else
 			{
@@ -1228,9 +1228,9 @@ bool CCTCmini::MonsterDie(int aIndexMonster, int aIndexUser)
 				gObjDel(IndexTru[n]);
 				IndexTru[n] = -1;
 				this->ThemTruGuild(n, lpUser->GuildNumber); //Tao lai Tru theo Guild Number
-				GCServerMsgStringSendToMap(MapCTC, 0, "[Công Thành chiến Mini] Guild %s đã chiếm %d Trụ!", lpUser->GuildName, this->SoTruDaChiem(lpUser->GuildNumber, lpUser->Index));
+				GCServerMsgStringSendToMap(MapCTC, 0, "[Mini Castle Siege] A guilda %s conquistou %d torres!", lpUser->GuildName, this->SoTruDaChiem(lpUser->GuildNumber, lpUser->Index));
 
-				LogAdd(LOG_EVENT, "[CTC Mini] Bonus Phá Trụ %s", lpUser->Name);
+				LogAdd(LOG_EVENT, "[Mini Castle Siege] Bônus por destruir torre: %s", lpUser->Name);
 
 				//gCashShop.GDCashShopAddPointSaveSend(lpUser->Index,0, b_PhaTru.WCoin, b_PhaTru.WCoinP, b_PhaTru.GobinP , b_PhaTru.Ruud);
 				GDSetCoinSend(lpUser->Index, +(b_PhaTru.WCoin), +(b_PhaTru.WCoinP), +(b_PhaTru.GobinP), "CTC Mini");
@@ -1262,9 +1262,9 @@ bool CCTCmini::MonsterDie(int aIndexMonster, int aIndexUser)
 			{
 				gObjDel(IndexCong[n]);
 				this->XoaTruChiDinh(n);
-				GCServerMsgStringSendToMap(MapCTC, 0, "[Công Thành chiến Mini] Guild %s đã phá cổng %d!", lpUser->GuildName, n + 1);
+				GCServerMsgStringSendToMap(MapCTC, 0, "[Mini Castle Siege] A guilda %s destruiu o portão %d!", lpUser->GuildName, n + 1);
 
-				//LogAdd(LOG_EVENT, "[CTC Mini] Bonus Phá Cổng %s", lpUser->Name);
+				//LogAdd(LOG_EVENT, "[Mini Castle Siege] Bônus por destruir portão: %s", lpUser->Name);
 
 				//gCashShop.GDCashShopAddPointSaveSend(lpUser->Index,0, b_PhaCong.WCoin, b_PhaCong.WCoinP, b_PhaCong.GobinP , b_PhaCong.Ruud);
 
@@ -1356,7 +1356,7 @@ void CCTCmini::StartCTCMini()
 
 	this->m_CTCMinitartTime.push_back(info);
 
-	LogAdd(LOG_EVENT, "[CTC Mini] Bắt Đầu At %2d:%2d:00", hour, minute);
+	LogAdd(LOG_EVENT, "[Mini Castle Siege] Início às %2d:%2d:00", hour, minute);
 
 	this->Init();
 }

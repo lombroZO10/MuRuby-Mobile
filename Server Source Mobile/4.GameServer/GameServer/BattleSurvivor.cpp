@@ -304,15 +304,15 @@ void CBsVEvent::ProcState_EMPTY() // OK
 		{
 			this->AlarmMinLeft = this->AlarmMinSave;
 
-			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Loạn Chiến] sẽ đóng sau %d phút", (this->AlarmMinLeft + 1));
+			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Battle Royale] inscrições encerram em %d minutos", (this->AlarmMinLeft + 1));
 			//gNotice.GCNoticeSendToAll(0,0,0,0,0,0,gMessage.GetMessage(826));
 		}
 	}
 
 	if (this->m_RemainTime <= 0)
 	{
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Loạn Chiến] đã đóng!");
-		this->NoticeSendToAll(1, "[Loạn Chiến] bắt đầu sau %d phút", this->m_StandTime);
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Battle Royale] inscrições encerradas!");
+		this->NoticeSendToAll(1, "[Battle Royale] começa em %d minutos", this->m_StandTime);
 		this->SetState(BSV_EVENT_STATE_STAND);
 
 	}
@@ -324,7 +324,7 @@ void CBsVEvent::ProcState_STAND() // OK
 
 	if (this->GetUserCount() < gServerInfo.m_BsVEventMinUsers)
 	{
-		this->NoticeSendToAll(0, "[Loạn Chiến] đã kết thúc!");
+		this->NoticeSendToAll(0, "[Battle Royale] terminou!");
 		this->SetState(BSV_EVENT_STATE_EMPTY);
 		return;
 	}
@@ -334,12 +334,12 @@ void CBsVEvent::ProcState_STAND() // OK
 		if (this->TotalPlayer >= gServerInfo.m_BsVEventMinUsers)
 		{
 			this->DivisionTeam();
-			this->NoticeSendToAll(0, "[Loạn Chiến] đã bắt đầu!");
+			this->NoticeSendToAll(0, "[Battle Royale] começou!");
 			this->SetState(BSV_EVENT_STATE_START);
 		}
 		else
 		{
-			this->NoticeSendToAll(0, "[Loạn Chiến] đã kết thúc!");
+			this->NoticeSendToAll(0, "[Battle Royale] terminou!");
 			this->SetState(BSV_EVENT_STATE_EMPTY);
 		}
 	}
@@ -363,7 +363,7 @@ void CBsVEvent::ProcState_START() // OK
 
 	if (this->m_RemainTime <= 0)
 	{
-		this->NoticeSendToAll(0, "[Loạn Chiến] đã kết thúc!");
+		this->NoticeSendToAll(0, "[Battle Royale] terminou!");
 		this->SetState(BSV_EVENT_STATE_CLEAN);
 	}
 }
@@ -484,7 +484,7 @@ void CBsVEvent::SetState_CLEAN() // OK
 			//GDRankingBsVEventSaveSend(lpObj->Index, this->User[n].Kills, this->User[n].Deaths);
 			//===== danh hieu event=====
 			//lpObj->rDanhHieu += 18; // Thay Đổi ID danh hieu
-			////gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, " NHAN Danh Hieu Event", lpObj->Name);
+			////gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, " RECEBEU O TÍTULO DO EVENTO", lpObj->Name);
 			//gCustomRankUser.GCReqRankLevelUser(lpObj->Index, lpObj->Index);
 			//GDCharacterInfoSaveSend(lpObj->Index);
 			//gObjectManager.CharacterCalcAttribute(lpObj->Index);
@@ -538,7 +538,7 @@ bool CBsVEvent::Dialog(LPOBJ lpObj, LPOBJ lpNpc)
 		lpNpc->X == gServerInfo.m_BsVEventNPCX &&
 		lpNpc->Y == gServerInfo.m_BsVEventNPCY)
 	{
-		GCChatTargetSend(lpObj, lpNpc->Index, "Tham gia Loạn Chiến ");
+		GCChatTargetSend(lpObj, lpNpc->Index, "Participar do Battle Royale");
 		this->CheckEnterEnabled(lpObj);
 		return 1;
 	}
@@ -552,43 +552,43 @@ bool CBsVEvent::CheckEnterEnabled(LPOBJ lpObj)
 
 	if (OBJECT_RANGE(lpObj->PartyNumber) != 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Bạn không thể vào Loạn Chiến khi trong nhóm");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Você não pode entrar no Battle Royale enquanto estiver em um grupo");
 		return 0;
 	}
 
 	if (lpObj->Guild != 0 && lpObj->Guild->WarState == 1)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0,  "[Loạn Chiến ] Bạn không thể tham gia!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0,  "[Battle Royale] Você não pode participar!");
 		return 0;
 	}
 
 	if (OBJECT_RANGE(lpObj->DuelUser) != 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0,  "[Loạn Chiến ] Bạn không thể tham gia!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0,  "[Battle Royale] Você não pode participar!");
 		return 0;
 	}
 
 	if (lpObj->PShopOpen != 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0,  "[Loạn Chiến ] Bạn không thể tham gia!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0,  "[Battle Royale] Você não pode participar!");
 		return 0;
 	}
 
 	if (this->GetEnterEnabled() == 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Loạn Chiến] Không mở!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Battle Royale] O evento não está aberto!");
 		return 0;
 	}
 
 	if (this->CheckReqItems(lpObj) == 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Loạn Chiến] Bạn không có Item cần thiết để nhập!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Battle Royale] Você não possui o item necessário para entrar!");
 		return 0;
 	}
 
 	if (this->GetUserCount() >= gServerInfo.m_BsVEventMaxUsers)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0,  "[Loạn Chiến ] Bạn không thể tham gia!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0,  "[Battle Royale] Você não pode participar!");
 		return 0;
 	}
 
@@ -640,7 +640,7 @@ bool CBsVEvent::CheckReqItems(LPOBJ lpObj)
 
 	if (count < this->ReqItemCount)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Loạn Chiến] Bạn không có Item cần thiết để nhập!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Battle Royale] Você não possui o item necessário para entrar!");
 		return false;
 	}
 
@@ -1080,8 +1080,8 @@ void CBsVEvent::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	lpUserA->Deaths++;
 	lpUserB->Kills++;
 
-	gNotice.GCNoticeSend(lpUserA->Index, 1, 0, 0, 0, 0, 0, "Bạn đã chết [%d/%d lần]", lpUserA->Deaths, this->MaxDie);
-	gNotice.GCNoticeSend(lpUserB->Index, 1, 0, 0, 0, 0, 0, "Bạn đã giết được [%d] Kill", lpUserB->Kills);
+	gNotice.GCNoticeSend(lpUserA->Index, 1, 0, 0, 0, 0, 0, "Você morreu [%d/%d vezes]", lpUserA->Deaths, this->MaxDie);
+	gNotice.GCNoticeSend(lpUserB->Index, 1, 0, 0, 0, 0, 0, "Você realizou [%d] eliminações", lpUserB->Kills);
 
 
 
@@ -1109,7 +1109,7 @@ void CBsVEvent::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
 
 		if (this->User[i].Index)
 		{
-			gNotice.GCNoticeSend(this->User[i].Index, 0, 0, 0, 0, 0, 0, "[%s] Bị [%s] Giết đạt được [%d] Kill", lpObj->Name, lpTarget->Name, lpUserB->Kills);
+			gNotice.GCNoticeSend(this->User[i].Index, 0, 0, 0, 0, 0, 0, "[%s] foi derrotado por [%s], que alcançou [%d] eliminações", lpObj->Name, lpTarget->Name, lpUserB->Kills);
 		}
 	}
 	//item bag

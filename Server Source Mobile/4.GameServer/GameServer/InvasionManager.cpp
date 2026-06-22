@@ -287,7 +287,7 @@ void CInvasionManager::ProcState_EMPTY(INVASION_INFO* lpInfo) // OK
 		{
 			lpInfo->AlarmMinLeft = lpInfo->AlarmMinSave;
 
-			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[%s] Sẽ xuất hiện sau %d phút !!.", lpInfo->AlertMessage, (lpInfo->AlarmMinLeft + 1));
+			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[%s] aparecerá em %d minutos!", lpInfo->AlertMessage, (lpInfo->AlarmMinLeft + 1));
 
 		}
 	}

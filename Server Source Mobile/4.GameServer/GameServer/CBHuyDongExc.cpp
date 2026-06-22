@@ -129,7 +129,7 @@ void CBHuyDongExc::HuyExc_ClientSetItemGS(int aIndex, PMSG_HDCLIENTSENDGS* lpMsg
 	}
 	if (lpObj->Inventory[lpMsg->Source].m_NewOption < 1 || (lpObj->Inventory[lpMsg->Source].m_Index / 512) >= 12)
 	{
-		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 0, 0, 0, this->GetMessage(10));//"[CongHuong] Item khong phu hop !!");
+		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 0, 0, 0, this->GetMessage(10));//"[Transferência Excellent] Item incompatível!");
 		//LogAdd(LOG_RED,"[BotAlchemist](%s)(%s) Ancient Item Error",lpObj->Account,lpObj->Name);
 		return;
 	}

@@ -344,7 +344,7 @@ void CBossGuild::MainProc() // OK
 		{
 			if (this->m_RemainTimeWinner == 10)
 			{
-				gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Chuẩn bị tiến hành trao thưởng!");
+				gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] Preparando as recompensas!");
 			}
 
 			if (this->m_RemainTimeWinner == 5) //Trao thuong cho Guild
@@ -356,8 +356,8 @@ void CBossGuild::MainProc() // OK
 				}
 				else
 				{
-					LogAdd(LOG_EVENT, "[BossGuild] Guild chiến thắng: %s", lpGuildInfo->Name);
-					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Guild [%s] đã chiến thắng", lpGuildInfo->Name);
+					LogAdd(LOG_EVENT, "[Boss Guild] Guilda vencedora: %s", lpGuildInfo->Name);
+					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] A guilda [%s] venceu", lpGuildInfo->Name);
 					//===============================================
 					// Phần thưởng cống hiến cho guild
 					for (int n = 0; n < MAX_OBJECT; n++)
@@ -372,7 +372,7 @@ void CBossGuild::MainProc() // OK
 							}
 						}
 					}
-					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "Guild [%s] mỗi thành viên cống hiến %d điểm Guild", lpGuildInfo->Name, GuildWin.Score);
+					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "Cada membro da guilda [%s] contribuiu com %d pontos de guilda", lpGuildInfo->Name, GuildWin.Score);
 					//===============================================
 					// Phần thưởng cho mỗi thành viên
 					for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
@@ -381,7 +381,7 @@ void CBossGuild::MainProc() // OK
 						{
 							if (strcmp(gObj[n].GuildName, lpGuildInfo->Name) == 0)
 							{
-								LogAdd(LOG_EVENT, "[BossGuild] Phần thưởng thành viên Guild chiến thắng: %s", gObj[n].Name);
+								LogAdd(LOG_EVENT, "[Boss Guild] Recompensa dos membros da guilda vencedora: %s", gObj[n].Name);
 
 								GDSetCoinSend(gObj[n].Index, +(GuildWin.WCoin), +(GuildWin.WCoinP), +(GuildWin.GobinP), "BossGuild");
 								gCashShop.CGCashShopPointRecv(gObj[n].Index);
@@ -393,7 +393,7 @@ void CBossGuild::MainProc() // OK
 							}
 						}
 					}
-					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "Guild Chiến thắng, Mỗi thành viên tham gia sẽ nhận được [ %d WC, %d WP, %d GP ]", GuildWin.WCoin, GuildWin.WCoinP, GuildWin.GobinP);
+					gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "Guilda vencedora: cada participante receberá [%d WC, %d WP, %d GP]", GuildWin.WCoin, GuildWin.WCoinP, GuildWin.GobinP);
 					//===============================================
 					// Sét điểm Guild về 0
 					for (int n = 0; n < MAX_OBJECT; n++)
@@ -416,7 +416,7 @@ void CBossGuild::MainProc() // OK
 
 			if (this->m_RemainTimeWinner <= 0)
 			{
-				gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Đã kết thúc !");
+				gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] Evento encerrado!");
 				LogAdd(LOG_EVENT, "[BossGuild] Finish 1");
 				for (int n = 0; n < MAX_CHAR; n++)
 				{
@@ -442,7 +442,7 @@ void CBossGuild::MainProc() // OK
 		else
 		{
 			LogAdd(LOG_EVENT, "[BossGuild] Finish 2");
-			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Đã kết thúc không có Guild chiến thắng !");
+			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] Evento encerrado sem guilda vencedora!");
 			// set diem kill boss ve 0
 			for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
 			{
@@ -505,19 +505,19 @@ void CBossGuild::ProcState_EMPTY() // OK
 		{
 			this->MinutesLeft = minutes;
 
-			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Bắt đầu sau %d phút !", (MinutesLeft + 1));
+			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] Começa em %d minutos!", (MinutesLeft + 1));
 		}
 		if (this->m_Active == 0) { this->m_Active = 1; }
 	}
 
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= 5)
 	{
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Bắt đầu sau %d giây !", m_RemainTime);
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] Começa em %d segundos!", m_RemainTime);
 	}
 
 	if (this->m_RemainTime <= 0)
 	{
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Sự kiện bắt đầu !"); //Bat Dau Su Kien
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] O evento começou!"); //Bat Dau Su Kien
 
 		this->SetState(BOSSGUILD_STATE_START);
 	}
@@ -534,13 +534,13 @@ void CBossGuild::ProcState_START() // OK
 		{
 			this->MinutesLeft = minutes;
 
-			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Sẽ kết thúc sau %d phút !", (MinutesLeft + 1));
+			gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] Termina em %d minutos!", (MinutesLeft + 1));
 		}
 	}
 
 	if (this->m_RemainTime <= 0)
 	{
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Đã kết thúc !");
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] Evento encerrado!");
 
 		this->m_RemainTimeWinner = 40; //Thoi Gian dem nguoc trao thuong
 
@@ -650,7 +650,7 @@ void CBossGuild::CGPacketBossGuild(BOSSGUILD_CGPACKET * aRecv, int aIndex)
 	LPOBJ lpObj = &gObj[aIndex];
 
 	if ((GetTickCount() - lpObj->ClickClientSend) < 2000) {
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Ban dang thao tac qua nhanh vui long cho doi !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Você está executando ações muito rápido. Aguarde!");
 		return;
 	}
 
@@ -658,26 +658,26 @@ void CBossGuild::CGPacketBossGuild(BOSSGUILD_CGPACKET * aRecv, int aIndex)
 
 	if (this->m_Active == 0 || this->m_Active == 2) //Verifica se o evento está em andamento
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Chưa đến thời gian sự kiện");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "O evento ainda não está disponível");
 		return;
 	}
 
 	if (lpGuildInfo == NULL)
 	{
 
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[BossGuild] Không thấy thông tin Guild của bạn");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Boss Guild] Não foi possível localizar sua guilda");
 		return;
 	}
 
 	if (lpObj->GuildNumber == 0) //Verifica se o personagem faz parte de uma guild
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[BossGuild] Bạn chưa vào Guild nên không thể tham gia !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Boss Guild] Você precisa estar em uma guilda para participar!");
 		return;
 	}
 
 	if (lpGuildInfo->TotalCount < this->GuildMinPlayer) //So Thanh Vien Toi Thieu Tham Gia
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[BossGuild] Guild bạn không đủ người than gia !");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[Boss Guild] Sua guilda não possui participantes suficientes!");
 		return;
 	}
 	int CongVao = aRecv->CongVao;
@@ -824,7 +824,7 @@ void CBossGuild::AddChar(int cIndex, int CongVao) // OK
 		this->Char[n].Index = cIndex;
 		memcpy(this->Char[n].Name, gObj[cIndex].Name, sizeof(gObj[cIndex].Name));
 		this->Char[n].CongVao = CongVao;
-		LogAdd(LOG_RED, "Add Nhan Vat %s Cong %d", this->Char[n].Name, CongVao);
+		LogAdd(LOG_RED, "Adicionar ao personagem %s: %d", this->Char[n].Name, CongVao);
 		return;
 	}
 }
@@ -938,7 +938,7 @@ bool CBossGuild::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x
 
 void CBossGuild::StartBossPhuThuy() // OK
 {
-	LogAdd(LOG_RED, "[BossGuild] Start Boss Pháp Sư");
+	LogAdd(LOG_RED, "[Boss Guild] Iniciar boss Soul Master");
 	int qtd = 1;
 	qtd = (qtd > 0) ? qtd : 1;
 	for (int n = 0; n < qtd; n++)
@@ -980,7 +980,7 @@ void CBossGuild::StartBossPhuThuy() // OK
 
 void CBossGuild::StartBossChienBinh() // OK
 {
-	LogAdd(LOG_RED, "[BossGuild] Start Boss Chiến Binh");
+	LogAdd(LOG_RED, "[Boss Guild] Iniciar boss Blade Knight");
 	int qtd = 1;
 	qtd = (qtd > 0) ? qtd : 1;
 	for (int n = 0; n < qtd; n++)
@@ -1022,7 +1022,7 @@ void CBossGuild::StartBossChienBinh() // OK
 
 void CBossGuild::StartBossTienNu() // OK
 {
-	LogAdd(LOG_RED, "[BossGuild] Start Boss Tiên Nữ");
+	LogAdd(LOG_RED, "[Boss Guild] Iniciar boss Muse Elf");
 	int qtd = 1;
 	qtd = (qtd > 0) ? qtd : 1;
 	for (int n = 0; n < qtd; n++)
@@ -1064,7 +1064,7 @@ void CBossGuild::StartBossTienNu() // OK
 
 void CBossGuild::StartBossThuatSi() // OK
 {
-	LogAdd(LOG_RED, "[BossGuild] Start Boss Thuật Sĩ");
+	LogAdd(LOG_RED, "[Boss Guild] Iniciar boss Summoner");
 	int qtd = 1;
 	qtd = (qtd > 0) ? qtd : 1;
 	for (int n = 0; n < qtd; n++)
@@ -1106,7 +1106,7 @@ void CBossGuild::StartBossThuatSi() // OK
 
 void CBossGuild::StartBossThietBinh() // OK
 {
-	LogAdd(LOG_RED, "[BossGuild] Start Boss Thiết Binh");
+	LogAdd(LOG_RED, "[Boss Guild] Iniciar boss Rage Fighter");
 	int qtd = 1;
 	qtd = (qtd > 0) ? qtd : 1;
 	//----------------------------------
@@ -1149,7 +1149,7 @@ void CBossGuild::StartBossThietBinh() // OK
 
 void CBossGuild::StartBossDauSi() // OK
 {
-	LogAdd(LOG_RED, "[BossGuild] Start Boss Đấu Sĩ ");
+	LogAdd(LOG_RED, "[Boss Guild] Iniciar boss Magic Gladiator");
 	int qtd = 1;
 	qtd = (qtd > 0) ? qtd : 1;
 	for (int n = 0; n < qtd; n++)
@@ -1191,7 +1191,7 @@ void CBossGuild::StartBossDauSi() // OK
 
 void CBossGuild::StartBossChuaTe() // OK
 {
-	LogAdd(LOG_RED, "[BossGuild] Start Boss Chúa Tể");
+	LogAdd(LOG_RED, "[Boss Guild] Iniciar boss Dark Lord");
 	int qtd = 1;
 	qtd = (qtd > 0) ? qtd : 1;
 	for (int n = 0; n < qtd; n++)
@@ -1311,7 +1311,7 @@ bool CBossGuild::MonsterDie(int aIndexMonster, int aIndexUser)
 			DGGuildScoreUpdate1(lpUser->Guild->Name, lpUser->Guild->TotalScore1);
 		}
 
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Guild %s đã tiêu diệt Boss Phù Thủy", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] A guilda %s derrotou o boss Dark Wizard", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
 
 		GDSetCoinSend(lpUser->Index, +(BossPhuThuy.WCoin), +(BossPhuThuy.WCoinP), +(BossPhuThuy.GobinP), "BossPhuThuy");
 		gCashShop.CGCashShopPointRecv(lpUser->Index);
@@ -1336,7 +1336,7 @@ bool CBossGuild::MonsterDie(int aIndexMonster, int aIndexUser)
 			DGGuildScoreUpdate1(lpUser->Guild->Name, lpUser->Guild->TotalScore1);
 		}
 
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Guild %s đã tiêu diệt Boss Chiến Binh", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] A guilda %s derrotou o boss Dark Knight", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
 
 		GDSetCoinSend(lpUser->Index, +(BossChienBinh.WCoin), +(BossChienBinh.WCoinP), +(BossChienBinh.GobinP), "BossChienBinh");
 		gCashShop.CGCashShopPointRecv(lpUser->Index);
@@ -1361,7 +1361,7 @@ bool CBossGuild::MonsterDie(int aIndexMonster, int aIndexUser)
 			DGGuildScoreUpdate1(lpUser->Guild->Name, lpUser->Guild->TotalScore1);
 		}
 
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Guild %s đã tiêu diệt Boss Tiên Nữ", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] A guilda %s derrotou o boss Fairy Elf", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
 
 		GDSetCoinSend(lpUser->Index, +(BossTienNu.WCoin), +(BossTienNu.WCoinP), +(BossTienNu.GobinP), "BossTienNu");
 		gCashShop.CGCashShopPointRecv(lpUser->Index);
@@ -1385,7 +1385,7 @@ bool CBossGuild::MonsterDie(int aIndexMonster, int aIndexUser)
 			DGGuildScoreUpdate1(lpUser->Guild->Name, lpUser->Guild->TotalScore1);
 		}
 
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Guild %s đã tiêu diệt Boss Thuật Sĩ", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] A guilda %s derrotou o boss Summoner", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
 
 		GDSetCoinSend(lpUser->Index, +(BossThuatSi.WCoin), +(BossThuatSi.WCoinP), +(BossThuatSi.GobinP), "BossThuatSi");
 		gCashShop.CGCashShopPointRecv(lpUser->Index);
@@ -1411,7 +1411,7 @@ bool CBossGuild::MonsterDie(int aIndexMonster, int aIndexUser)
 			DGGuildScoreUpdate1(lpUser->Guild->Name, lpUser->Guild->TotalScore1);
 		}
 
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Guild %s đã tiêu diệt Boss Thiết Binh", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] A guilda %s derrotou o boss Rage Fighter", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
 
 		GDSetCoinSend(lpUser->Index, +(BossThietBinh.WCoin), +(BossThietBinh.WCoinP), +(BossThietBinh.GobinP), "BossThietBinh");
 		gCashShop.CGCashShopPointRecv(lpUser->Index);
@@ -1437,7 +1437,7 @@ bool CBossGuild::MonsterDie(int aIndexMonster, int aIndexUser)
 			DGGuildScoreUpdate1(lpUser->Guild->Name, lpUser->Guild->TotalScore1);
 		}
 
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Guild %s đã tiêu diệt Boss Đấu Sĩ", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] A guilda %s derrotou o boss Magic Gladiator", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
 
 		GDSetCoinSend(lpUser->Index, +(BossDauSi.WCoin), +(BossDauSi.WCoinP), +(BossDauSi.GobinP), "BossDauSi");
 		gCashShop.CGCashShopPointRecv(lpUser->Index);
@@ -1463,7 +1463,7 @@ bool CBossGuild::MonsterDie(int aIndexMonster, int aIndexUser)
 			DGGuildScoreUpdate1(lpUser->Guild->Name, lpUser->Guild->TotalScore1);
 		}
 
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[BossGuild] Guild %s đã tiêu diệt Boss Chúa Tể", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[Boss Guild] A guilda %s derrotou o boss Dark Lord", lpUser->GuildName, (lpUser->GuildNumber, lpUser->Index));
 
 		GDSetCoinSend(lpUser->Index, +(BossChuaTe.WCoin), +(BossChuaTe.WCoinP), +(BossChuaTe.GobinP), "BossChuaTe");
 		gCashShop.CGCashShopPointRecv(lpUser->Index);

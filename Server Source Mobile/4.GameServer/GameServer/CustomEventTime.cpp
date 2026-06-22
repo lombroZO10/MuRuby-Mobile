@@ -92,7 +92,7 @@ void CCustomEventTime::GCReqEventTime(int Index, PMSG_CUSTOM_EVENTTIME_RECV* lpM
 	}
 	if (!this->m_Enable)
 	{
-		gNotice.GCNoticeSend(Index, eMessageBox, 0, 0, 0, 0, 0, "Chuc nang khong duoc su dung");//
+		gNotice.GCNoticeSend(Index, eMessageBox, 0, 0, 0, 0, 0, "Esta função não está disponível");//
 		return;
 	}
 	int GetPage = lpMsg->Page;

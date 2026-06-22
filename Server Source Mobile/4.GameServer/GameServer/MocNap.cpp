@@ -187,7 +187,7 @@ void gBMocNap::UserSendClientInfo(int aIndex) //Send Danh Sach Moc Nap Ve Client
 	memcpy(send, &pMsg, sizeof(pMsg));
 
 	DataSend(aIndex, send, size);
-	//LogAdd(LOG_RED, "SendINfo List Moc Nap %s", gObj[aIndex].Name);
+	//LogAdd(LOG_RED, "Enviar lista de metas de recarga para %s", gObj[aIndex].Name);
 }
 
 void CBMONAP_ItemByteConvert(BYTE* lpMsg, DATA_CBITEMMOCNAP* Data) // OK
@@ -311,7 +311,7 @@ void gBMocNap::SendListNhanThuong(int aIndex, int MocNap) //Send List SendListNh
 	memcpy(send, &pMsg, sizeof(pMsg));
 
 	DataSend(aIndex, send, size);
-	LogAdd(LOG_RED, "Send List Phan Thuong Moc Nap %s", gObj[aIndex].Name);
+	LogAdd(LOG_RED, "Enviar recompensas das metas de recarga para %s", gObj[aIndex].Name);
 }
 void gBMocNap::NhanThuongMocNap(int aIndex, int MocNap)
 {
@@ -440,13 +440,13 @@ void gBMocNap::NhanThuongMocNap(int aIndex, int MocNap)
 					if (it->second.ListItemNhan[n].HSD > 0)
 					{
 						GDCreateItemSend(lpObj->Index, 0xEB, (BYTE)lpObj->X, (BYTE)lpObj->Y, it->second.ListItemNhan[n].IndexItem, it->second.ListItemNhan[n].LvItem, it->second.ListItemNhan[n].Dur, it->second.ListItemNhan[n].Skill, it->second.ListItemNhan[n].Luck, it->second.ListItemNhan[n].Opt, -1, it->second.ListItemNhan[n].Exc, it->second.ListItemNhan[n].Anc, 0, 0, ItemSocketOption, it->second.ListItemNhan[n].SKBonus, iTime);
-						gLog.Output(LOG_MocNap, "%s - %s: nhận mốc:%d có giá trị là %s", lpObj->Account, lpObj->Name, it->second.IndexMocNap, NumberFormat(it->second.GiaTriNap));
+						gLog.Output(LOG_MocNap, "%s - %s: recebeu a meta %d no valor de %s", lpObj->Account, lpObj->Name, it->second.IndexMocNap, NumberFormat(it->second.GiaTriNap));
 
 					}
 					else
 					{
 						GDCreateItemSend(lpObj->Index, 0xEB, (BYTE)lpObj->X, (BYTE)lpObj->Y, it->second.ListItemNhan[n].IndexItem, it->second.ListItemNhan[n].LvItem, it->second.ListItemNhan[n].Dur, it->second.ListItemNhan[n].Skill, it->second.ListItemNhan[n].Luck, it->second.ListItemNhan[n].Opt, -1, it->second.ListItemNhan[n].Exc, it->second.ListItemNhan[n].Anc, 0, 0, ItemSocketOption, it->second.ListItemNhan[n].SKBonus, 0);
-						gLog.Output(LOG_MocNap, "%s - %s: nhận mốc: %d có giá trị là %s - %s+%d Dur:%d Skill:%d Luck:%d Opt:%d Exc:%d Anc:%d",
+						gLog.Output(LOG_MocNap, "%s - %s: recebeu a meta %d no valor de %s - %s+%d Dur:%d Habilidade:%d Sorte:%d Opt:%d Exc:%d Anc:%d",
 							lpObj->Account,
 							lpObj->Name,
 							it->second.IndexMocNap,

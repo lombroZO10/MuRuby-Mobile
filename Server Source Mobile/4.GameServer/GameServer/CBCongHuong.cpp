@@ -219,7 +219,7 @@ void CBCongHuong::CH_ClearDB(int aIndex, int TypeClear, bool RollBackItem)
 	{
 		if (gObj[aIndex].CH_IndexItem[1] != -1)
 		{
-			gNotice.GCNoticeSend(aIndex, 0, 0, 0, 0, 0, 0, this->GetMessage(3));// "[CongHuong] Ban can lay phoi ra truoc !");
+			gNotice.GCNoticeSend(aIndex, 0, 0, 0, 0, 0, 0, this->GetMessage(3));// "[Transferência Excellent] Retire primeiro o item material!");
 			return;
 		}
 		if (RollBackItem)
@@ -319,30 +319,30 @@ void CBCongHuong::CH_ClientSetItemGS(int aIndex, PMSG_MOVEITEM* lpMsg)
 	}
 	if (lpObj->Inventory[lpMsg->Source].m_NewOption == 63 && this->CHLevel == 0)
 	{
-		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, "[Cộng Hưởng] Không Thể Dùng Item Full Excellent Để Cộng Hưởng !");
+		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, "[Transferência Excellent] Não é possível usar um item com todas as opções Excellent!");
 		return;
 	}
 	if (lpObj->Inventory[lpMsg->Source].m_NewOption < 1 || (lpObj->Inventory[lpMsg->Source].m_Index / 512) >= 12)
 	{
-		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, "[Cộng Hưởng] Item Chính của bạn Không Phải Là Excellent !");//"[CongHuong] Item khong phu hop !!");
+		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, "[Transferência Excellent] O item principal não é Excellent!");//"[Transferência Excellent] Item incompatível!");
 		return;
 	}
 
 	if (this->CHAllowAnc == 0 && lpObj->Inventory[lpMsg->Source].m_SetOption > 0)
 	{
-		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, "[Cộng Hưởng] Admin Không Cho Cộng Hưởng Đồ Thần !");//"[CongHuong] Item khong phu hop !!");
+		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, "[Transferência Excellent] Itens Ancient não são permitidos!");//"[Transferência Excellent] Item incompatível!");
 		return;
 	}
 	//if (lpObj->Inventory[lpMsg->Source].m_NewOption < 1 || (lpObj->Inventory[lpMsg->Source].m_Index / 512) >= 12)
 	//{
-	//	gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(4));//"[CongHuong] Item khong phu hop !!");
+	//	gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(4));//"[Transferência Excellent] Item incompatível!");
 	//	//LogAdd(LOG_RED,"[BotAlchemist](%s)(%s) Ancient Item Error",lpObj->Account,lpObj->Name);
 	//	return;
 	//}
 
 	//if (this->CHAllowAnc == 0 && lpObj->Inventory[lpMsg->Source].m_SetOption > 0)
 	//{
-	//	gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(4));//"[CongHuong] Item khong phu hop !!");
+	//	gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(4));//"[Transferência Excellent] Item incompatível!");
 	//	//LogAdd(LOG_RED,"[BotAlchemist](%s)(%s) Ancient Item Error",lpObj->Account,lpObj->Name);
 	//	return;
 	//}
@@ -352,7 +352,7 @@ void CBCongHuong::CH_ClientSetItemGS(int aIndex, PMSG_MOVEITEM* lpMsg)
 	{
 		if (this->CHCheckItemCH(lpObj->Inventory[lpMsg->Source]) == false)
 		{
-			gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(9));//"[CongHuong] Item cua ban dat muc toi da !!");
+			gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(9));//"[Transferência Excellent] O item já atingiu o limite máximo!");
 			return;
 		}
 		lpObj->CH_IndexItem[0] = lpObj->Inventory[lpMsg->Source].m_Index;
@@ -372,7 +372,7 @@ void CBCongHuong::CH_ClientSetItemGS(int aIndex, PMSG_MOVEITEM* lpMsg)
 
 			if ((sLevel < fLevel && this->CHCheckPhoiType == 1) || (lpObj->CH_InfoItem[0].m_Index != lpObj->Inventory[lpMsg->Source].m_Index && this->CHCheckPhoiType == 2))
 			{
-				gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(5));//"[CongHuong] vui long dung phoi co trong danh sach !");
+				gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(5));//"[Transferência Excellent] Use um material permitido pela configuração!");
 				return;
 			}
 
@@ -380,7 +380,7 @@ void CBCongHuong::CH_ClientSetItemGS(int aIndex, PMSG_MOVEITEM* lpMsg)
 
 		if ((lpObj->CH_InfoItem[0].m_Index / 512) != (lpObj->Inventory[lpMsg->Source].m_Index / 512))
 		{
-			gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(4));//"[CongHuong] Item khong phu hop !!");
+			gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(4));//"[Transferência Excellent] Item incompatível!");
 			return;
 
 		}
@@ -574,7 +574,7 @@ void CBCongHuong::CH_MixItemGS(int aIndex, XULY_CGPACKET* lpMsg)
 
 	if (lpObj->CH_IndexItem[2] == -1)
 	{
-		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(6));//"[CongHuong] Vui long bo them phoi item vao");
+		gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(6));//"[Transferência Excellent] Adicione o item material!");
 		CBCongHuong::CH_ClearDB(aIndex, 0);
 		CBCongHuong::CH_GSSendInfoClient(aIndex);
 		return;
@@ -627,8 +627,8 @@ void CBCongHuong::CH_MixItemGS(int aIndex, XULY_CGPACKET* lpMsg)
 				gItemManager.GCItemModifySend(aIndex, SlotRecvPhoi);
 			}
 		}
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s Cộng hưởng thành công %s", lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[0].m_Index));
-		//gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(7));// "[CongHuong] Ban vua Cong Huong thanh cong !");
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s transferiu opções Excellent com sucesso para %s", lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[0].m_Index));
+		//gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(7));// "[Transferência Excellent] Transferência concluída com sucesso!");
 		gLog.Output(LOG_CONG_HUONG, "[CongHuong][ThanhCong][%s][%s] ItemChinh: Item: %s+%01d, Index %d,Seri %08X, Skil %01d ,Luck %01d, Option %01d , OptionEx %03d, JOH: %03d, Set %03d, SocketOption:%03d, %03d, %03d, %03d, %03d", lpObj->Account, lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[0].m_Index), gObj[aIndex].CH_InfoItem[0].m_Level, gObj[aIndex].CH_InfoItem[0].m_Index, gObj[aIndex].CH_InfoItem[0].m_Serial, gObj[aIndex].CH_InfoItem[0].m_Option1, gObj[aIndex].CH_InfoItem[0].m_Option2, gObj[aIndex].CH_InfoItem[0].m_Option3, gObj[aIndex].CH_InfoItem[0].m_NewOption, gObj[aIndex].CH_InfoItem[0].m_JewelOfHarmonyOption, gObj[aIndex].CH_InfoItem[0].m_SetOption, gObj[aIndex].CH_InfoItem[0].m_SocketOption[0], gObj[aIndex].CH_InfoItem[0].m_SocketOption[1], gObj[aIndex].CH_InfoItem[0].m_SocketOption[2], gObj[aIndex].CH_InfoItem[0].m_SocketOption[3], gObj[aIndex].CH_InfoItem[0].m_SocketOption[4]);
 		gLog.Output(LOG_CONG_HUONG, "[CongHuong][ThanhCong][%s][%s] Item_Phoi: Item: %s+%01d, Index %d,Seri %08X, Skil %01d ,Luck %01d, Option %01d , OptionEx %03d, JOH: %03d, Set %03d, SocketOption:%03d, %03d, %03d, %03d, %03d", lpObj->Account, lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[1].m_Index), gObj[aIndex].CH_InfoItem[1].m_Level, gObj[aIndex].CH_InfoItem[1].m_Index, gObj[aIndex].CH_InfoItem[1].m_Serial, gObj[aIndex].CH_InfoItem[1].m_Option1, gObj[aIndex].CH_InfoItem[1].m_Option2, gObj[aIndex].CH_InfoItem[1].m_Option3, gObj[aIndex].CH_InfoItem[1].m_NewOption, gObj[aIndex].CH_InfoItem[1].m_JewelOfHarmonyOption, gObj[aIndex].CH_InfoItem[1].m_SetOption, gObj[aIndex].CH_InfoItem[1].m_SocketOption[0], gObj[aIndex].CH_InfoItem[1].m_SocketOption[1], gObj[aIndex].CH_InfoItem[1].m_SocketOption[2], gObj[aIndex].CH_InfoItem[1].m_SocketOption[3], gObj[aIndex].CH_InfoItem[1].m_SocketOption[4]);
 		gLog.Output(LOG_CONG_HUONG, "[CongHuong][ThanhCong][%s][%s] Item_Nhan: Item: %s+%01d, Index %d,Seri %08X, Skil %01d ,Luck %01d, Option %01d , OptionEx %03d, JOH: %03d, Set %03d, SocketOption:%03d, %03d, %03d, %03d, %03d", lpObj->Account, lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[2].m_Index), gObj[aIndex].CH_InfoItem[2].m_Level, gObj[aIndex].CH_InfoItem[2].m_Index, gObj[aIndex].CH_InfoItem[2].m_Serial, gObj[aIndex].CH_InfoItem[2].m_Option1, gObj[aIndex].CH_InfoItem[2].m_Option2, gObj[aIndex].CH_InfoItem[2].m_Option3, gObj[aIndex].CH_InfoItem[2].m_NewOption, gObj[aIndex].CH_InfoItem[2].m_JewelOfHarmonyOption, gObj[aIndex].CH_InfoItem[2].m_SetOption, gObj[aIndex].CH_InfoItem[2].m_SocketOption[0], gObj[aIndex].CH_InfoItem[2].m_SocketOption[1], gObj[aIndex].CH_InfoItem[2].m_SocketOption[2], gObj[aIndex].CH_InfoItem[2].m_SocketOption[3], gObj[aIndex].CH_InfoItem[2].m_SocketOption[4]);
@@ -652,8 +652,8 @@ void CBCongHuong::CH_MixItemGS(int aIndex, XULY_CGPACKET* lpMsg)
 				gItemManager.GCItemModifySend(aIndex, SlotRecvPhoi);
 			}
 		}
-		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s Cộng Hưởng Thất Bại: %s !", lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[0].m_Index));//"[Cộng Hưởng] %s Cộng Hưởng Thành Công !",lpObj->Name);
-		//gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(8));//"[CongHuong] Rat tiec, ban da that bai");
+		gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "%s falhou ao transferir opções Excellent para %s!", lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[0].m_Index));//"[Transferência Excellent] %s concluiu a transferência com sucesso!",lpObj->Name);
+		//gNotice.GCNoticeSend(aIndex, 0, 0, 0, 10, 0, 0, this->GetMessage(8));//"[Transferência Excellent] A combinação falhou!");
 		gLog.Output(LOG_CONG_HUONG, "[CongHuong][ThatBai][%s][%s] ItemChinh: Item: %s+%01d, Index %d,Seri %08X, Skil %01d ,Luck %01d, Option %01d , OptionEx %03d, JOH: %03d, Set %03d, SocketOption:%03d, %03d, %03d, %03d, %03d", lpObj->Account, lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[0].m_Index), gObj[aIndex].CH_InfoItem[0].m_Level, gObj[aIndex].CH_InfoItem[0].m_Index, gObj[aIndex].CH_InfoItem[0].m_Serial, gObj[aIndex].CH_InfoItem[0].m_Option1, gObj[aIndex].CH_InfoItem[0].m_Option2, gObj[aIndex].CH_InfoItem[0].m_Option3, gObj[aIndex].CH_InfoItem[0].m_NewOption, gObj[aIndex].CH_InfoItem[0].m_JewelOfHarmonyOption, gObj[aIndex].CH_InfoItem[0].m_SetOption, gObj[aIndex].CH_InfoItem[0].m_SocketOption[0], gObj[aIndex].CH_InfoItem[0].m_SocketOption[1], gObj[aIndex].CH_InfoItem[0].m_SocketOption[2], gObj[aIndex].CH_InfoItem[0].m_SocketOption[3], gObj[aIndex].CH_InfoItem[0].m_SocketOption[4]);
 		gLog.Output(LOG_CONG_HUONG, "[CongHuong][ThatBai][%s][%s] Item_Phoi: Item: %s+%01d, Index %d,Seri %08X, Skil %01d ,Luck %01d, Option %01d , OptionEx %03d, JOH: %03d, Set %03d, SocketOption:%03d, %03d, %03d, %03d, %03d", lpObj->Account, lpObj->Name, gItemManager.GetItemName(gObj[aIndex].CH_InfoItem[1].m_Index), gObj[aIndex].CH_InfoItem[1].m_Level, gObj[aIndex].CH_InfoItem[1].m_Index, gObj[aIndex].CH_InfoItem[1].m_Serial, gObj[aIndex].CH_InfoItem[1].m_Option1, gObj[aIndex].CH_InfoItem[1].m_Option2, gObj[aIndex].CH_InfoItem[1].m_Option3, gObj[aIndex].CH_InfoItem[1].m_NewOption, gObj[aIndex].CH_InfoItem[1].m_JewelOfHarmonyOption, gObj[aIndex].CH_InfoItem[1].m_SetOption, gObj[aIndex].CH_InfoItem[1].m_SocketOption[0], gObj[aIndex].CH_InfoItem[1].m_SocketOption[1], gObj[aIndex].CH_InfoItem[1].m_SocketOption[2], gObj[aIndex].CH_InfoItem[1].m_SocketOption[3], gObj[aIndex].CH_InfoItem[1].m_SocketOption[4]);
 		gLog.Output(LOG_CONG_HUONG, "[CongHuong][ThatBai][%s][%s] Ty Le: %d\n==", lpObj->Account, lpObj->Name, this->CH_TyLeThanhCong);

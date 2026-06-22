@@ -121,55 +121,55 @@ end
 1	// Messenger Invasion
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-0         		189              	190                 *         			*           		1800					3			"Thanh Long Tái Thế"
+0         		189              	190                 *         			*           		1800					3			"Dragão Azul"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-1         		190              	192                	*          		   	*           		1800					3			"Triệu Long Võ Tôn"
+1         		190              	192                	*          		   	*           		1800					3			"Zhao Zilong"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-2        		193               	924                	*          			*          			1800					3			"Boss Vàng"
+2        		193               	924                	*          			*          			1800					3			"Invasão Dourada"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-3          		200              	201                 *          		   	*        	  		1800					3			"Ma Thần"
+3          		200              	201                 *          		   	*        	  		1800					3			"Medusa"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-4         		212             	213                	*          			*           		1800					3			"Tử Thần Xương Sọ"
+4         		212             	213                	*          			*           		1800					3			"Rei Esqueleto"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-5         		220              	221                	*          			*           		480						3			"Thỏ Ngọc"
+5         		220              	221                	*          			*           		480						3			"Coelho Lunar"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-6         		216              	217                	*          			*           		1800					3			"Kỵ Sỹ Hắc Ám"
+6         		216              	217                	*          			*           		1800					3			"Cavaleiro Negro"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-7         		187              	188                	*          			*           		900						3			"Quỷ Vương"
+7         		187              	188                	*          			*           		900						3			"Rei Demônio"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-8         		218              	219                	*          			*           		1800					3			"KunDun" 
+8         		218              	219                	*          			*           		1800					3			"Kundun"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-9         		222              	223                	*          			*           		1800					3			"Siêu Boss" 
+9         		222              	223                	*          			*           		1800					3			"Super Boss"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-10         		194             	925                	*          			*           		1800					3			"Boss Nhện" 
+10         		194             	925                	*          			*           		1800					3			"Boss Aranha"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-11         		195              	926                	*          			*           		1800					3			"Kiếm Vương" 
+11         		195              	926                	*          			*           		1800					3			"Mestre da Espada"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-12         		196              	927                	*          			*           		1800					3			"Ma Sói" 
+12         		196              	927                	*          			*           		1800					3			"Rei Lobo"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-13         		214              	215                	*          			*           		1800					3			"Rồng Đỏ" 
+13         		214              	215                	*          			*           		1800					3			"Dragão Vermelho"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-14         		199              	928                	*          			*           		1800					3			"Chiến Thần" 
+14         		199              	928                	*          			*           		1800					3			"Deus da Guerra"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-15         		929              	930                	*          			*           		1800					3			"Đế Quân"
+15         		929              	930                	*          			*           		1800					3			"Imperador"
 //=================================================================================================================================================>
 //Index	  Sự Kiện Bắt Đầu	 Thống Báo Hết Time      Boss Index		  Thông Báo Giết Boss	 Thời Gian Biến Mất 	 AlarmTime 		Event Name
-16         		931              	932                	*          			*           		1800					3			"Lord Of Darkness" 
+16         		931              	932                	*          			*           		1800					3			"Lorde das Trevas"
 end                                                                                                         
 
 2 // Map Invasion

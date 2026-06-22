@@ -224,7 +224,7 @@ void CB_NewQuest::RecvProtocol(int aIndex,BYTE* Recv)
 		}
 
 		this->SendInfoNQuest(lpObj->Index, lpObj->NQuest_LV + 1);
-		gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Chúc mừng bạn đã nhận thưởng Nhiệm Vụ, hãy cố gắng nhé !");
+		gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Parabéns! Você recebeu a recompensa da missão.");
 
 	}
 	else if (lpObj->NQuest_Status == eNone)
@@ -235,18 +235,18 @@ void CB_NewQuest::RecvProtocol(int aIndex,BYTE* Recv)
 
 		if (it == this->m_DataNQuestReq.end())
 		{
-			LogAdd(LOG_RED, "Khong co du lieu LevelQuest %d", LevelQuest);
+			LogAdd(LOG_RED, "Não existem dados para a missão de nível %d", LevelQuest);
 			return;
 		}
 		lpObj->NQuest_LV = LevelQuest;
 		lpObj->NQuest_Status = 1;
 
 		this->SendInfoNQuest(lpObj->Index, LevelQuest, TRUE);
-		LogAdd(LOG_RED, "%s Nhan NV LevelQuest %d", lpObj->Name, LevelQuest);
+		LogAdd(LOG_RED, "%s recebeu a missão de nível %d", lpObj->Name, LevelQuest);
 	}
 	else
 	{
-		gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Vui lòng hoàn thành yêu cầu của Nhiệm Vụ !!");
+		gNotice.GCNoticeSend(lpObj->Index, eMessageBox, 0, 0, 0, 0, 0, "Conclua os requisitos da missão!");
 	}
 
 	if (lpObj->NQuest_Status != eNone) this->SendInfoMonterProc(aIndex);
@@ -304,7 +304,7 @@ void CB_NewQuest::MonsterDieProc(LPOBJ Monter, LPOBJ lpObj) // OK
 
 	if (it == this->m_DataNQuestReq.end())
 	{
-		//LogAdd(LOG_RED, "Khong co du lieu LevelQuest %d", lpObj->NQuest_LV);
+		//LogAdd(LOG_RED, "Não existem dados para a missão de nível %d", lpObj->NQuest_LV);
 		return;
 	}
 	//LogAdd(LOG_RED, "MonsterDieProc NQuest %d (%d)", Monter->Class, Monter->Map);
@@ -373,7 +373,7 @@ void CB_NewQuest::SendInfoMonterProc(int aIndex)
 
 	if (it == this->m_DataNQuestReq.end())
 	{
-		LogAdd(LOG_RED, "Khong co du lieu LevelQuest %d", lpObj->NQuest_LV);
+		LogAdd(LOG_RED, "Não existem dados para a missão de nível %d", lpObj->NQuest_LV);
 		return;
 	}
 	for (int i = 0; i < 5; i++)
@@ -429,7 +429,7 @@ void CB_NewQuest::SendInfoNQuest(int aIndex, int LevelQuest, bool OpenNPC)
 
 	if (it == this->m_DataNQuestReq.end())
 	{
-		LogAdd(LOG_RED, "Khong co du lieu LevelQuest %d", LevelQuest);
+		LogAdd(LOG_RED, "Não existem dados para a missão de nível %d", LevelQuest);
 		return;
 	}
 

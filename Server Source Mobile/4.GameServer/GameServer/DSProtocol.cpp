@@ -1474,7 +1474,7 @@ void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg) // OK
 
 	gNotice.GCNoticeSend(lpObj->Index,0,0,0,0,0,0,gMessage.GetMessage(256),lpObj->Name);
 
-	gNotice.GCNoticeSend(lpObj->Index, 0, 0, 0, 0, 0, 0, "Giới hạn reset hôm nay là %d lần nha %s!", gServerInfo.GHRSMax, lpObj->Name);
+	gNotice.GCNoticeSend(lpObj->Index, 0, 0, 0, 0, 0, 0, "O limite de resets de hoje é %d, %s!", gServerInfo.GHRSMax, lpObj->Name);
 
 
 	gNotice.GCNoticeSend(lpObj->Index,1,0,0,0,0,0,gMessage.GetMessage((248+lpObj->AccountLevel)),lpObj->AccountExpireDate);
@@ -4811,7 +4811,7 @@ void LogWCoinChange(LPOBJ lpObj, const char* logName, int value, int oldCoin, in
 		std::string formattedOldCoin = FormatNumber(oldCoin);
 		std::string formattedNewCoin = FormatNumber(newCoin);
 
-		gLog.Output(LOG_WC, "%s - %s/%s | %s: %s | Trước: %s | Sau: %s %s",
+		gLog.Output(LOG_WC, "%s - %s/%s | %s: %s | Anterior: %s | Novo: %s %s",
 			logName, lpObj->Account, lpObj->Name, coinType,
 			formattedValue.c_str(), formattedOldCoin.c_str(),
 			formattedNewCoin.c_str(), coinType);

@@ -667,7 +667,7 @@ void CFakeOnline::QuayLaiToaDoGoc(int aIndex) {
                               ((lpObj->DistanceMin * 60) * 1000)) {
       if (lpObj->m_OfflineCoordX != lpObj->X &&
           lpObj->m_OfflineCoordY != lpObj->Y) {
-        // LogAdd(LOG_BLUE, "[FakeOnline]Quay Ve Toa Do Goc (%d,%d)",
+        // LogAdd(LOG_BLUE, "[FakeOnline] Retornar às coordenadas iniciais (%d,%d)",
         // lpObj->m_OfflineCoordX, lpObj->m_OfflineCoordY);
         FakeAnimationMove(lpObj->Index, lpObj->m_OfflineCoordX,
                           lpObj->m_OfflineCoordY, false);

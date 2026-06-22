@@ -568,7 +568,7 @@ void CCustomStartItem::GiftItem(LPOBJ lpObj)
 
 	if (gItemManager.CheckItemInventorySpace(lpObj, 4, 4) == 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Kiem tra cho trong trong thung do");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Verifique se há espaço livre no inventário");
 		return;
 	}
 

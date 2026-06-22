@@ -118,7 +118,7 @@ void CBAutoNapGame::SendNapTienBank(BYTE * recv, int aIndex)
 	LPOBJ lpObj = &gObj[aIndex];
 	if (lpMsg->ThaoTac < this->GiaTriNapThapNhat)
 	{
-		gNotice.GCNoticeSend(aIndex, 255, 0, 0, 0, 0, 0, "Vui lòng nạp ít nhất %d", this->GiaTriNapThapNhat);//
+		gNotice.GCNoticeSend(aIndex, 255, 0, 0, 0, 0, 0, "Insira pelo menos %d", this->GiaTriNapThapNhat);//
 		return;
 	}
 
@@ -130,7 +130,7 @@ void CBAutoNapGame::SendNapTienBank(BYTE * recv, int aIndex)
 	pMsg.TienNap = lpMsg->ThaoTac;
 	pMsg.aIndex = aIndex;
 	gDataServerConnection.DataSend((BYTE*)& pMsg, pMsg.header.size);
-	gNotice.GCNoticeSend(aIndex, 255, 0, 0, 0, 0, 0, "Bạn vừa tạo lệnh nạp với giá trị %d VND", pMsg.TienNap);//
+	gNotice.GCNoticeSend(aIndex, 255, 0, 0, 0, 0, 0, "Solicitação de recarga criada no valor de %d VND", pMsg.TienNap);//
 
 }
 #endif

@@ -703,7 +703,7 @@ bool CCommandManager::CommandSetPassParty(LPOBJ lpObj, char* arg) // OK
 
 	this->GetString(arg, lpObj->AutoPartyPassword, sizeof(lpObj->AutoPartyPassword), 0);
 
-	gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[SetPass] Thành Công, Pass : %s", lpObj->AutoPartyPassword);
+	gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "[SetPass] Senha alterada com sucesso: %s", lpObj->AutoPartyPassword);
 
 	return 1;
 
@@ -894,7 +894,7 @@ bool CCommandManager::CommandPKClear(LPOBJ lpObj,char* arg, int Npc) // OK
 	{
 		if(lpObj->Money < Count)
 		{
-			gNotice.GCNoticeSend(lpObj->Index,1,0,0,0,0,0,"Bạn không đủ %d Zen để rửa tội",Count);
+			gNotice.GCNoticeSend(lpObj->Index,1,0,0,0,0,0,"Você não possui %d Zen para limpar o PK",Count);
 			return 0;
 		}
 		else
@@ -1056,7 +1056,7 @@ bool CCommandManager::CommandReset(LPOBJ lpObj,char* arg,int Npc) // OK
 #if(CB_AUTORESETINFO)
 	if (lpObj->Reset >= gServerInfo.m_CommandMasterResetReset[lpObj->AccountLevel])
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Bạn đã đạt GHRS hãy Relife để có thể tiếp tục Reset!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Você atingiu o limite de resets. Faça um Relife para continuar resetando!");
 		lpObj->AutoResetEnable = 0;
 		GCAutoResetInfoSend(lpObj); //Send Info Relife ve Client
 		return 1;
@@ -1805,7 +1805,7 @@ void CCommandManager::CommandResetAutoProc(LPOBJ lpObj) // OK
 	//===GHRS
 	if (lpObj->Reset >= gServerInfo.GHRSMax)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Bạn đã đạt GHRS hôm nay!!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Você atingiu o limite de resets de hoje!");
 		lpObj->AutoResetEnable = 0;
 		
 		return;
@@ -1813,7 +1813,7 @@ void CCommandManager::CommandResetAutoProc(LPOBJ lpObj) // OK
 	//== Kiem tra gioi han relife
 	if (lpObj->Reset >= gServerInfo.m_CommandMasterResetReset[lpObj->AccountLevel])
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Bạn đã đạt GHRS hãy Relife để có thể tiếp tục Reset!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Você atingiu o limite de resets. Faça um Relife para continuar resetando!");
 		lpObj->AutoResetEnable = 0;
 		GCAutoResetInfoSend(lpObj); //Send Info Relife ve Client
 		return;
@@ -4582,14 +4582,14 @@ bool CCommandManager::CommandSetLevel(LPOBJ lpObj, char* arg) // OK
 	LPOBJ lpTarget = gObjFind(name);
 	if (lpTarget == 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Nhân vật không tồn tại hoặc không trực tuyến!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "O personagem não existe ou não está online!");
 		return 0;
 	}
 
 	int level = this->GetNumber(arg, 1);
 	if (level >= MAX_CHARACTER_LEVEL + 1)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Vượt quá mức cho phép");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "O valor excede o limite permitido");
 		return 0;
 	}
 	lpTarget->Level = level;
@@ -4603,14 +4603,14 @@ bool CCommandManager::CommandSetReset(LPOBJ lpObj, char* arg) // OK
 	LPOBJ lpTarget = gObjFind(name);
 	if (lpTarget == 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Nhân vật không tồn tại hoặc không trực tuyến!");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "O personagem não existe ou não está online!");
 		return 0;
 	}
 
 	int Reset = this->GetNumber(arg, 1);
 	if (Reset >= 65535)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Vượt quá mức cho phép");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "O valor excede o limite permitido");
 		return 0;
 	}
 	lpTarget->Reset = (lpTarget->Reset + Reset);
@@ -4618,6 +4618,6 @@ bool CCommandManager::CommandSetReset(LPOBJ lpObj, char* arg) // OK
 	GCNewCharacterInfoSend(lpObj);
 	GDCharacterInfoSaveSend(lpObj->Index);
 	GDResetInfoSaveSend(lpObj->Index, 0, 0, 0);
-	gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Đã cộng %d lần reset. Bạn có %d lần Reset!", Reset, lpTarget->Reset);
+	gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Foram adicionados %d resets. Agora você possui %d resets!", Reset, lpTarget->Reset);
 	gLog.Output(LOG_COMMAND, "[CommandSetReset] Account:[%s] Name:[%s] - (Name:%s, Reset: %d)", lpObj->Account, lpObj->Name, name, Reset);
 }

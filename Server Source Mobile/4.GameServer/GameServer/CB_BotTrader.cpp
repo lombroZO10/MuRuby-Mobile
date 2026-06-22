@@ -691,7 +691,7 @@ BOOL CB_BotTrader::XuLyItemTrade(int aIndex, int BotNum)
 			goto OK;
 		}		
 	}	
-	ChatSend(&gObj[aIndexBot], "Vui long dat dung vat pham");
+	ChatSend(&gObj[aIndexBot], "Coloque o item correto");
 	goto Cancel;
 OK:
 	if (mIndex != -1)
@@ -700,14 +700,14 @@ OK:
 
 		if (itDBMixResult == this->m_DataMix.end())
 		{
-			ChatSend(&gObj[aIndexBot], "Khong co KQ Mix !!");
+			ChatSend(&gObj[aIndexBot], "Não existe resultado configurado para esta combinação!");
 			goto Cancel;
 		}
 		if (itDBMixResult->second.PriceType == 0)
 		{
 			if (lpObj->Money < itDBMixResult->second.PriceCount)
 			{
-				wsprintf(sbuf, "Ban Can Co %d Zen de Mix", itDBMixResult->second.PriceCount);
+				wsprintf(sbuf, "Você precisa de %d Zen para combinar", itDBMixResult->second.PriceCount);
 				ChatSend(&gObj[aIndexBot], sbuf);
 				goto Cancel;
 			}
@@ -716,7 +716,7 @@ OK:
 		{
 			if (lpObj->Coin1 < itDBMixResult->second.PriceCount)
 			{
-				wsprintf(sbuf, "Ban Can Co %d WC de Mix", itDBMixResult->second.PriceCount);
+				wsprintf(sbuf, "Você precisa de %d WCoinC para combinar", itDBMixResult->second.PriceCount);
 				ChatSend(&gObj[aIndexBot], sbuf);
 				goto Cancel;
 			}
@@ -725,7 +725,7 @@ OK:
 		{
 			if (lpObj->Coin2 < itDBMixResult->second.PriceCount)
 			{
-				wsprintf(sbuf, "Ban Can Co %d WP de Mix", itDBMixResult->second.PriceCount);
+				wsprintf(sbuf, "Você precisa de %d WCoinP para combinar", itDBMixResult->second.PriceCount);
 				ChatSend(&gObj[aIndexBot], sbuf);
 				goto Cancel;
 			}
@@ -734,7 +734,7 @@ OK:
 		{
 			if (lpObj->Coin3 < itDBMixResult->second.PriceCount)
 			{
-				wsprintf(sbuf, "Ban Can Co %d GP de Mix", itDBMixResult->second.PriceCount);
+				wsprintf(sbuf, "Você precisa de %d Goblin Points para combinar", itDBMixResult->second.PriceCount);
 				ChatSend(&gObj[aIndexBot], sbuf);
 				goto Cancel;
 			}
@@ -751,7 +751,7 @@ OK:
 		{
 			if (itDBMixResult->second.mDataResultItem.empty())
 			{
-				ChatSend(&gObj[aIndexBot], "Loi khong co item KQ 2");
+				ChatSend(&gObj[aIndexBot], "Erro: o segundo item de resultado não está configurado");
 				goto Cancel;
 			}
 			srand(static_cast<int>(time(NULL)));

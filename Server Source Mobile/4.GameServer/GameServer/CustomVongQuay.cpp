@@ -184,7 +184,7 @@ void CCustomVongQuay::UserSendClientInfo(int aIndex) //Send Danh Sach Moc Nap Ve
 	memcpy(send, &pMsg, sizeof(pMsg));
 
 	DataSend(aIndex, send, size);
-	//LogAdd(LOG_RED, "SendINfo List Vong Quay %s", gObj[aIndex].Name);
+	//LogAdd(LOG_RED, "Enviar lista da Roleta para %s", gObj[aIndex].Name);
 	//SendListNhanThuong(gObj[aIndex].Index, 1);
 }
 
@@ -307,7 +307,7 @@ void CCustomVongQuay::SendListNhanThuong(int aIndex, int VongQuaySo) //Send List
 	memcpy(send, &pMsg, sizeof(pMsg));
 
 	DataSend(aIndex, send, size);
-	//LogAdd(LOG_RED, "Send List Item Vong Quay %s", gObj[aIndex].Name);
+	//LogAdd(LOG_RED, "Enviar itens da Roleta para %s", gObj[aIndex].Name);
 }
 
 void CCustomVongQuay::MakeItem(int aIndex,int type)
@@ -483,7 +483,7 @@ void CCustomVongQuay::ActionVongQuay(int aIndex, int MocNap , int solan)
 	//===============Cong Coin
 	if (it->second.WC > 0 || it->second.WP > 0 || it->second.GP > 0)
 	{
-		GDSetCoinSend(lpObj->Index, -it->second.WC, -it->second.WP, -it->second.GP, "Tru Coin Vong Quay");
+		GDSetCoinSend(lpObj->Index, -it->second.WC, -it->second.WP, -it->second.GP, "Débito da Roleta");
 	}
 	
 	

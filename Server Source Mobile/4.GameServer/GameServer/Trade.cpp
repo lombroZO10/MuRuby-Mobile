@@ -116,7 +116,7 @@ void CTrade::ExchangeTradeItemLog(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	{
 		if(lpObj->Trade[n].IsItem() != 0)
 		{
-			gLog.Output(LOG_TRADE, "Giao Dịch từ %s | %s đến %s | %s,Index: %04d:, Item %s+%d, Skill: %d, Luck: %d, Tính năng: %d, Hoàn hảo: %d, Thần: %d, Hamorny: %03d, Item 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Serial: %08X)"
+			gLog.Output(LOG_TRADE, "Comércio de %s | %s para %s | %s, Índice: %04d:, Item %s + %d, Habilidade: %d, Sorte: %d, Opção: %d, Excellent: %d, Ancient: %d, Harmony: %03d, Item 380: %03d, Socket: %03d, %03d, %03d, %03d, %03d, Série: %08X)"
 				, lpObj->Account
 				, lpObj->Name
 				, lpTarget->Account
@@ -151,7 +151,7 @@ void CTrade::CGTradeRequestRecv(PMSG_TRADE_REQUEST_RECV* lpMsg,int aIndex) // OK
 
 	if (gMapManager.GetMapAllowTrade(lpObj->Map) == 0)
 	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Map Này Đéo Cho Giao Dich OK");
+		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, "Negociação não permitida neste mapa.");
 		return;
 	}
 

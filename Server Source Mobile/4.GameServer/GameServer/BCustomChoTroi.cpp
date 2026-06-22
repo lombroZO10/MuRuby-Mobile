@@ -477,7 +477,7 @@ void BCustomChoTroi::CGReqItemSell(PMSG_REQ_MARKET_SELL * lpMsg, int aIndex)
 	//Set Delay
 	lpUser->ClickClientSend = GetTickCount();
 	gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, this->GetMessage(12), lpUser->Name, gItemLevel.GetItemName(lpUser->CH_InfoItem[0].m_Index, lpUser->CH_InfoItem[0].m_Level), lpUser->CH_InfoItem[0].m_Level);
-	gLog.Output(LOG_TRADE, "[ChoTroi][%s][%s] Rao Ban item (%s | Index: %04d Gia: %d [%d] Level: %02d, Serial: %08X, Option1: %01d, Option2: %01d, Option3: %01d, NewOption: %03d, JewelOfHarmonyOption: %03d, ItemOptionEx: %03d, SocketOption: %03d, %03d, %03d, %03d, %03d)"
+	gLog.Output(LOG_TRADE, "[Mercado][%s][%s] Item Anunciou (%s | Índice: %04d Preço: %d [%d] Nível: %02d, Série: %08X, Opção1: %01d, Opção2: %01d, Opção3: %01d, Nova Opção: %03d, JewelOfHarmonyOpção: %03d, ItemOptionEx: %03d, SocketOpção: %03d, %03d, %03d, %03d, %03d)"
 		, lpUser->Account, lpUser->Name, gItemLevel.GetItemName(lpUser->CH_InfoItem[0].m_Index, lpUser->CH_InfoItem[0].m_Level), lpUser->CH_InfoItem[0].m_Index, ItemPrice, ItemPriceType, lpUser->CH_InfoItem[0].m_Level, lpUser->CH_InfoItem[0].m_Serial, lpUser->CH_InfoItem[0].m_Option1, lpUser->CH_InfoItem[0].m_Option2, lpUser->CH_InfoItem[0].m_Option3, lpUser->CH_InfoItem[0].m_NewOption, lpUser->CH_InfoItem[0].m_JewelOfHarmonyOption, lpUser->CH_InfoItem[0].m_ItemOptionEx, lpUser->CH_InfoItem[0].m_SocketOption[0], lpUser->CH_InfoItem[0].m_SocketOption[1], lpUser->CH_InfoItem[0].m_SocketOption[2], lpUser->CH_InfoItem[0].m_SocketOption[3], lpUser->CH_InfoItem[0].m_SocketOption[4]);
 	if (ItemPriceType == eMarketPriceWC)
 	{
@@ -872,7 +872,7 @@ void BCustomChoTroi::DGAnsItemBuy(SDHP_ANS_MARKET_BUY * lpMsg)
 					int ListID = this->m_ListDataChoTroi[aIndex][i].ID;
 					int ItemPrice = this->m_ListDataChoTroi[aIndex][i].Price;
 					int ItemPriceType = this->m_ListDataChoTroi[aIndex][i].PriceType;
-					gLog.Output(LOG_TRADE, "[ChoTroi][%s][%s] Vua mua Item [%d] (%s | Index: %04d Gia: %d [%d] Level: %02d, Serial: %08X, Option1: %01d, Option2: %01d, Option3: %01d, NewOption: %03d, JewelOfHarmonyOption: %03d, ItemOptionEx: %03d, SocketOption: %03d, %03d, %03d, %03d, %03d)"
+					gLog.Output(LOG_TRADE, "[Mercado][%s][%s] Comprou Item [%d] (%s | Índice: %04d Preço: %d [%d] Nível: %02d, Série: %08X, Opção1: %01d, Opção2: %01d, Opção3: %01d, NovaOpção: %03d, JewelOfHarmonyOpção: %03d, ItemOpçãoEx: %03d, SocketOpção: %03d, %03d, %03d, %03d, %03d)"
 						, lpUser->Account, lpUser->Name, ListID, gItemLevel.GetItemName(item.m_Index, item.m_Level), item.m_Index, ItemPrice, ItemPriceType, item.m_Level, item.m_Serial, item.m_Option1, item.m_Option2, item.m_Option3, item.m_NewOption, item.m_JewelOfHarmonyOption, item.m_ItemOptionEx, item.m_SocketOption[0], item.m_SocketOption[1], item.m_SocketOption[2], item.m_SocketOption[3], item.m_SocketOption[4]);
 
 				}
@@ -882,7 +882,7 @@ void BCustomChoTroi::DGAnsItemBuy(SDHP_ANS_MARKET_BUY * lpMsg)
 					int ListID = this->m_ListDataChoTroi[aIndex][i].ID;
 					int ItemPrice = this->m_ListDataChoTroi[aIndex][i].Price;
 					int ItemPriceType = this->m_ListDataChoTroi[aIndex][i].PriceType;
-					gLog.Output(LOG_TRADE, "[ChoTroi][%s][%s] Vua thu hoi Item [%d] (%s | Index: %04d Gia: %d [%d] Level: %02d, Serial: %08X, Option1: %01d, Option2: %01d, Option3: %01d, NewOption: %03d, JewelOfHarmonyOption: %03d, ItemOptionEx: %03d, SocketOption: %03d, %03d, %03d, %03d, %03d)"
+					gLog.Output(LOG_TRADE, "[Mercado][%s][%s] Retirou Item [%d] (%s | Índice: %04d Preço: %d [%d] Nível: %02d, Série: %08X, Opção1: %01d, Opção2: %01d, Opção3: %01d, Nova Opção: %03d, JewelOfHarmonyOpção: %03d, ItemOptionEx: %03d, SocketOpção: %03d, %03d, %03d, %03d, %03d)"
 						, lpUser->Account, lpUser->Name, ListID, gItemLevel.GetItemName(item.m_Index, item.m_Level), item.m_Index, ItemPrice, ItemPriceType, item.m_Level, item.m_Serial, item.m_Option1, item.m_Option2, item.m_Option3, item.m_NewOption, item.m_JewelOfHarmonyOption, item.m_ItemOptionEx, item.m_SocketOption[0], item.m_SocketOption[1], item.m_SocketOption[2], item.m_SocketOption[3], item.m_SocketOption[4]);
 
 				}
@@ -1010,7 +1010,7 @@ void BCustomChoTroi::DGAnsItemStatus(CBCUSTOM_LOAD_COUNT * lpMsg)
 			RateTax, TypeCoin[ItemPriceType], CoinAfterTax, gItemLevel.GetItemName(item.m_Index, item.m_Level), ItemPrice, TypeCoin[ItemPriceType],
 			item.m_Level, item.m_Serial, item.m_Option1, item.m_Option2, item.m_Option3, item.m_NewOption, item.m_JewelOfHarmonyOption, item.m_ItemOptionEx, item.m_SocketOption[0], item.m_SocketOption[1], item.m_SocketOption[2], item.m_SocketOption[3], item.m_SocketOption[4]);
 
-		gLog.Output(LOG_TRADE, "[ChoTroi][%s][%s] Ban Thanh Cong Item (%s | Index: %04d Gia: %d [%s] Level: %02d, Serial: %08X, Option1: %01d, Option2: %01d, Option3: %01d, NewOption: %03d, JewelOfHarmonyOption: %03d, ItemOptionEx: %03d, SocketOption: %03d, %03d, %03d, %03d, %03d)"
+		gLog.Output(LOG_TRADE, "[Mercado][%s][%s] Vendeu com sucesso Item (%s | Índice: %04d Preço: %d [%s] Nível: %02d, Série: %08X, Opção 1: %01d, Opção2: %01d, Opção3: %01d, Nova Opção: %03d, JewelOfHarmonyOpção: %03d, ItemOptionEx: %03d, SocketOpção: %03d, %03d, %03d, %03d, %03d)"
 			, lpUser->Account, lpUser->Name, gItemLevel.GetItemName(item.m_Index, item.m_Level), item.m_Index, ItemPrice, TypeCoin[ItemPriceType], item.m_Level, item.m_Serial, item.m_Option1, item.m_Option2, item.m_Option3, item.m_NewOption, item.m_JewelOfHarmonyOption, item.m_ItemOptionEx, item.m_SocketOption[0], item.m_SocketOption[1], item.m_SocketOption[2], item.m_SocketOption[3], item.m_SocketOption[4]);
 
 	}

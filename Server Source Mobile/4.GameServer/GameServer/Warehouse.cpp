@@ -405,13 +405,13 @@ void CWarehouse::DGWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg) // OK
 
 	GDPetItemInfoSend(lpObj->Index,1);
 
-	gLog.Output(LOG_ITEM_CHARACTER, "[CHECKITEMWAREHOUSE]Mờ Hòm Đồ Chung Account:[%s]- Name[%s]", lpObj->Account, lpObj->Name);
+	gLog.Output(LOG_ITEM_CHARACTER, "[CHECKITEMWAREHOUSE] Abrir Baú Compartilhado Conta:[%s] Nome:[%s]", lpObj->Account, lpObj->Name);
 	for (int n = 0; n < WAREHOUSE_SIZE; n++)
 	{
 		if (lpObj->Warehouse[n].IsItem() != 0)
 		{
 
-			gLog.Output(LOG_ITEM_CHARACTER, "[Hòm Đồ Chung] - [%s +%d] - DB[%.0f] TC[%d] Luck[%d] Op[%d] Exc[%d] Set[%d] oEx[%d] Har[%d] Socket[%03d,%03d,%03d,%03d,%03d][%d] Seri[%08X]",
+			gLog.Output(LOG_ITEM_CHARACTER, "[Baú Compartilhado] - [%s +%d] - DB[%.0f] TC[%d] Sorte[%d] Op[%d] Exc[%d] Conjunto[%d] oEx[%d] Har[%d] Socket[%03d,%03d,%03d,%03d,%03d][%d] Série[%08X]",
 				gItemManager.GetItemName(lpObj->Warehouse[n].m_Index),
 				lpObj->Warehouse[n].m_Level,
 				lpObj->Warehouse[n].m_Durability,
@@ -433,7 +433,7 @@ void CWarehouse::DGWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg) // OK
 
 	}
 
-	gLog.Output(LOG_ITEM_CHARACTER, "[CHECKITEMWAREHOUSE]Mở Hòm Đồ Chung[%s][%s] ", lpObj->Account, lpObj->Name);
+	gLog.Output(LOG_ITEM_CHARACTER, "[CHECKITEMWAREHOUSE] Baú Compartilhado aberto [%s][%s]", lpObj->Account, lpObj->Name);
 }
 
 void CWarehouse::DGWarehouseFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg) // OK
@@ -535,7 +535,7 @@ void CWarehouse::GDWarehouseItemSaveSend(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 
 	GDPetItemInfoSaveSend(aIndex,1);
-	gLog.Output(LOG_ITEM_HomDo, "[CHECKITEMWAREHOUSE] Đóng Hòm đồ Account:[%s]- Name[%s]", lpObj->Account, lpObj->Name);
+	gLog.Output(LOG_ITEM_HomDo, "[CHECKITEMWAREHOUSE] Fechar Baú Compartilhado Conta:[%s] Nome:[%s]", lpObj->Account, lpObj->Name);
 	for (int n = 0; n < WAREHOUSE_SIZE; n++)
 	{
 		if (lpObj->Warehouse[n].IsItem() != 0)
@@ -563,7 +563,7 @@ void CWarehouse::GDWarehouseItemSaveSend(int aIndex) // OK
 
 	}
 
-	gLog.Output(LOG_ITEM_HomDo, "[CHECKITEMWAREHOUSE]Đóng Hòm đồ [%s][%s] ", lpObj->Account, lpObj->Name);
+	gLog.Output(LOG_ITEM_HomDo, "[CHECKITEMWAREHOUSE] Baú Compartilhado fechado [%s][%s]", lpObj->Account, lpObj->Name);
 }
 
 void CWarehouse::DGWarehouseGuildItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg) // OK

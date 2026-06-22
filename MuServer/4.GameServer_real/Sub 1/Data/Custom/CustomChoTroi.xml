@@ -8,19 +8,19 @@
 -->
 <CustomChoTroi Enable="2" TypeHSD="2" OnWC="1" OnWP="0" OnGP="1" OnB="1" OnS="1" OnC="1">
 		<MessageInfo>
-			<Message Index="0"	Text="Không khả dụng !!" />
-			<Message Index="1" 	Text="[ChoTroi] Vật phẩm bạn chọn không còn tồn tại trên hệ thống !" />
-			<Message Index="2" 	Text="Bạn cần có %d [%s] để mua Item này" />
-			<Message Index="3" 	Text="[ChoTroi] Vui lòng lấy Item cũ trước !" />
-			<Message Index="4" 	Text="Item này không được phép rao bán" />
-			<Message Index="5" 	Text="Thao tác quá nhanh vui lòng chậm lại !!" />
-			<Message Index="6" 	Text="Không đủ chô trống để mua Item !" />
-			<Message Index="7" 	Text="Bạn đã mua thành công Item %s !" />
-			<Message Index="8" 	Text="Bạn vừa thu hồi Item %s !" />
-			<Message Index="9" 	Text="Bạn vừa rao bán %s với giá %d (%s)" />
-			<Message Index="10" Text="[Chợ Trời] Bán Item" />
-			<Message Index="11" Text="[Chợ Trời] Tiền tệ bạn chọn không khả dụng !!" />
-			<Message Index="12" Text="[Chợ Trời] [%s] Vừa Rao Bán [%s] +[%d] !!" />
+			<Message Index="0"	Text="Funcao indisponivel!" />
+			<Message Index="1" 	Text="[Mercado] O item selecionado nao esta mais disponivel!" />
+			<Message Index="2" 	Text="Voce precisa de %d [%s] para comprar este item" />
+			<Message Index="3" 	Text="[Mercado] Retire primeiro o item anterior!" />
+			<Message Index="4" 	Text="Este item nao pode ser anunciado" />
+			<Message Index="5" 	Text="Operacao muito rapida. Aguarde!" />
+			<Message Index="6" 	Text="Nao ha espaco suficiente no inventario!" />
+			<Message Index="7" 	Text="Voce comprou o item %s com sucesso!" />
+			<Message Index="8" 	Text="Voce retirou o item %s!" />
+			<Message Index="9" 	Text="Voce anunciou %s por %d (%s)" />
+			<Message Index="10" Text="[Mercado] Anunciar item" />
+			<Message Index="11" Text="[Mercado] A moeda selecionada nao esta disponivel!" />
+			<Message Index="12" Text="[Mercado] [%s] anunciou [%s] +[%d]!" />
 		</MessageInfo>	
 	
 		<!--Cấu hình thu thuế , thu phí người bán

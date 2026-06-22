@@ -604,9 +604,9 @@ BOOL BotThuMuaer::XuLyItemThuMua(int aIndex, int BotNum)
 			{
 
 				ChatSend(&gObj[this->bot[BotNum].index], this->GetMessage(0));
-				//LogAdd(LOG_BLUE, "[THUMUA]BotNum[%d] [%s] Da Doi (%d) Item Nhan Duoc (%d) Coin Type(%d)", BotNum, lpObj->Name, count, Coin, LoaiTienTe);
-				//gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[% s] Đã đổi(% d) Item Nhận được (% d) WCoinC", lpObj->Name, count, Coin, 0, 0);
-				//gLog.Output(LOG_TRADE,"[THUMUA]BotNum[%d] [%s] Da Doi (%d) Item Nhan Duoc (%d) Coin Type(%d) | ItemBag: %d   ", BotNum, lpObj->Name, count, Coin, LoaiTienTe, LoaiItemBag );
+				//LogAdd(LOG_BLUE, "[THUMUA]BotNum[%d] [%s] Da Doi (%d) Item Nhan Duoc (%d) Tipo de moeda (%d)", BotNum, lpObj->Name, count, Coin, LoaiTienTe);
+				//gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[%s] Trocou (%d) itens e recebeu (%d) WCoinC", lpObj->Name, count, Coin, 0, 0);
+				//gLog.Output(LOG_TRADE,"[THUMUA]BotNum[%d] [%s] Da Doi (%d) Item Nhan Duoc (%d) Tipo de moeda (%d) | ItemSaco: %d", BotNum, lpObj->Name, count, Coin, LoaiTienTe, LoaiItemBag );
 				gLog.Output(LOG_THUMUA, "[ThuMuaEx]: Account:[%s]- Name[%s] ", lpObj->Account, lpObj->Name);
 				for (int n = 0; n < TRADE_SIZE; n++)
 				{
@@ -639,7 +639,7 @@ BOOL BotThuMuaer::XuLyItemThuMua(int aIndex, int BotNum)
 						GDSetCoinSend(lpObj->Index, +Coin, 0, 0, "ThuMuaDoRac");
 						gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, gMessage.GetMessage(565), lpObj->Name, Coin, 0, 0);
 
-						gLog.Output(LOG_WC, "[THUMUA][%s] Da Doi (%d) Item Nhan Duoc (%d) CoinC ", lpObj->Name, count, Coin);
+						gLog.Output(LOG_WC, "[Compra Excellent][%s] Trocou (%d) itens e recebeu (%d) WCoinC", lpObj->Name, count, Coin);
 					} break;
 					case 2:
 					{

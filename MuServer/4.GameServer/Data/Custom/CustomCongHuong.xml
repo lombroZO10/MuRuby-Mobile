@@ -6,16 +6,16 @@
 </NPC>
 
 <MessageInfo>
-	<Message Index="0" Text="[Cộng Hưởng] Bạn cần có %d WCoin để sử thực hiện" />
-	<Message Index="1" Text="[Cộng Hưởng] Bạn cần có %d WCoinP để sử thực hiện" />
-	<Message Index="2" Text="[Cộng Hưởng] Bạn cần có %d GobinP để sử thực hiện" />
-	<Message Index="3" Text="[Cộng Hưởng] Bạn cần lấy phôi ra trước" />
-	<Message Index="4" Text="[Cộng Hưởng] Item sử dụng không phù hợp" />
-	<Message Index="5" Text="[Cộng Hưởng] Vui lòng dùng phôi trong danh sách" />
-	<Message Index="6" Text="[Cộng Hưởng] Vui lòng bỏ thêm Phôi để Cộng Hưởng" />
-	<Message Index="7" Text="[Cộng Hưởng] Chúc mừng, bạn vừa cộng hưởng thành công" />
-	<Message Index="8" Text="[Cộng Hưởng] Ohh, tiếc quá bạn đã thất bại rồi!" />
-	<Message Index="9" Text="[Cộng Hưởng] Item của bạn đã đạt mức tối đa !" />
+	<Message Index="0" Text="[Transferencia Excellent] Voce precisa de %d WCoinC" />
+	<Message Index="1" Text="[Transferencia Excellent] Voce precisa de %d WCoinP" />
+	<Message Index="2" Text="[Transferencia Excellent] Voce precisa de %d Goblin Points" />
+	<Message Index="3" Text="[Transferencia Excellent] Retire primeiro o item material" />
+	<Message Index="4" Text="[Transferencia Excellent] Item incompativel" />
+	<Message Index="5" Text="[Transferencia Excellent] Use um material permitido" />
+	<Message Index="6" Text="[Transferencia Excellent] Adicione o item material" />
+	<Message Index="7" Text="[Transferencia Excellent] Transferencia concluida com sucesso" />
+	<Message Index="8" Text="[Transferencia Excellent] A combinacao falhou" />
+	<Message Index="9" Text="[Transferencia Excellent] O item atingiu o limite maximo" />
 </MessageInfo>	
 	
 <CongHuongItem>
