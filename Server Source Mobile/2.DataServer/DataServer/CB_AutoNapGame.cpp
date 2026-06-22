@@ -148,7 +148,7 @@ void CBAutoNapGame::LoadConfig()
 	GetPrivateProfileString("AutoNapBank", "MsgThongBao", "", this->MsgThongBao, sizeof(this->MsgThongBao), PathConfig);
 	gCBAutoNapGame.SendConfigToGS(-1);
 	TimeCacheGetAPI = GetTickCount() + (1000 * 15);
-	LogAdd(LOG_BLUE, "[AutoNapGame] Load Config OK (%d)", this->Enable);
+	LogAdd(LOG_BLUE, "[Recarga Automatica] Configuracao carregada (%d)", this->Enable);
 }
 
 void CBAutoNapGame::SendConfigToGS(int uIndex)
@@ -166,14 +166,14 @@ void CBAutoNapGame::SendConfigToGS(int uIndex)
 			if (gServerManager[n].CheckState() != 0)
 			{
 				gSocketManager.DataSend(n, (BYTE*)& pMsg, sizeof(pMsg));
-				LogAdd(LOG_BLUE, "[AutoNapGame] Send Data -> GS [%d]", n);
+				LogAdd(LOG_BLUE, "[Recarga Automatica] Dados enviados ao GS [%d]", n);
 			}
 		}
 	}
 	else
 	{
 		gSocketManager.DataSend(uIndex, (BYTE*)& pMsg, sizeof(pMsg));
-		LogAdd(LOG_BLUE, "[AutoNapGame] Send Data -> GS [%d]", uIndex);
+		LogAdd(LOG_BLUE, "[Recarga Automatica] Dados enviados ao GS [%d]", uIndex);
 	}
 }
 void CBAutoNapGame::RecvNapTienBank(BYTE * recv, int gsIndex)//7C
@@ -335,7 +335,7 @@ DWORD WINAPI TCheckKQNapBank(LPVOID lpThreadParameter)
 	if (gCBAutoNapGame.StatusGetAPI) return 0;
 	gCBAutoNapGame.StatusGetAPI = true;
 
-	LogAdd(LOG_BLUE, "[AutoNapGame] Run Checking !!");
+	LogAdd(LOG_BLUE, "[Recarga Automatica] Verificacao iniciada");
 
 	gCBAutoNapGame.mDataGETKQNapTien.clear();
 	if (gCBAutoNapGame.TypeDB == 1)
@@ -464,7 +464,7 @@ DWORD WINAPI TCheckKQNapBank(LPVOID lpThreadParameter)
 			if (gCBAutoNapGame.GetLogUpdateCoin)
 			{
 				LogAdd(LOG_RED, "//=====================================================//");
-				LogAdd(LOG_RED, "CoinTruoc = %d, CoinSau = %d", CoinTruoc, (int)(CoinTruoc + TinhToanGiaTriNap));
+				LogAdd(LOG_RED, "Saldo anterior = %d, saldo atual = %d", CoinTruoc, (int)(CoinTruoc + TinhToanGiaTriNap));
 				LogAdd(LOG_RED, "Update MEMB_INFO set gcoin=%d Where memb___id='%s'", (int)(CoinTruoc + TinhToanGiaTriNap), gCBAutoNapGame.mDataGETKQNapTien[n].Account);
 				LogAdd(LOG_RED, "//=====================================================//");
 			}
@@ -529,7 +529,7 @@ DWORD WINAPI TCheckKQNapBank(LPVOID lpThreadParameter)
 		{
 			SendMessGobal(gCBAutoNapGame.MsgThongBao, gCBAutoNapGame.mDataGETKQNapTien[n].Name, NumberFormat(gCBAutoNapGame.mDataGETKQNapTien[n].TienNap));
 		}
-		LogAdd(LOG_BLUE, "[AutoNapGame] [%s] da nap thanh cong (%s) Nhan duoc (%s) VND MaNap [%s]", gCBAutoNapGame.mDataGETKQNapTien[n].Name, NumberFormat(gCBAutoNapGame.mDataGETKQNapTien[n].TienNap), NumberFormat(TinhToanGiaTriNap), gCBAutoNapGame.mDataGETKQNapTien[n].Checking);
+		LogAdd(LOG_BLUE, "[Recarga Automatica] [%s] recarregou (%s) e recebeu (%s) VND. Codigo [%s]", gCBAutoNapGame.mDataGETKQNapTien[n].Name, NumberFormat(gCBAutoNapGame.mDataGETKQNapTien[n].TienNap), NumberFormat(TinhToanGiaTriNap), gCBAutoNapGame.mDataGETKQNapTien[n].Checking);
 		Sleep(100);
 	}
 Exit:

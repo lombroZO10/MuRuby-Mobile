@@ -3761,11 +3761,11 @@ void GDDOIMK_SAVEDB(CSENDGS_DOIMK_INFOSAVE* lpMsg, int aIndex) // OK
 
 	gQueryManager.Close();
 
-	//=== DOi MK MOi
+	// Nova senha
 	gQueryManager.ExecQuery("UPDATE MEMB_INFO SET memb__pwd = '%s' WHERE memb___id = '%s'", lpMsg->PASS_NEW, lpMsg->ACCOUNT);
-	pMsg.result = 3; //== Doi MK THanh Cong
+	pMsg.result = 3; // Senha alterada com sucesso
 	gSocketManager.DataSend(aIndex, (BYTE*)& pMsg, pMsg.h.size);
-	LogAdd(LOG_RED, "[ChangePass] [%s] Doi MK [%s] -> [%s]", lpMsg->ACCOUNT, lpMsg->PASS_OLD, lpMsg->PASS_NEW);
+	LogAdd(LOG_RED, "[Alterar Senha] [%s] alterou a senha [%s] -> [%s]", lpMsg->ACCOUNT, lpMsg->PASS_OLD, lpMsg->PASS_NEW);
 	gQueryManager.Close();
 }
 #endif

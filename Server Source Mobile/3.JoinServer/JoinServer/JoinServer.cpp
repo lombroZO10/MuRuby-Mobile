@@ -58,7 +58,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 	char buff[256];
 
-	wsprintf(buff,"[%s] %s JoinServer (QueueSize : %d) (AccountCount : %d/%d)",JOINSERVER_VERSION,JOINSERVER_CLIENT,0,0,0);
+	wsprintf(buff,"[%s] %s (Fila: %d) (Contas: %d/%d)",JOINSERVER_VERSION,JOINSERVER_CLIENT,0,0,0);
 
 	SetWindowText(hWnd,buff);
 
@@ -96,7 +96,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 		if(gQueryManager.Connect(JoinServerODBC,JoinServerUSER,JoinServerPASS) == 0)
 		{
-			LogAdd(LOG_RED,"Khong the ket noi toi Data SQL");
+			LogAdd(LOG_RED,"Nao foi possivel conectar ao banco de dados SQL.");
 
 		}
 		else
@@ -201,7 +201,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // 
 					DialogBox(hInst,(LPCTSTR)IDD_ABOUTBOX,hWnd,(DLGPROC)About);
 					break;
 				case IDM_EXIT:
-					if(MessageBox(0,"Are you sure to terminate JoinServer?","Ask terminate server",MB_YESNO | MB_ICONQUESTION) == IDYES)
+					if(MessageBox(0,"Deseja realmente encerrar o JoinServer?","Encerrar servidor",MB_YESNO | MB_ICONQUESTION) == IDYES)
 					{
 						DestroyWindow(hWnd);
 					}
@@ -225,7 +225,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // 
 			}
 			break;
 		case WM_CLOSE:
-			if (MessageBox(0, "Close JoinServer?", "JoinServer", MB_OKCANCEL) == IDOK)
+			if (MessageBox(0, "Fechar o JoinServer?", "JoinServer", MB_OKCANCEL) == IDOK)
 			{
 				DestroyWindow(hWnd);
 			}

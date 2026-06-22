@@ -54,7 +54,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 	char buff[256];
 
-	wsprintf(buff,"[%s] %s ConnectServer (QueueSize : %d)",CONNECTSERVER_VERSION,CONNECTSERVER_CLIENT,0);
+	wsprintf(buff,"[%s] %s (Fila: %d)",CONNECTSERVER_VERSION,CONNECTSERVER_CLIENT,0);
 
 	SetWindowText(hWnd,buff);
 
@@ -160,7 +160,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // 
 					DialogBox(hInst,(LPCTSTR)IDD_ABOUTBOX,hWnd,(DLGPROC)About);
 					break;
 				case IDM_EXIT:
-					if(MessageBox(0,"Are you sure to terminate ConnectServer?","Ask terminate server",MB_YESNO | MB_ICONQUESTION) == IDYES)
+					if(MessageBox(0,"Deseja realmente encerrar o ConnectServer?","Encerrar servidor",MB_YESNO | MB_ICONQUESTION) == IDYES)
 					{
 						DestroyWindow(hWnd);
 					}

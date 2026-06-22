@@ -60,7 +60,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 	char buff[256];
 
-	wsprintf(buff,"[%s] %s DataServer (QueueSize : %d)",DATASERVER_VERSION,DATASERVER_CLIENT,0);
+	wsprintf(buff,"[%s] %s (Fila: %d)",DATASERVER_VERSION,DATASERVER_CLIENT,0);
 
 	SetWindowText(hWnd,buff);
 
@@ -94,10 +94,10 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 		if(gQueryManager.Connect(DataServerODBC,DataServerUSER,DataServerPASS) == 0)
 		{
-			LogAdd(LOG_RED,"Không thể kết nối tới Data SQL");
-			LogAdd(LOG_RED,"Có thể chưa chạy DUYDATREG_32/64. Hoặc tên DB không đúng.");
-			LogAdd(LOG_RED,"Hãy kiểm tra lại cấu hình tên ODBC phải khớp DB SQL.");
-			LogAdd(LOG_RED,"Hoặc ib zalo sđt: 0961873767 (DUYDAT) để trợ giúp.");
+			LogAdd(LOG_RED,"Nao foi possivel conectar ao banco de dados SQL.");
+			LogAdd(LOG_RED,"Verifique se o SQL Server esta em execucao e se o nome do banco esta correto.");
+			LogAdd(LOG_RED,"Verifique se o nome do ODBC corresponde ao banco SQL.");
+			LogAdd(LOG_RED,"Revise as configuracoes do DataServer.ini e do ODBC.");
 		}
 		else
 		{
@@ -196,7 +196,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // 
 					DialogBox(hInst,(LPCTSTR)IDD_ABOUTBOX,hWnd,(DLGPROC)About);
 					break;
 				case IDM_EXIT:
-					if(MessageBox(0,"Are you sure to terminate DataServer?","Ask terminate server",MB_YESNO | MB_ICONQUESTION) == IDYES)
+					if(MessageBox(0,"Deseja realmente encerrar o DataServer?","Encerrar servidor",MB_YESNO | MB_ICONQUESTION) == IDYES)
 					{
 						DestroyWindow(hWnd);
 					}
@@ -214,7 +214,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // 
 					break;
 				case ID_AUTONAP_GETAPIKQ:
 #if(CB_AutoBanking)
-					if (MessageBox(0, "Chay Get KQ API The Nap", "Notice", MB_OKCANCEL) == IDOK)
+					if (MessageBox(0, "Executar verificacao da API de recarga", "Aviso", MB_OKCANCEL) == IDOK)
 					{
 						gCBAutoNapGame.GetKQNapTien(1);
 					}
@@ -242,7 +242,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // 
 			}
 			break;
 		case WM_CLOSE:
-			if (MessageBox(0, "Close DataServer?", "DataServer", MB_OKCANCEL) == IDOK)
+			if (MessageBox(0, "Fechar o DataServer?", "DataServer", MB_OKCANCEL) == IDOK)
 			{
 				DestroyWindow(hWnd);
 			}

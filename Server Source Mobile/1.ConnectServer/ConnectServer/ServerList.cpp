@@ -94,7 +94,7 @@ void CServerList::Load(char* path) // OK
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 	}
-	LogAdd(LOG_BLUE,"[KEN] ServerList loaded successfully");
+	LogAdd(LOG_BLUE,"[Premium] Lista de servidores carregada com sucesso");
 	delete lpMemScript;
 }
 
@@ -104,7 +104,7 @@ void CServerList::MainProc() // OK
 	{
 		this->m_JoinServerState = 0;
 		this->m_JoinServerStateTime = 0;
-		LogAdd(LOG_RED,"[KEN] JoinServer offline");
+		LogAdd(LOG_RED,"[Premium] JoinServer desconectado");
 	}
 
 	for(std::map<int,SERVER_LIST_INFO>::iterator it=this->m_ServerListInfo.begin();it != this->m_ServerListInfo.end();it++)
@@ -113,7 +113,7 @@ void CServerList::MainProc() // OK
 		{
 			it->second.ServerState = 0;
 			it->second.ServerStateTime = 0;
-			LogAdd(LOG_BLACK,"[KEN] GameServer offline (%s) (%d)",it->second.ServerName,it->second.ServerCode);
+			LogAdd(LOG_BLACK,"[Premium] GameServer desconectado (%s) (%d)",it->second.ServerName,it->second.ServerCode);
 		}
 	}
 }
@@ -200,7 +200,7 @@ void CServerList::GCGameServerLiveRecv(SDHP_GAME_SERVER_LIVE_RECV* lpMsg) // OK
 
 	if(lpServerListInfo->ServerState == 0)
 	{
-		LogAdd(LOG_BLACK,"[KEN] GameServer online (%s) (%d)",lpServerListInfo->ServerName,lpServerListInfo->ServerCode);
+		LogAdd(LOG_BLACK,"[Premium] GameServer conectado (%s) (%d)",lpServerListInfo->ServerName,lpServerListInfo->ServerCode);
 	}
 
 	lpServerListInfo->ServerState = 1;
@@ -222,7 +222,7 @@ void CServerList::JCJoinServerLiveRecv(SDHP_JOIN_SERVER_LIVE_RECV* lpMsg) // OK
 {
 	if(this->m_JoinServerState == 0)
 	{
-		LogAdd(LOG_GREEN,"[KEN] JoinServer online");
+		LogAdd(LOG_GREEN,"[Premium] JoinServer conectado");
 	}
 
 	this->m_JoinServerState = 1;

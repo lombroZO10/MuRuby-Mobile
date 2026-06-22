@@ -138,7 +138,18 @@ int ConvertDirectSoundVolumeToSdl(long volume)
 void ApplyAndroidMasterVolume()
 {
     const int sdlVolume = ConvertDirectSoundVolumeToSdl(g_androidMasterVolume);
-    Mix_Volume(-1, sdlVolume);
+
+    if (Mix_QuerySpec(nullptr, nullptr, nullptr) == 0)
+    {
+        return;
+    }
+
+    const int channelCount = Mix_AllocateChannels(-1);
+    for (int channel = 0; channel < channelCount; ++channel)
+    {
+        Mix_Volume(channel, sdlVolume);
+    }
+
     Mix_VolumeMusic(sdlVolume);
 }
 
@@ -207,9 +218,18 @@ void SetEnableSound(bool enabled)
     g_androidSoundEnabled = enabled;
     if (!enabled)
     {
-        Mix_HaltChannel(-1);
-        Mix_Volume(-1, 0);
-        Mix_VolumeMusic(0);
+        if (Mix_QuerySpec(nullptr, nullptr, nullptr) != 0)
+        {
+            Mix_HaltChannel(-1);
+
+            const int channelCount = Mix_AllocateChannels(-1);
+            for (int channel = 0; channel < channelCount; ++channel)
+            {
+                Mix_Volume(channel, 0);
+            }
+
+            Mix_VolumeMusic(0);
+        }
         return;
     }
 

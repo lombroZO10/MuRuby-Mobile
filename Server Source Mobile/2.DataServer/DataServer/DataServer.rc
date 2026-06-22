@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Inglés (Estados Unidos) resources
+// Inglï¿½s (Estados Unidos) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
@@ -41,23 +41,23 @@ IDI_SMALL               ICON                    "Main_48.ico"
 
 IDC_DATASERVER MENU
 BEGIN
-    POPUP "&File"
+    POPUP "&Arquivo"
     BEGIN
-        MENUITEM "Exit",                        IDM_EXIT
+        MENUITEM "Sair",                        IDM_EXIT
     END
-	POPUP "&Tool"
+	POPUP "&Ferramentas"
 	BEGIN
-	MENUITEM "ReloadConfig", ID_FILE_RELOADCONFIG
-	MENUITEM "Update Top 50", ID_FILE_UPDATETOP50
+	MENUITEM "Recarregar configuracao", ID_FILE_RELOADCONFIG
+	MENUITEM "Atualizar Top 50", ID_FILE_UPDATETOP50
 	END
-	POPUP "Auto Nap"
+	POPUP "Recarga Automatica"
 	BEGIN
-	MENUITEM "Reload Config", ID_AUTONAP_RELOADCONFIG
-	MENUITEM "Get API KQ", ID_AUTONAP_GETAPIKQ
+	MENUITEM "Recarregar configuracao", ID_AUTONAP_RELOADCONFIG
+	MENUITEM "Consultar API", ID_AUTONAP_GETAPIKQ
 	END
-    POPUP "&Help"
+    POPUP "&Ajuda"
     BEGIN
-        MENUITEM "&About ...",                  IDM_ABOUT
+        MENUITEM "&Sobre...",                  IDM_ABOUT
     END
 END
 
@@ -85,10 +85,10 @@ CAPTION "About"
 FONT 8, "System", 0, 0, 0x0
 BEGIN
     ICON            IDI_DATASERVER,IDC_MYICON,14,9,20,20
-    LTEXT           "DataServer",IDC_STATIC,56,11,45,8,SS_NOPREFIX
-    LTEXT           "Files GamingMaster",IDC_STATIC,44,22,79,8
+    LTEXT           "DataServer Premium",IDC_STATIC,56,11,45,8,SS_NOPREFIX
+    LTEXT           "Arquivos Premium",IDC_STATIC,44,22,79,8
     DEFPUSHBUTTON   "OK",IDOK,54,53,30,11,WS_GROUP
-    LTEXT           "Developer Takumi12",IDC_STATIC,44,34,86,8
+    LTEXT           "Servidor Premium",IDC_STATIC,44,34,86,8
 END
 
 
@@ -139,16 +139,16 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_APP_TITLE           "DataServer"
+    IDS_APP_TITLE           "DataServer Premium"
     IDC_DATASERVER          "DATASERVER"
 END
 
-#endif    // Inglés (Estados Unidos) resources
+#endif    // Inglï¿½s (Estados Unidos) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Portugués (Brasil) resources
+// Portuguï¿½s (Brasil) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_PTB)
 LANGUAGE LANG_PORTUGUESE, SUBLANG_PORTUGUESE_BRAZILIAN
@@ -191,10 +191,10 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "CompanyName", "MasterCodec"
-            VALUE "FileDescription", "DataServer"
+            VALUE "FileDescription", "DataServer Premium"
             VALUE "FileVersion", "1.0.0.0"
-            VALUE "InternalName", "DataServer"
-            VALUE "LegalCopyright", "Copyright © MasterCodec"
+            VALUE "InternalName", "DataServer Premium"
+            VALUE "LegalCopyright", "Copyright ï¿½ MasterCodec"
             VALUE "OriginalFilename", "DataServer.exe"
             VALUE "ProductName", "LatinoHost DataServer"
             VALUE "ProductVersion", "1.0.0.0"
@@ -206,12 +206,12 @@ BEGIN
     END
 END
 
-#endif    // Portugués (Brasil) resources
+#endif    // Portuguï¿½s (Brasil) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Español (México) resources
+// Espaï¿½ol (Mï¿½xico) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ESM)
 LANGUAGE LANG_SPANISH, SUBLANG_SPANISH_MEXICAN
@@ -226,12 +226,12 @@ LANGUAGE LANG_SPANISH, SUBLANG_SPANISH_MEXICAN
 // remains consistent on all systems.
 //IDI_ICON1               ICON                    "icon2.ico"
 IDI_ICON1               ICON                    "Main_48.ico"
-#endif    // Español (México) resources
+#endif    // Espaï¿½ol (Mï¿½xico) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Español (España, alfabetización internacional) resources
+// Espaï¿½ol (Espaï¿½a, alfabetizaciï¿½n internacional) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ESN)
 LANGUAGE LANG_SPANISH, SUBLANG_SPANISH_MODERN
@@ -246,7 +246,7 @@ LANGUAGE LANG_SPANISH, SUBLANG_SPANISH_MODERN
 // remains consistent on all systems.
 //IDI_ICON2               ICON                    "icon2.ico"
 IDI_ICON2               ICON                    "Main_48.ico"
-#endif    // Español (España, alfabetización internacional) resources
+#endif    // Espaï¿½ol (Espaï¿½a, alfabetizaciï¿½n internacional) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -45,8 +45,8 @@ CServerDisplayer::CServerDisplayer() // OK
 	this->m_brush[4] = CreateSolidBrush(RGB(48, 56, 65)); //-- fondo de eventos e informacion
 #endif
 
-	strcpy_s(this->m_DisplayerText[0],"STANDBY MODE");
-	strcpy_s(this->m_DisplayerText[1],"ACTIVE MODE");
+	strcpy_s(this->m_DisplayerText[0],"MODO DE ESPERA");
+	strcpy_s(this->m_DisplayerText[1],"MODO ATIVO");
 }
 
 CServerDisplayer::~CServerDisplayer() // OK
@@ -86,7 +86,7 @@ void CServerDisplayer::SetWindowName() // OK
 {
 	char buff[256];
 
-    wsprintf(buff,"[%s] %s JoinServer (QueueSize : %d) (AccountCount : %d/%d)",JOINSERVER_VERSION,JOINSERVER_CLIENT,gSocketManager.GetQueueSize(),
+    wsprintf(buff,"[%s] %s (Fila: %d) (Contas: %d/%d)",JOINSERVER_VERSION,JOINSERVER_CLIENT,gSocketManager.GetQueueSize(),
         gAccountManager.GetAccountCount(),
 #if    PROTECT_STATE
         gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType]

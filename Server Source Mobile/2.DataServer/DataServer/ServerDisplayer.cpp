@@ -42,8 +42,8 @@ CServerDisplayer::CServerDisplayer() // OK
 	this->m_brush[3] = CreateSolidBrush(RGB(24, 24, 24)); //-- Fondo Principal
 	this->m_brush[4] = CreateSolidBrush(RGB(0, 0, 0)); //-- fondo de eventos e informacion
 #endif
-	strcpy_s(this->m_DisplayerText[0],"STANDBY MODE");
-	strcpy_s(this->m_DisplayerText[1],"ACTIVE MODE");
+	strcpy_s(this->m_DisplayerText[0],"MODO DE ESPERA");
+	strcpy_s(this->m_DisplayerText[1],"MODO ATIVO");
 	
 }
 
@@ -81,7 +81,7 @@ void CServerDisplayer::SetWindowName() // OK
 {
 	char buff[256];
 
-	wsprintf(buff,"[%s] %s DataServer (QueueSize : %d)",DATASERVER_VERSION,DATASERVER_CLIENT,gSocketManager.GetQueueSize());
+	wsprintf(buff,"[%s] %s (Fila: %d)",DATASERVER_VERSION,DATASERVER_CLIENT,gSocketManager.GetQueueSize());
 
 	SetWindowText(this->m_hwnd,buff);
 }

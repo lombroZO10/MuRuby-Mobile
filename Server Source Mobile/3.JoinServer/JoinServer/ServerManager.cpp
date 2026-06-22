@@ -141,12 +141,12 @@ void CServerManager::AddServer(int index,char* ip,SOCKET socket) // OK
 
 	this->m_SecurityRegisterCount = 0;
 
-	LogAdd(LOG_BLACK,"[KEN][%d] AddServer (%s)",this->m_index,this->m_IpAddr);
+	LogAdd(LOG_BLACK,"[Premium][%d] Servidor conectado (%s)",this->m_index,this->m_IpAddr);
 }
 
 void CServerManager::DelServer() // OK
 {
-	LogAdd(LOG_BLACK,"[KEN][%d] DelServer (%s)",this->m_index,this->m_IpAddr);
+	LogAdd(LOG_BLACK,"[Premium][%d] Servidor desconectado (%s)",this->m_index,this->m_IpAddr);
 
 	WORD ServerCode = this->m_ServerCode;
 
@@ -201,5 +201,5 @@ void CServerManager::SetServerInfo(char* name,WORD port,WORD code) // OK
 
 	this->m_ServerCode = code;
 
-	LogAdd(LOG_BLACK,"[KEN][%d] ServerInfo (%s) (%d) (%d)",this->m_index,this->m_ServerName,this->m_ServerPort,this->m_ServerCode);
+	LogAdd(LOG_BLACK,"[Premium][%d] Informacoes do servidor (%s) (%d) (%d)",this->m_index,this->m_ServerName,this->m_ServerPort,this->m_ServerCode);
 }

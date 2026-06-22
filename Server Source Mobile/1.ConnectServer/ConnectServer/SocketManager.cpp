@@ -80,7 +80,7 @@ bool CSocketManager::Start(WORD port) // OK
 
 	PROTECT_FINAL
 
-	LogAdd(LOG_BLACK,"[KEN] Server started at port [%d]",this->m_port);
+	LogAdd(LOG_BLACK,"[Premium] Servidor iniciado na porta [%d]",this->m_port);
 	return 1;
 }
 
@@ -147,7 +147,7 @@ bool CSocketManager::CreateListenSocket() // OK
 
 	if(bind(this->m_listen,(sockaddr*)&SocketAddr,sizeof(SocketAddr)) == SOCKET_ERROR)
 	{
-		LogAdd(LOG_RED,"[KEN] bind() failed Port with error: %d",WSAGetLastError());
+		LogAdd(LOG_RED,"[Premium] bind() failed Port with error: %d",WSAGetLastError());
 		return 0;
 	}
 

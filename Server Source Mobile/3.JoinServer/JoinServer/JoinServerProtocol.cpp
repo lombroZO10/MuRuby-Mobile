@@ -1039,7 +1039,7 @@ void GJRegistroMainRecv(SDHP_REGISTRO_GS_SEND_JS* lpMsg, int index) // OK
 				gQueryManager.Close();
 				pMsg.result = 1;
 				JoinServerSecurityTrackRegistration(index,lpMsg->account,lpMsg->TypeSend,pMsg.result);
-				gLog.Output(LOG_ACCOUNT, "[AccountInfo] Account created (Account: %s, Password: %s )", lpMsg->account, lpMsg->password);
+				gLog.Output(LOG_ACCOUNT, "[Conta] Conta criada (Account: %s, Password: %s )", lpMsg->account, lpMsg->password);
 			}
 			gQueryManager.Close();
 		}
@@ -1068,7 +1068,7 @@ void GJRegistroMainRecv(SDHP_REGISTRO_GS_SEND_JS* lpMsg, int index) // OK
 				pMsg.result = 11;
 				JoinServerSecurityTrackRegistration(index,lpMsg->account,lpMsg->TypeSend,pMsg.result);
 
-				gLog.Output(LOG_ACCOUNT, "[DatLaiPass] Set Pass  (Account: %s, Password: %s )", lpMsg->account, lpMsg->password);
+				gLog.Output(LOG_ACCOUNT, "[Redefinir Senha] Senha definida  (Account: %s, Password: %s )", lpMsg->account, lpMsg->password);
 			}
 			gQueryManager.Close();
 		}

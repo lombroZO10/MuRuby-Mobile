@@ -313,7 +313,7 @@ void CChoTroi::GDReqItemSell(SDHP_REQ_MARKET_SELL* lpMsg, int uIndex)
 	if (!gQueryManager.ExecQuery(szQuery) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		//pMsg.Result = 0;
-		LogAdd(LOG_RED, "[ChoTroi] Loi Sell Item len cho !!");
+		LogAdd(LOG_RED, "[Mercado] Erro ao anunciar o item!");
 		gQueryManager.Close();
 		return;
 	}

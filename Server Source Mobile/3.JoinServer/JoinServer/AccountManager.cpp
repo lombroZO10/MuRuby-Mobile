@@ -36,7 +36,7 @@ void CAccountManager::DisconnectProc() // OK
 			continue;
 		}
 
-		gLog.Output(LOG_ACCOUNT,"[AccountInfo] Account disconnected by proc (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
+		gLog.Output(LOG_ACCOUNT,"[Conta] Conta desconectada pelo processo (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
 
 		gQueryManager.ExecQuery("EXEC WZ_DISCONNECT_MEMB '%s'",it->second.Account);
 
@@ -62,7 +62,7 @@ void CAccountManager::ClearServerAccountInfo(WORD ServerCode) // OK
 			continue;
 		}
 
-		gLog.Output(LOG_ACCOUNT,"[AccountInfo] Account disconnected by clear (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
+		gLog.Output(LOG_ACCOUNT,"[Conta] Conta desconectada por limpeza (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
 
 		gQueryManager.ExecQuery("EXEC WZ_DISCONNECT_MEMB '%s'",it->second.Account);
 

@@ -14473,6 +14473,23 @@ void ChangeCharacterExt(int Key,BYTE *Equipment, CHARACTER * pCharacter, OBJECT 
 
 extern int HeroIndex;
 
+static void SetCharacterId(CHARACTER* character, const char* name)
+{
+	if (character == NULL)
+	{
+		return;
+	}
+
+	if (name == NULL)
+	{
+		character->ID[0] = '\0';
+		return;
+	}
+
+	strncpy(character->ID, name, sizeof(character->ID) - 1);
+	character->ID[sizeof(character->ID) - 1] = '\0';
+}
+
 void Setting_Monster(CHARACTER *c,int Type,int PositionX,int PositionY)
 {
 	OBJECT *o;
@@ -14494,7 +14511,7 @@ void Setting_Monster(CHARACTER *c,int Type,int PositionX,int PositionY)
 		{
 			if(Type == MonsterScript[i].Type)
 			{
-	     		strcpy(c->ID,MonsterScript[i].Name);
+				SetCharacterId(c, MonsterScript[i].Name);
 	
 				break;
 			}
@@ -14503,7 +14520,7 @@ void Setting_Monster(CHARACTER *c,int Type,int PositionX,int PositionY)
 
 		if (NpcName != 0)
 		{
-			strcpy(c->ID, NpcName->Name);
+			SetCharacterId(c, NpcName->Name);
 		}
 
 		c->MonsterIndex = Type;
@@ -16511,7 +16528,7 @@ NexCustomMonter:
 	case 566:
 		OpenNpc(MODEL_TIME_LIMIT_QUEST_NPC_TERSIA);
 		c = CreateCharacter(Key, MODEL_TIME_LIMIT_QUEST_NPC_TERSIA, PositionX, PositionY);
-		strcpy(c->ID, "±æµå°ü¸®ÀÎ Å×¸£½Ã¾Æ");
+		strcpy(c->ID, "Tercia");
 		c->Object.Scale = 0.93f;
 		break;
 	case 567:
@@ -16524,7 +16541,7 @@ NexCustomMonter:
 		{
 			OpenNpc(MODEL_TIME_LIMIT_QUEST_NPC_ZAIRO);
 			c = CreateCharacter(Key, MODEL_TIME_LIMIT_QUEST_NPC_ZAIRO, PositionX, PositionY);
-			strcpy(c->ID, "¶°µ¹ÀÌ»óÀÎ ÀÚÀÌ·Î");
+			SetCharacterId(c, "Zairo");
 			c->Object.LifeTime = 100;
 			c->Object.Scale = 0.8f;
 			c->Object.m_fEdgeScale = 1.1f;

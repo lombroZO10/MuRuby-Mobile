@@ -12,7 +12,7 @@
 #if(GAMESERVER_NOMBRE == 0)
 	#define DATASERVER_CLIENT "VIERJA&HIGHLEVEL"
 #elif(GAMESERVER_NOMBRE == 1)
-	#define DATASERVER_CLIENT "DataServer - xKEN"
+	#define DATASERVER_CLIENT "DataServer Premium"
 #else
 #define DATASERVER_CLIENT "REAL GAMING"
 #endif

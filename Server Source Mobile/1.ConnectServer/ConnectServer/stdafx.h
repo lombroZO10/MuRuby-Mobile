@@ -12,7 +12,7 @@
 #if(GAMESERVER_TYPE2 == 0)
 	#define CONNECTSERVER_CLIENT "VIERJA&HIGHLEVEL"
 #elif(GAMESERVER_TYPE2 == 1)
-	#define CONNECTSERVER_CLIENT "ConnectServer - xKEN"
+	#define CONNECTSERVER_CLIENT "ConnectServer Premium"
 #else
 #define CONNECTSERVER_CLIENT "REAL GAMING"
 #endif
