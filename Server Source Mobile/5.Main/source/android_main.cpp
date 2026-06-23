@@ -8846,6 +8846,11 @@ static bool InitializeAndroidGame()
     g_DrawableWidth = (g_DrawableWidth > 0) ? g_DrawableWidth : 1280;
     g_DrawableHeight = (g_DrawableHeight > 0) ? g_DrawableHeight : 720;
 
+    // SDL's prebuilt Android runtime repeatedly warns about JNI environment
+    // access under NativeActivity. Keep actual SDL errors, but discard its
+    // high-frequency informational and warning noise.
+    SDL_LogSetAllPriority(SDL_LOG_PRIORITY_ERROR);
+
     MU_MobilePlatformInit();
     SetWorkingDirectoryToMobileDataRoot();
     InitializeTakumiProtectState();
