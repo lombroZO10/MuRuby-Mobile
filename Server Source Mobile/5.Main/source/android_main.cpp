@@ -258,6 +258,21 @@ static void InitializeTakumiProtectState()
         gProtect.m_MainInfo.IpAddressPort = 63000;
         std::strcpy(gProtect.m_MainInfo.ClientVersion, "1.04.05");
         std::strcpy(gProtect.m_MainInfo.ClientSerial, "TbYehR2hFUPBKgZj");
+        for (int n = 0; n < MAX_CUSTOM_MESSAGE; ++n)
+        {
+            gProtect.m_MainInfo.EngCustomMessageInfo[n].Index = -1;
+            gProtect.m_MainInfo.VtmCustomMessageInfo[n].Index = -1;
+        }
+        gProtect.m_MainInfo.EngCustomMessageInfo[0].Index = 0;
+        std::strcpy(
+            gProtect.m_MainInfo.EngCustomMessageInfo[0].Message,
+            "Nivel: %d | Reset: %d | M.Reset: %d");
+        gProtect.m_MainInfo.VtmCustomMessageInfo[0].Index = 0;
+        std::strcpy(
+            gProtect.m_MainInfo.VtmCustomMessageInfo[0].Message,
+            "Nivel: %d | Reset: %d | M.Reset: %d");
+        gCustomMessage.LoadEng(gProtect.m_MainInfo.EngCustomMessageInfo);
+        gCustomMessage.LoadVtm(gProtect.m_MainInfo.VtmCustomMessageInfo);
         gProtect.LoadEncDec();
         LOGW(
             "Protect fallback active: gsPorts=%u-%u server=%s:%u serial=%s",
