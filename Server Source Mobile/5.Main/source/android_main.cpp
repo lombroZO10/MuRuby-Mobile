@@ -6098,15 +6098,114 @@ static void RenderAndroidBottomUtilityBar()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    const float effectTime = static_cast<float>(MU_MobileGetTicks()) * 0.0042f;
+    int displaySlot = 0;
     for (const int action : kAndroidBottomMenuActions)
     {
         const AndroidUiRect rect = GetVirtualRightPanelGridRect(action);
         const bool active = IsVirtualRightPanelUtilityActionActive(action);
+        const float phase = effectTime + static_cast<float>(displaySlot) * 0.83f;
+        const float pulse = 0.5f + 0.5f * std::sin(phase);
+        const float centerX = rect.x + rect.w * 0.5f;
+        const float centerY = rect.y + rect.h * 0.43f;
+
+        glDisable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+        DrawVirtualCircle(
+            centerX,
+            centerY,
+            rect.w * (0.42f + pulse * 0.025f),
+            1.0f,
+            0.42f,
+            0.04f,
+            active ? 0.20f : 0.105f,
+            true);
+        DrawVirtualCircle(
+            centerX,
+            centerY,
+            rect.w * 0.47f,
+            1.0f,
+            0.70f,
+            0.16f,
+            active ? 0.34f : (0.16f + pulse * 0.055f),
+            false);
+
+        auto drawFlame = [](float baseX, float baseY, float halfWidth, float height, float sway, float alpha)
+        {
+            const float leftX = UiToScreenX(baseX - halfWidth);
+            const float rightX = UiToScreenX(baseX + halfWidth);
+            const float baseScreenY = static_cast<float>(WindowHeight) - UiToScreenY(baseY);
+            const float tipX = UiToScreenX(baseX + sway);
+            const float tipY = static_cast<float>(WindowHeight) - UiToScreenY(baseY - height);
+
+            glBegin(GL_TRIANGLES);
+            glColor4f(1.0f, 0.24f, 0.015f, alpha * 0.45f);
+            glVertex2f(leftX, baseScreenY);
+            glColor4f(1.0f, 0.70f, 0.08f, alpha);
+            glVertex2f((leftX + rightX) * 0.5f, baseScreenY);
+            glColor4f(1.0f, 0.88f, 0.24f, alpha * 0.48f);
+            glVertex2f(tipX, tipY);
+
+            glColor4f(1.0f, 0.70f, 0.08f, alpha);
+            glVertex2f((leftX + rightX) * 0.5f, baseScreenY);
+            glColor4f(1.0f, 0.24f, 0.015f, alpha * 0.45f);
+            glVertex2f(rightX, baseScreenY);
+            glColor4f(1.0f, 0.88f, 0.24f, alpha * 0.48f);
+            glVertex2f(tipX, tipY);
+            glEnd();
+        };
+
+        const float flameAlpha = active ? 0.74f : 0.43f;
+        drawFlame(
+            centerX,
+            rect.y + 10.0f,
+            3.2f,
+            15.0f + pulse * 4.0f,
+            std::sin(phase * 1.7f) * 1.7f,
+            flameAlpha);
+        drawFlame(
+            rect.x + rect.w * 0.15f,
+            rect.y + 20.0f,
+            2.0f,
+            10.0f + (1.0f - pulse) * 3.0f,
+            -1.6f,
+            flameAlpha * 0.82f);
+        drawFlame(
+            rect.x + rect.w * 0.85f,
+            rect.y + 20.0f,
+            2.0f,
+            10.0f + pulse * 3.0f,
+            1.6f,
+            flameAlpha * 0.82f);
+
+        for (int spark = 0; spark < 2; ++spark)
+        {
+            const float sparkPhase = phase * (1.35f + spark * 0.18f) + spark * 2.4f;
+            const float sparkX = centerX
+                + std::sin(sparkPhase) * rect.w * (spark == 0 ? 0.42f : 0.48f);
+            const float travel = std::fmod(
+                effectTime * (0.65f + spark * 0.17f) + displaySlot * 0.19f,
+                1.0f);
+            const float sparkY = rect.y + 17.0f - travel * 25.0f;
+            DrawVirtualCircle(
+                sparkX,
+                sparkY,
+                active ? 0.80f : 0.58f,
+                1.0f,
+                0.72f,
+                0.18f,
+                (1.0f - travel) * (active ? 0.76f : 0.48f),
+                true);
+        }
+
         const UITexture& texture =
             active && g_uiTex_bottomButtonsActive[action].id != 0
                 ? g_uiTex_bottomButtonsActive[action]
                 : g_uiTex_bottomButtons[action];
         DrawIconButton(rect.x, rect.y, rect.w, rect.h, texture, 1.0f);
+        ++displaySlot;
     }
 
     EndBitmap();
