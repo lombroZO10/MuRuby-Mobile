@@ -730,6 +730,9 @@ void SEASON3B::CNewUIMainFrameWindow::RenderButtonsSS2()
 }
 bool SEASON3B::CNewUIMainFrameWindow::RenderSS2()
 {
+#if defined(__ANDROID__) || defined(MU_IOS)
+	return true;
+#endif
 	EnableAlphaTest();
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -750,6 +753,9 @@ bool SEASON3B::CNewUIMainFrameWindow::RenderSS2()
 }
 bool SEASON3B::CNewUIMainFrameWindow::Render()
 {
+#if defined(__ANDROID__) || defined(MU_IOS)
+	return true;
+#endif
 	if (gProtect.m_MainInfo.IsVersion == 1) //Skin Ss2
 	{
 		return RenderSS2();
@@ -778,11 +784,17 @@ bool SEASON3B::CNewUIMainFrameWindow::Render()
 
 void SEASON3B::CNewUIMainFrameWindow::Render3D()
 {
+#if defined(__ANDROID__) || defined(MU_IOS)
+	return;
+#endif
 	m_ItemHotKey.RenderItems();
 }
 
 void SEASON3B::CNewUIMainFrameWindow::UI2DEffectCallback(LPVOID pClass, DWORD dwParamA, DWORD dwParamB)
 {
+#if defined(__ANDROID__) || defined(MU_IOS)
+	return;
+#endif
 	g_pMainFrame->RenderHotKeyItemCount();
 
 }

@@ -63,6 +63,7 @@ static void android_set_data_dir_early()
 #include <array>
 #include <cctype>
 #include <cstdarg>
+#include <cstdio>
 #include <cmath>
 #include <cstring>
 #include <fstream>
@@ -118,12 +119,16 @@ bool AndroidBindVirtualPotionSlotFromInventory(int itemType, int itemLevel);
 #include "CB_MUHelper.h"
 #include "CB_NewJewelBank.h"
 #include "CB_JewelBank.h"
+#include "CBInterface.h"
+#include "CustomEventTime.h"
+#include "CustomRanking.h"
 #include "DuelMgr.h"
 #include "GameShop/InGameShopSystem.h"
 #include "Platform/AndroidGDI.h"
 #include "Platform/RenderBackend.h"
 #include "Platform/gl_compat.h"
 #include "android/AndroidNetwork.h"
+#include "android/AndroidCashShop.h"
 #include "android/SimpleModulusCrypt.h"
 #ifndef min
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -613,18 +618,18 @@ enum VirtualRightPanelUtilityAction
 };
 
 constexpr std::array<const TCHAR*, kVirtualRightPanelUtilityActionCount> kVirtualRightPanelUtilityLabels = {
-    _T("PK"),
-    _T("CHAT"),
-    _T("JWL"),
+    _T("MENU"),
     _T("SHOP"),
-    _T("HELP"),
+    _T("RANK"),
     _T("BAG"),
     _T("CHAR"),
+    _T("BANK"),
+    _T("EVENT"),
+    _T("MOVE"),
     _T("MAP"),
-    _T("SET"),
+    _T("CHAT"),
     _T("CMD"),
-    _T("FRD"),
-    _T("GLD"),
+    _T("OPT"),
 };
 constexpr const TCHAR* kVirtualRightPanelModeButtonLabel = _T("CHG");
 
@@ -727,7 +732,32 @@ static UITexture g_uiTex_joystick2;
 static UITexture g_uiTex_balo;
 static UITexture g_uiTex_character;
 static UITexture g_uiTex_setting;
+static UITexture g_uiTex_muButtonBase;
+static UITexture g_uiTex_muButtonBaseHover;
+static UITexture g_uiTex_portraitDefault;
+static UITexture g_uiTex_portraitDw;
+static UITexture g_uiTex_portraitDk;
+static UITexture g_uiTex_portraitEf;
+static UITexture g_uiTex_portraitMg;
+static UITexture g_uiTex_portraitDl;
+static UITexture g_uiTex_portraitSm;
+static UITexture g_uiTex_portraitRf;
+static UITexture g_uiTex_barMain;
+static UITexture g_uiTex_barSub;
+static UITexture g_uiTex_bottomBarLeft;
+static UITexture g_uiTex_bottomBarCenter;
+static UITexture g_uiTex_bottomBarRight;
+static std::array<UITexture, kVirtualRightPanelUtilityActionCount> g_uiTex_bottomButtons;
+static std::array<UITexture, kVirtualRightPanelUtilityActionCount> g_uiTex_bottomButtonsActive;
 static bool g_uiTexturesLoaded = false;
+
+constexpr GLuint kAndroidBottomBarMainbarBitmap = 111100;
+constexpr GLuint kAndroidBottomBarMenuButtonBitmap = 111101;
+constexpr GLuint kAndroidBottomBarMenuLeftBitmap = 111102;
+constexpr GLuint kAndroidBottomBarMenuCenterBitmap = 111103;
+constexpr GLuint kAndroidBottomBarMenuRightBitmap = 111104;
+constexpr GLuint kAndroidBottomBarButtonBitmapBase = 111110;
+static bool g_androidBottomBarAssetsLoaded = false;
 
 constexpr float kSkillLineU = 157.0f / 677.0f;
 constexpr float kSkillLineV = 3.0f / 369.0f;
@@ -749,6 +779,42 @@ struct AndroidUiRect
     float w = 0.0f;
     float h = 0.0f;
 };
+
+AndroidUiRect GetVirtualRightPanelGridRect(int gridSlot);
+bool IsVirtualRightPanelUtilityActionActive(int button);
+
+constexpr std::array<int, 11> kAndroidBottomMenuActions = {
+    kVirtualRightPanelUtilityActionPk,
+    kVirtualRightPanelUtilityActionChat,
+    kVirtualRightPanelUtilityActionJewelBank,
+    kVirtualRightPanelUtilityActionXShop,
+    kVirtualRightPanelUtilityActionHelper,
+    kVirtualRightPanelUtilityActionBag,
+    kVirtualRightPanelUtilityActionCharacter,
+    kVirtualRightPanelUtilityActionMap,
+    kVirtualRightPanelUtilityActionCommand,
+    kVirtualRightPanelUtilityActionFriend,
+    kVirtualRightPanelUtilityActionGuild,
+};
+constexpr float kAndroidBottomMenuWidth = 420.0f;
+constexpr float kAndroidBottomMenuButtonW =
+    kAndroidBottomMenuWidth / static_cast<float>(kAndroidBottomMenuActions.size());
+constexpr float kAndroidBottomMenuButtonH = 46.0f;
+constexpr float kAndroidBottomMenuY = 432.0f;
+constexpr float kAndroidHudPortraitX = 14.0f;
+constexpr float kAndroidHudPortraitY = 10.0f;
+constexpr float kAndroidHudPortraitW = 204.0f;
+constexpr float kAndroidHudPortraitH = 68.0f;
+constexpr float kAndroidHudBarMainX = kAndroidHudPortraitX + 61.0f;
+constexpr float kAndroidHudBarMainY = kAndroidHudPortraitY + 17.0f;
+constexpr float kAndroidHudBarMainW = 122.0f;
+constexpr float kAndroidHudBarMainH = 26.0f;
+constexpr float kAndroidHudBarSubX = kAndroidHudPortraitX + 64.0f;
+constexpr float kAndroidHudBarSubY = kAndroidHudPortraitY + 46.0f;
+constexpr float kAndroidHudBarSubW = 115.0f;
+constexpr float kAndroidHudBarSubH = 7.0f;
+constexpr float kAndroidHudMapLabelX = kAndroidHudPortraitX + 67.0f;
+constexpr float kAndroidHudMapLabelY = 5.0f;
 
 AndroidUiRect GetVirtualMirrorHotKeyRect(int slot)
 {
@@ -839,17 +905,23 @@ AndroidUiRect GetVirtualRightPanelRect()
 
 AndroidUiRect GetVirtualRightPanelGridRect(int gridSlot)
 {
-    if (gridSlot < 0 || gridSlot >= kVirtualRightPanelUtilityActionCount)
+    const auto action = std::find(
+        kAndroidBottomMenuActions.begin(),
+        kAndroidBottomMenuActions.end(),
+        gridSlot);
+    if (action == kAndroidBottomMenuActions.end())
     {
         return {};
     }
 
-    const VirtualUiOffset& buttonPos = kVirtualRightPanelButtonTopLefts[gridSlot];
+    const int displaySlot = static_cast<int>(
+        std::distance(kAndroidBottomMenuActions.begin(), action));
+    const float startX = (640.0f - kAndroidBottomMenuWidth) * 0.5f;
     return {
-        buttonPos.x,
-        buttonPos.y,
-        kVirtualRightPanelButtonW,
-        kVirtualRightPanelButtonH
+        startX + displaySlot * kAndroidBottomMenuButtonW,
+        kAndroidBottomMenuY,
+        kAndroidBottomMenuButtonW,
+        kAndroidBottomMenuButtonH
     };
 }
 
@@ -939,7 +1011,7 @@ constexpr float kZoomAnchorCenterX = 318.0f;
 constexpr float kZoomMinusX = kZoomAnchorCenterX - kZoomButtonGap * 0.5f - kZoomButtonW;
 constexpr float kZoomPlusX  = kZoomAnchorCenterX + kZoomButtonGap * 0.5f;
 constexpr float kZoomStep = 100.0f;   // distance per tap
-constexpr float kZoomMin  = 800.0f;
+constexpr float kZoomMin  = 1000.0f;
 constexpr float kZoomMax  = 1600.0f;
 constexpr uint32_t kZoomCooldownMs = 180;
 constexpr float kMainFrameItemHotKeyX = 0.0f;
@@ -2666,52 +2738,6 @@ void ToggleVirtualSkillPickerByTouch();
 
 bool HandleVirtualTopControlTap(float uiX, float uiY)
 {
-    const uint32_t nowMs = MU_MobileGetTicks();
-
-    if (HitTestMiniMapToggleButton(uiX, uiY))
-    {
-        if ((nowMs - g_virtualLastMiniMapTapMs) >= kVirtualMiniMapButtonCooldownMs)
-        {
-            g_virtualLastMiniMapTapMs = nowMs;
-            ToggleMiniMapByVirtualButton();
-        }
-
-        return true;
-    }
-
-    if (HitTestMapButton(uiX, uiY))
-    {
-        if ((nowMs - g_virtualLastMiniMapTapMs) >= kVirtualMiniMapButtonCooldownMs)
-        {
-            g_virtualLastMiniMapTapMs = nowMs;
-            ToggleMapListByVirtualButton();
-        }
-
-        return true;
-    }
-
-    if (HitTestVirtualChatUtilityButton(uiX, uiY))
-    {
-        if ((nowMs - g_virtualLastUtilityTapMs) >= kVirtualUtilityButtonCooldownMs)
-        {
-            g_virtualLastUtilityTapMs = nowMs;
-            ToggleVirtualChatInputBox();
-        }
-
-        return true;
-    }
-
-    if (kUseLegacyMainHud)
-    {
-        return false;
-    }
-
-    if (HitTestVirtualCurrentSkillBox(uiX, uiY))
-    {
-        ToggleVirtualSkillPickerByTouch();
-        return true;
-    }
-
     return false;
 }
 
@@ -3661,27 +3687,29 @@ bool IsVirtualRightPanelUtilityActionActive(int button)
     switch (button)
     {
     case kVirtualRightPanelUtilityActionPk:
-        return g_pBCustomMenuInfo != nullptr && g_pBCustomMenuInfo->AutoCtrlPK;
+        return gInterface.Data[eMenu_MAIN].OnShow;
     case kVirtualRightPanelUtilityActionChat:
-        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_CHATINPUTBOX);
-    case kVirtualRightPanelUtilityActionXShop:
         return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_INGAMESHOP);
-    case kVirtualRightPanelUtilityActionHelper:
-        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MuHelper);
-    case kVirtualRightPanelUtilityActionBag:
+    case kVirtualRightPanelUtilityActionJewelBank:
+        return gInterface.Data[eRankPANEL_MAIN].OnShow;
+    case kVirtualRightPanelUtilityActionXShop:
         return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_INVENTORY);
-    case kVirtualRightPanelUtilityActionCharacter:
+    case kVirtualRightPanelUtilityActionHelper:
         return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_CHARACTER);
+    case kVirtualRightPanelUtilityActionBag:
+        return gInterface.Data[eWindowJewelBank].OnShow;
+    case kVirtualRightPanelUtilityActionCharacter:
+        return gInterface.Data[eWindowEventTime].OnShow;
     case kVirtualRightPanelUtilityActionMap:
         return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MOVEMAP);
     case kVirtualRightPanelUtilityActionSetting:
-        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_OPTION);
+        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MINI_MAP);
     case kVirtualRightPanelUtilityActionCommand:
-        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_COMMAND);
+        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_CHATINPUTBOX);
     case kVirtualRightPanelUtilityActionFriend:
-        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_FRIEND);
+        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_COMMAND);
     case kVirtualRightPanelUtilityActionGuild:
-        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_GUILDINFO);
+        return g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_OPTION);
     default:
         return false;
     }
@@ -3733,63 +3761,52 @@ void TriggerVirtualRightPanelUtilityAction(int button)
     switch (button)
     {
     case kVirtualRightPanelUtilityActionPk:
-        if (g_pBCustomMenuInfo != nullptr)
-        {
-            g_pBCustomMenuInfo->AutoCtrlPK ^= 1;
-            PlayBuffer(SOUND_CLICK01);
-        }
+        gInterface.Data[eMenu_MAIN].OnShow ^= 1;
+        PlayBuffer(SOUND_CLICK01);
         break;
 
     case kVirtualRightPanelUtilityActionChat:
-        ToggleVirtualChatInputBox();
+        AndroidCashShop::Instance().RequestToggle();
         PlayBuffer(SOUND_CLICK01);
         break;
 
     case kVirtualRightPanelUtilityActionJewelBank:
-#if defined(JEWELBANKVER2) && (JEWELBANKVER2)
-        if (gCB_NewJewelBank != nullptr)
+        if (gCustomRanking != nullptr)
         {
-            gCB_NewJewelBank->OpenOnOff();
-            PlayBuffer(SOUND_CLICK01);
+            gCustomRanking->OpenWindow();
         }
-#else
-        gCBJewelBank.OpenOnOff();
         PlayBuffer(SOUND_CLICK01);
-#endif
         break;
 
     case kVirtualRightPanelUtilityActionXShop:
-#ifdef KJH_ADD_INGAMESHOP_UI_SYSTEM
-        if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_INGAMESHOP) == false)
-        {
-            if (g_InGameShopSystem->GetIsRequestShopOpenning() == false)
-            {
-                SendRequestIGS_CashShopOpen(0);
-                g_InGameShopSystem->SetIsRequestShopOpenning(true);
-                PlayBuffer(SOUND_CLICK01);
-            }
-        }
-        else
-        {
-            SendRequestIGS_CashShopOpen(1);
-            g_pNewUISystem->Hide(SEASON3B::INTERFACE_INGAMESHOP);
-            PlayBuffer(SOUND_CLICK01);
-        }
-#endif
-        break;
-
-    case kVirtualRightPanelUtilityActionHelper:
-        g_pNewUISystem->Toggle(SEASON3B::INTERFACE_MuHelper);
-        PlayBuffer(SOUND_CLICK01);
-        break;
-
-    case kVirtualRightPanelUtilityActionBag:
         g_pNewUISystem->Toggle(SEASON3B::INTERFACE_INVENTORY);
         PlayBuffer(SOUND_CLICK01);
         break;
 
-    case kVirtualRightPanelUtilityActionCharacter:
+    case kVirtualRightPanelUtilityActionHelper:
         g_pNewUISystem->Toggle(SEASON3B::INTERFACE_CHARACTER);
+        PlayBuffer(SOUND_CLICK01);
+        break;
+
+    case kVirtualRightPanelUtilityActionBag:
+#if defined(JEWELBANKVER2) && (JEWELBANKVER2)
+        if (gCB_NewJewelBank != nullptr)
+        {
+            gCB_NewJewelBank->OpenOnOff();
+        }
+#else
+        gCBJewelBank.OpenOnOff();
+#endif
+        PlayBuffer(SOUND_CLICK01);
+        break;
+
+    case kVirtualRightPanelUtilityActionCharacter:
+        gInterface.Data[eWindowEventTime].OpenClose();
+        if (gInterface.Data[eWindowEventTime].OnShow)
+        {
+            gCustomEventTime.ClearCustomEventTime();
+            gCustomEventTime.OpenTestWindow();
+        }
         PlayBuffer(SOUND_CLICK01);
         break;
 
@@ -3799,11 +3816,16 @@ void TriggerVirtualRightPanelUtilityAction(int button)
         break;
 
     case kVirtualRightPanelUtilityActionSetting:
-        g_pNewUISystem->Toggle(SEASON3B::INTERFACE_OPTION);
+        ToggleMiniMapByVirtualButton();
         PlayBuffer(SOUND_CLICK01);
         break;
 
     case kVirtualRightPanelUtilityActionCommand:
+        ToggleVirtualChatInputBox();
+        PlayBuffer(SOUND_CLICK01);
+        break;
+
+    case kVirtualRightPanelUtilityActionFriend:
         if (gMapManager.InChaosCastle() == false)
         {
             g_pNewUISystem->Toggle(SEASON3B::INTERFACE_COMMAND);
@@ -3811,13 +3833,8 @@ void TriggerVirtualRightPanelUtilityAction(int button)
         }
         break;
 
-    case kVirtualRightPanelUtilityActionFriend:
-        ToggleFriendListByVirtualButton();
-        PlayBuffer(SOUND_CLICK01);
-        break;
-
     case kVirtualRightPanelUtilityActionGuild:
-        g_pNewUISystem->Toggle(SEASON3B::INTERFACE_GUILDINFO);
+        g_pNewUISystem->Toggle(SEASON3B::INTERFACE_OPTION);
         PlayBuffer(SOUND_CLICK01);
         break;
 
@@ -3828,16 +3845,34 @@ void TriggerVirtualRightPanelUtilityAction(int button)
 
 int HitTestVirtualRightPanelUtilityActionButton(float uiX, float uiY)
 {
-    if (!g_virtualRightPanelUtilityMode || !IsVirtualPadAvailable())
+    if (!IsVirtualPadAvailable())
     {
         return -1;
     }
 
-    for (int button = 0; button < kVirtualRightPanelUtilityActionCount; ++button)
+    for (const int action : kAndroidBottomMenuActions)
     {
-        if (HitTestAndroidUiRect(uiX, uiY, GetVirtualRightPanelGridRect(button)))
+        const AndroidUiRect rect = GetVirtualRightPanelGridRect(action);
+        if (!HitTestAndroidUiRect(uiX, uiY, rect))
         {
-            return button;
+            continue;
+        }
+
+        const float localX = (uiX - rect.x) / rect.w;
+        const float localY = (uiY - rect.y) / rect.h;
+        const float circleX = localX - 0.5f;
+        const float circleY = localY - 0.43f;
+        const bool overMedallion =
+            ((circleX * circleX) / (0.45f * 0.45f))
+            + ((circleY * circleY) / (0.39f * 0.39f)) <= 1.0f;
+        const bool overNamePlaque =
+            localY >= 0.72f
+            && localY <= 0.98f
+            && localX >= 0.03f
+            && localX <= 0.97f;
+        if (overMedallion || overNamePlaque)
+        {
+            return action;
         }
     }
 
@@ -3846,42 +3881,17 @@ int HitTestVirtualRightPanelUtilityActionButton(float uiX, float uiY)
 
 bool HitTestVirtualRightPanelModeButton(float uiX, float uiY)
 {
-    if (!IsVirtualPadAvailable())
-    {
-        return false;
-    }
-
-    const AndroidUiRect rect = g_virtualRightPanelUtilityMode
-        ? GetVirtualRightPanelUtilityModeButtonRect()
-        : GetVirtualRightPanelCombatModeButtonRect();
-    return HitTestAndroidUiRect(uiX, uiY, rect);
+    return false;
 }
 
 bool HitTestVirtualRightPanelFrame(float uiX, float uiY)
 {
-    return g_virtualRightPanelUtilityMode
-        && IsVirtualPadAvailable()
-        && HitTestAndroidUiRect(uiX, uiY, GetVirtualRightPanelRect());
+    return false;
 }
 
 bool HandleVirtualRightPanelTap(float uiX, float uiY)
 {
     const uint32_t nowMs = MU_MobileGetTicks();
-
-    if (ShouldYieldVirtualRightPanelUtilityOverlay())
-    {
-        return false;
-    }
-
-    if (HitTestVirtualRightPanelModeButton(uiX, uiY))
-    {
-        if ((nowMs - g_virtualLastUtilityTapMs) >= kVirtualUtilityButtonCooldownMs)
-        {
-            g_virtualLastUtilityTapMs = nowMs;
-            ToggleVirtualRightPanelMode();
-        }
-        return true;
-    }
 
     const int utilityButton = HitTestVirtualRightPanelUtilityActionButton(uiX, uiY);
     if (utilityButton >= 0)
@@ -3899,24 +3909,6 @@ bool HandleVirtualRightPanelTap(float uiX, float uiY)
 
 int HitTestVirtualMirrorHotKeySlot(float uiX, float uiY)
 {
-    if (!IsVirtualPadAvailable() || IsVirtualRightPanelUtilityWindowVisible())
-    {
-        return -1;
-    }
-
-    for (int slot = 0; slot < kVirtualMirrorHotKeySlotCount; ++slot)
-    {
-        AndroidUiRect rect = GetVirtualMirrorHotKeyRect(slot);
-        rect.x -= kVirtualMirrorHotKeyTouchPadding;
-        rect.y -= kVirtualMirrorHotKeyTouchPadding;
-        rect.w += kVirtualMirrorHotKeyTouchPadding * 2.0f;
-        rect.h += kVirtualMirrorHotKeyTouchPadding * 2.0f;
-        if (HitTestAndroidUiRect(uiX, uiY, rect))
-        {
-            return slot;
-        }
-    }
-
     return -1;
 }
 
@@ -4892,6 +4884,11 @@ bool HandleVirtualFingerDown(const SDL_TouchFingerEvent& touch)
     float uiY = 0.0f;
     TouchToVirtualUi(touch, uiX, uiY);
 
+    if (AndroidCashShop::Instance().HandleTap(uiX, uiY))
+    {
+        return true;
+    }
+
     {
         CCharMakeWin& charMakeWin = CUIMng::Instance().m_CharMakeWin;
         if (charMakeWin.IsShow())
@@ -5480,6 +5477,104 @@ static UITexture LoadUITextureAsset(const char* assetPath)
     return tex;
 }
 
+static UITexture LoadSpkTextureAsset(const char* relativePath, int frameIndex = 0, int frameCount = 1)
+{
+    UITexture tex;
+
+    std::ifstream file(relativePath, std::ios::binary | std::ios::ate);
+    if (!file)
+    {
+        LOGE("LoadSpkTextureAsset: fopen failed for '%s'", relativePath);
+        return tex;
+    }
+
+    const std::streamsize fileSize = file.tellg();
+    if (fileSize <= 22)
+    {
+        LOGE("LoadSpkTextureAsset: invalid size for '%s'", relativePath);
+        return tex;
+    }
+
+    std::vector<unsigned char> raw(static_cast<size_t>(fileSize));
+    file.seekg(0, std::ios::beg);
+    if (!file.read(reinterpret_cast<char*>(raw.data()), fileSize))
+    {
+        LOGE("LoadSpkTextureAsset: read failed for '%s'", relativePath);
+        return tex;
+    }
+
+    if (!(raw[0] == 'S' && raw[1] == 'P' && raw[2] == 'K'))
+    {
+        LOGE("LoadSpkTextureAsset: bad header for '%s'", relativePath);
+        return tex;
+    }
+
+    const int width = static_cast<int>(raw[16] | (raw[17] << 8));
+    const int fullHeight = static_cast<int>(raw[18] | (raw[19] << 8));
+    const int bitsPerPixel = static_cast<int>(raw[20] | (raw[21] << 8));
+    if (width <= 0 || fullHeight <= 0 || bitsPerPixel != 32 || frameCount <= 0 || (fullHeight % frameCount) != 0)
+    {
+        LOGE(
+            "LoadSpkTextureAsset: unsupported metadata file='%s' w=%d h=%d bpp=%d frames=%d",
+            relativePath,
+            width,
+            fullHeight,
+            bitsPerPixel,
+            frameCount);
+        return tex;
+    }
+
+    const int frameHeight = fullHeight / frameCount;
+    const int clampedFrame = std::clamp(frameIndex, 0, frameCount - 1);
+    const size_t headerSize = 22;
+    const size_t expectedSize = headerSize + static_cast<size_t>(width) * static_cast<size_t>(fullHeight) * 4u;
+    if (raw.size() < expectedSize)
+    {
+        LOGE(
+            "LoadSpkTextureAsset: truncated file='%s' size=%zu expected=%zu",
+            relativePath,
+            raw.size(),
+            expectedSize);
+        return tex;
+    }
+
+    std::vector<unsigned char> pixels(static_cast<size_t>(width) * static_cast<size_t>(frameHeight) * 4u);
+    for (int y = 0; y < frameHeight; ++y)
+    {
+        const int srcY = clampedFrame * frameHeight + y;
+        const unsigned char* src = raw.data() + headerSize + static_cast<size_t>(srcY) * static_cast<size_t>(width) * 4u;
+        unsigned char* dst = pixels.data() + static_cast<size_t>(frameHeight - 1 - y) * static_cast<size_t>(width) * 4u;
+        for (int x = 0; x < width; ++x)
+        {
+            dst[0] = src[2];
+            dst[1] = src[1];
+            dst[2] = src[0];
+            dst[3] = src[3];
+            src += 4;
+            dst += 4;
+        }
+    }
+
+    glGenTextures(1, &tex.id);
+    glBindTexture(GL_TEXTURE_2D, tex.id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, frameHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+
+    tex.w = width;
+    tex.h = frameHeight;
+    LOGI(
+        "LoadSpkTextureAsset: OK '%s' (%dx%d of %d frames texId=%u)",
+        relativePath,
+        width,
+        frameHeight,
+        frameCount,
+        tex.id);
+    return tex;
+}
+
 static void EnsureUITextures()
 {
     if (g_uiTexturesLoaded) return;
@@ -5494,6 +5589,18 @@ static void EnsureUITextures()
     g_uiTex_balo      = LoadUITextureAsset("ui/balo.png");
     g_uiTex_character = LoadUITextureAsset("ui/character.png");
     g_uiTex_setting   = LoadUITextureAsset("ui/setting.png");
+    g_uiTex_muButtonBase = LoadUITextureAsset("ui/mu_button_base.png");
+    g_uiTex_muButtonBaseHover = LoadUITextureAsset("ui/mu_button_base_hover.png");
+    g_uiTex_portraitDefault = LoadUITextureAsset("ui/info/characterinfoleft.png");
+    g_uiTex_portraitDw = LoadUITextureAsset("ui/info/characterinfoleft_dw.png");
+    g_uiTex_portraitDk = LoadUITextureAsset("ui/info/characterinfoleft_dk.png");
+    g_uiTex_portraitEf = LoadUITextureAsset("ui/info/characterinfoleft_ef.png");
+    g_uiTex_portraitMg = LoadUITextureAsset("ui/info/characterinfoleft_mg.png");
+    g_uiTex_portraitDl = LoadUITextureAsset("ui/info/characterinfoleft_dl.png");
+    g_uiTex_portraitSm = LoadUITextureAsset("ui/info/characterinfoleft_sm.png");
+    g_uiTex_portraitRf = LoadUITextureAsset("ui/info/characterinfoleft_rf.png");
+    g_uiTex_barMain = LoadUITextureAsset("ui/info/mainarsdhp.png");
+    g_uiTex_barSub = LoadUITextureAsset("ui/info/mainsubsdmn.png");
 }
 
 // Draw a PNG icon at the given UI rect â€” NO background, NO border.
@@ -5559,6 +5666,450 @@ static void DrawIconButtonUv(float uiX, float uiY, float uiW, float uiH,
     glDisable(GL_TEXTURE_2D);
 
     glBlendFunc(GL_ONE, GL_ONE);
+}
+
+static BITMAP_t* FindAndroidBottomBitmap(GLuint bitmapId)
+{
+    return Bitmaps.FindTexture(bitmapId);
+}
+
+static bool EnsureAndroidBottomBitmap(GLuint bitmapId, const char* primaryPath, const char* fallbackPath = nullptr)
+{
+    if (FindAndroidBottomBitmap(bitmapId) != nullptr)
+    {
+        return true;
+    }
+
+    const bool loadedPrimary = (primaryPath != nullptr)
+        && LoadBitmap(primaryPath, bitmapId, GL_LINEAR, GL_CLAMP_TO_EDGE, true);
+    if (loadedPrimary)
+    {
+        BITMAP_t* bitmap = FindAndroidBottomBitmap(bitmapId);
+        LOGI(
+            "AndroidBottomBar: loaded %s -> id=%u size=%.1fx%.1f",
+            primaryPath,
+            bitmapId,
+            bitmap != nullptr ? bitmap->Width : 0.0f,
+            bitmap != nullptr ? bitmap->Height : 0.0f);
+        return true;
+    }
+
+    if (fallbackPath != nullptr
+        && LoadBitmap(fallbackPath, bitmapId, GL_LINEAR, GL_CLAMP_TO_EDGE, true))
+    {
+        BITMAP_t* bitmap = FindAndroidBottomBitmap(bitmapId);
+        LOGW(
+            "AndroidBottomBar: fallback %s -> id=%u size=%.1fx%.1f",
+            fallbackPath,
+            bitmapId,
+            bitmap != nullptr ? bitmap->Width : 0.0f,
+            bitmap != nullptr ? bitmap->Height : 0.0f);
+        return true;
+    }
+
+    LOGE(
+        "AndroidBottomBar: failed to load id=%u primary=%s fallback=%s",
+        bitmapId,
+        primaryPath != nullptr ? primaryPath : "<null>",
+        fallbackPath != nullptr ? fallbackPath : "<null>");
+    return false;
+}
+
+static void EnsureAndroidBottomBarAssets()
+{
+    if (g_androidBottomBarAssetsLoaded)
+    {
+        return;
+    }
+
+    g_androidBottomBarAssetsLoaded = true;
+
+    static const char* const kBottomButtonBitmapNames[kVirtualRightPanelUtilityActionCount] =
+    {
+        "menu",
+        "shop",
+        "rank",
+        "bag",
+        "char",
+        "bank",
+        "event",
+        "move",
+        "map",
+        "chat",
+        "cmd",
+        "opt"
+    };
+
+    for (int button = 0; button < kVirtualRightPanelUtilityActionCount; ++button)
+    {
+        char normalPath[MAX_PATH] = {};
+        char activePath[MAX_PATH] = {};
+        std::snprintf(
+            normalPath,
+            sizeof(normalPath),
+            "ui/bottombar/mu_button_base_%s.png",
+            kBottomButtonBitmapNames[button]);
+        std::snprintf(
+            activePath,
+            sizeof(activePath),
+            "ui/bottombar/mu_button_base_%s_active.png",
+            kBottomButtonBitmapNames[button]);
+        g_uiTex_bottomButtons[button] = LoadUITextureAsset(normalPath);
+        g_uiTex_bottomButtonsActive[button] = LoadUITextureAsset(activePath);
+    }
+}
+
+static void RenderAndroidBitmap(GLuint bitmapId, float x, float y, float width, float height, DWORD color = RGBA(255, 255, 255, 255))
+{
+    if (FindAndroidBottomBitmap(bitmapId) == nullptr)
+    {
+        return;
+    }
+
+    SEASON3B::RenderImage(bitmapId, x, y, width, height, 0.0f, 0.0f, color);
+}
+
+static void RenderAndroidBitmapFitted(GLuint bitmapId, float x, float y, float targetW, float targetH, DWORD color = RGBA(255, 255, 255, 255))
+{
+    BITMAP_t* bitmap = FindAndroidBottomBitmap(bitmapId);
+    if (bitmap == nullptr || bitmap->Width <= 0.0f || bitmap->Height <= 0.0f)
+    {
+        return;
+    }
+
+    const float scale = std::min(targetW / bitmap->Width, targetH / bitmap->Height);
+    const float renderW = bitmap->Width * scale;
+    const float renderH = bitmap->Height * scale;
+    const float renderX = x + (targetW - renderW) * 0.5f;
+    const float renderY = y + (targetH - renderH) * 0.5f;
+    RenderAndroidBitmap(bitmapId, renderX, renderY, renderW, renderH, color);
+}
+
+static float GetAndroidSafeRatio(DWORD current, DWORD maximum)
+{
+    if (maximum == 0)
+    {
+        return 0.0f;
+    }
+
+    return std::clamp(
+        static_cast<float>(current) / static_cast<float>(maximum),
+        0.0f,
+        1.0f);
+}
+
+static const UITexture& GetAndroidHudPortraitTexture()
+{
+    if (Hero == nullptr)
+    {
+        return g_uiTex_portraitDefault.id != 0 ? g_uiTex_portraitDefault : g_uiTex_portraitDw;
+    }
+
+    switch (gCharacterManager.GetBaseClass(Hero->Class))
+    {
+    case CLASS_WIZARD:
+        return g_uiTex_portraitDw.id != 0 ? g_uiTex_portraitDw : g_uiTex_portraitDefault;
+    case CLASS_KNIGHT:
+        return g_uiTex_portraitDk.id != 0 ? g_uiTex_portraitDk : g_uiTex_portraitDefault;
+    case CLASS_ELF:
+        return g_uiTex_portraitEf.id != 0 ? g_uiTex_portraitEf : g_uiTex_portraitDefault;
+    case CLASS_DARK:
+        return g_uiTex_portraitMg.id != 0 ? g_uiTex_portraitMg : g_uiTex_portraitDefault;
+    case CLASS_DARK_LORD:
+        return g_uiTex_portraitDl.id != 0 ? g_uiTex_portraitDl : g_uiTex_portraitDefault;
+#ifdef CLASS_SUMMONER
+    case CLASS_SUMMONER:
+        return g_uiTex_portraitSm.id != 0 ? g_uiTex_portraitSm : g_uiTex_portraitDefault;
+#endif
+#ifdef CLASS_RAGEFIGHTER
+    case CLASS_RAGEFIGHTER:
+        return g_uiTex_portraitRf.id != 0 ? g_uiTex_portraitRf : g_uiTex_portraitDefault;
+#endif
+    default:
+        return g_uiTex_portraitDefault.id != 0 ? g_uiTex_portraitDefault : g_uiTex_portraitDw;
+    }
+}
+
+static void DrawAndroidHudBarFill(float x, float y, float w, float h,
+                                  float ratio,
+                                  float r, float g, float b,
+                                  float backR, float backG, float backB)
+{
+    DrawVirtualRectFilled(x, y, w, h, backR, backG, backB, 0.70f);
+    DrawVirtualRectFilled(x, y, w * std::clamp(ratio, 0.0f, 1.0f), h, r, g, b, 0.92f);
+}
+
+static void DrawAndroidBottomButtonLabel(const AndroidUiRect& rect, const TCHAR* label, bool active)
+{
+    const float plaqueW = rect.w * 0.78f;
+    const float plaqueH = 6.5f;
+    const float plaqueX = rect.x + (rect.w - plaqueW) * 0.5f;
+    const float plaqueY = rect.y + rect.h - 7.0f;
+    DrawVirtualRectFilled(plaqueX, plaqueY, plaqueW, plaqueH, 0.52f, 0.13f, 0.02f, active ? 0.94f : 0.88f);
+    DrawVirtualRectFilled(plaqueX + 0.8f, plaqueY + 0.8f, plaqueW - 1.6f, plaqueH - 1.6f, 0.86f, 0.38f, 0.06f, active ? 0.90f : 0.78f);
+    DrawVirtualRectOutline(plaqueX, plaqueY, plaqueW, plaqueH, 0.98f, 0.86f, 0.46f, active ? 0.96f : 0.88f, 1.0f);
+
+    if (g_pRenderText != nullptr)
+    {
+        g_pRenderText->SetFont(g_hFixFont != nullptr ? g_hFixFont : g_hFont);
+        g_pRenderText->SetBgColor(0);
+        g_pRenderText->SetTextColor(active ? 35 : 25, active ? 18 : 12, 0, 255);
+        g_pRenderText->RenderText(
+            static_cast<int>(plaqueX + plaqueW * 0.5f),
+            static_cast<int>(plaqueY - 1.0f),
+            label,
+            0,
+            0,
+            RT3_WRITE_CENTER);
+    }
+}
+
+static void DrawAndroidRoundButton(float cx, float cy, float size, bool active, float alpha = 1.0f)
+{
+    DrawVirtualCircle(
+        cx,
+        cy,
+        size * 0.5f,
+        active ? 0.32f : 0.11f,
+        active ? 0.22f : 0.10f,
+        active ? 0.10f : 0.10f,
+        active ? alpha : alpha * 0.92f,
+        true);
+
+    DrawVirtualCircle(
+        cx,
+        cy,
+        size * 0.40f,
+        0.06f,
+        0.06f,
+        0.06f,
+        active ? alpha * 0.74f : alpha * 0.62f,
+        true);
+
+    DrawVirtualCircle(
+        cx,
+        cy,
+        size * 0.5f,
+        active ? 0.95f : 0.46f,
+        active ? 0.72f : 0.34f,
+        active ? 0.28f : 0.26f,
+        alpha,
+        false);
+
+    DrawVirtualCircle(
+        cx - size * 0.10f,
+        cy + size * 0.12f,
+        size * 0.16f,
+        1.0f,
+        0.95f,
+        0.72f,
+        active ? 0.22f : 0.14f,
+        true);
+}
+
+static void DrawAndroidBottomButtonIconStroke(float x1, float y1, float x2, float y2,
+                                              float r, float g, float b, float a, float width = 1.3f)
+{
+    const float sx1 = UiToScreenX(x1);
+    const float sy1 = static_cast<float>(WindowHeight) - UiToScreenY(y1);
+    const float sx2 = UiToScreenX(x2);
+    const float sy2 = static_cast<float>(WindowHeight) - UiToScreenY(y2);
+    glLineWidth(width);
+    glColor4f(r, g, b, a);
+    glBegin(GL_LINES);
+    glVertex2f(sx1, sy1);
+    glVertex2f(sx2, sy2);
+    glEnd();
+    glLineWidth(1.0f);
+}
+
+static void DrawAndroidBottomButtonIconCircle(float cx, float cy, float radius,
+                                              float r, float g, float b, float a, bool filled)
+{
+    DrawVirtualCircle(cx, cy, radius, r, g, b, a, filled);
+}
+
+static void DrawAndroidBottomButtonIcon(int button, const AndroidUiRect& rect, bool active)
+{
+    const float goldR = active ? 1.0f : 0.96f;
+    const float goldG = active ? 0.95f : 0.84f;
+    const float goldB = active ? 0.74f : 0.52f;
+    const float alpha = active ? 0.98f : 0.92f;
+    const float cx = rect.x + rect.w * 0.5f;
+    const float cy = rect.y + rect.h * 0.60f;
+    const float left = rect.x + 5.0f;
+    const float right = rect.x + rect.w - 5.0f;
+    const float top = rect.y + 5.0f;
+    const float bottom = rect.y + rect.h - 9.0f;
+
+    switch (button)
+    {
+    case 0:
+        for (int row = 0; row < 3; ++row)
+        {
+            for (int col = 0; col < 3; ++col)
+            {
+                DrawVirtualRectFilled(left + col * 4.0f, top + row * 3.5f, 2.2f, 1.8f, goldR, goldG, goldB, alpha);
+            }
+        }
+        break;
+    case 1:
+        DrawVirtualRectOutline(left + 1.0f, top + 3.0f, 10.0f, 6.2f, goldR, goldG, goldB, alpha, 1.0f);
+        DrawAndroidBottomButtonIconStroke(left + 3.0f, top + 10.0f, left + 9.0f, top + 10.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(left + 2.0f, top + 3.0f, left + 4.0f, top + 1.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconCircle(left + 3.4f, top + 11.2f, 0.8f, goldR, goldG, goldB, alpha, false);
+        DrawAndroidBottomButtonIconCircle(left + 8.8f, top + 11.2f, 0.8f, goldR, goldG, goldB, alpha, false);
+        break;
+    case 2:
+        DrawAndroidBottomButtonIconCircle(cx, top + 5.2f, 3.5f, goldR, goldG, goldB, alpha, false);
+        DrawAndroidBottomButtonIconStroke(cx, top + 1.8f, cx, top + 8.6f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx - 3.0f, top + 5.2f, cx + 3.0f, top + 5.2f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx - 2.4f, top + 2.8f, cx + 2.4f, top + 7.6f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx + 2.4f, top + 2.8f, cx - 2.4f, top + 7.6f, goldR, goldG, goldB, alpha);
+        break;
+    case 3:
+        DrawVirtualRectOutline(left + 2.0f, top + 4.0f, 8.0f, 6.0f, goldR, goldG, goldB, alpha, 1.0f);
+        DrawAndroidBottomButtonIconStroke(cx - 2.0f, top + 3.5f, cx + 2.0f, top + 3.5f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx - 2.2f, top + 3.5f, cx - 1.0f, top + 1.7f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx + 2.2f, top + 3.5f, cx + 1.0f, top + 1.7f, goldR, goldG, goldB, alpha);
+        break;
+    case 4:
+        DrawAndroidBottomButtonIconCircle(cx, top + 4.0f, 2.2f, goldR, goldG, goldB, alpha, false);
+        DrawAndroidBottomButtonIconStroke(cx - 4.0f, top + 10.2f, cx + 4.0f, top + 10.2f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx - 3.2f, top + 9.0f, cx, top + 6.8f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx + 3.2f, top + 9.0f, cx, top + 6.8f, goldR, goldG, goldB, alpha);
+        break;
+    case 5:
+        DrawVirtualRectOutline(left + 2.0f, top + 3.0f, 8.0f, 7.0f, goldR, goldG, goldB, alpha, 1.0f);
+        DrawVirtualRectFilled(cx - 0.8f, top + 5.2f, 1.6f, 2.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(left + 2.0f, top + 6.5f, left + 10.0f, top + 6.5f, goldR, goldG, goldB, alpha);
+        break;
+    case 6:
+        DrawVirtualRectOutline(left + 2.0f, top + 2.4f, 8.0f, 8.2f, goldR, goldG, goldB, alpha, 1.0f);
+        DrawAndroidBottomButtonIconStroke(left + 3.0f, top + 4.8f, left + 9.0f, top + 4.8f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(left + 4.0f, top + 2.2f, left + 4.0f, top + 4.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(left + 8.0f, top + 2.2f, left + 8.0f, top + 4.0f, goldR, goldG, goldB, alpha);
+        break;
+    case 7:
+        DrawAndroidBottomButtonIconStroke(left + 2.0f, cy, right - 1.0f, cy, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(right - 1.0f, cy, right - 4.0f, cy - 2.4f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(right - 1.0f, cy, right - 4.0f, cy + 2.4f, goldR, goldG, goldB, alpha);
+        break;
+    case 8:
+        DrawAndroidBottomButtonIconStroke(left + 2.0f, top + 2.0f, left + 2.0f, bottom, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx, top + 3.0f, cx, bottom, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(right - 2.0f, top + 2.0f, right - 2.0f, bottom, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(left + 2.0f, top + 2.0f, cx, top + 4.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx, top + 4.0f, right - 2.0f, top + 2.0f, goldR, goldG, goldB, alpha);
+        break;
+    case 9:
+        DrawAndroidBottomButtonIconCircle(cx - 2.0f, top + 5.0f, 2.5f, goldR, goldG, goldB, alpha, false);
+        DrawAndroidBottomButtonIconCircle(cx + 3.0f, top + 5.2f, 2.9f, goldR, goldG, goldB, alpha, false);
+        DrawAndroidBottomButtonIconStroke(cx - 0.8f, top + 8.0f, cx - 2.2f, top + 10.0f, goldR, goldG, goldB, alpha);
+        break;
+    case 10:
+        DrawVirtualRectOutline(left + 2.0f, top + 2.0f, 8.0f, 8.4f, goldR, goldG, goldB, alpha, 1.0f);
+        DrawAndroidBottomButtonIconStroke(left + 3.5f, top + 4.0f, left + 8.5f, top + 4.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(left + 3.5f, top + 6.2f, left + 8.5f, top + 6.2f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(left + 3.5f, top + 8.4f, left + 7.2f, top + 8.4f, goldR, goldG, goldB, alpha);
+        break;
+    case 11:
+        DrawAndroidBottomButtonIconStroke(cx - 3.2f, top + 3.0f, cx - 3.2f, top + 10.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx + 0.2f, top + 3.0f, cx + 0.2f, top + 10.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconStroke(cx + 3.6f, top + 3.0f, cx + 3.6f, top + 10.0f, goldR, goldG, goldB, alpha);
+        DrawAndroidBottomButtonIconCircle(cx - 3.2f, top + 5.0f, 0.9f, goldR, goldG, goldB, alpha, true);
+        DrawAndroidBottomButtonIconCircle(cx + 0.2f, top + 8.2f, 0.9f, goldR, goldG, goldB, alpha, true);
+        DrawAndroidBottomButtonIconCircle(cx + 3.6f, top + 6.0f, 0.9f, goldR, goldG, goldB, alpha, true);
+        break;
+    default:
+        break;
+    }
+}
+
+static void RenderAndroidStatusHud()
+{
+    if (SceneFlag != MAIN_SCENE || CharacterAttribute == nullptr)
+    {
+        return;
+    }
+
+    EnsureUITextures();
+    BeginBitmap();
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    const UITexture& portraitTex = GetAndroidHudPortraitTexture();
+    DrawIconButton(kAndroidHudPortraitX, kAndroidHudPortraitY, kAndroidHudPortraitW, kAndroidHudPortraitH, portraitTex, 1.0f);
+
+    const DWORD curHP = CharacterAttribute->Life;
+    const DWORD maxHP = (std::max<DWORD>)(1u, static_cast<DWORD>(CharacterAttribute->LifeMax));
+    const DWORD curMP = CharacterAttribute->Mana;
+    const DWORD maxMP = (std::max<DWORD>)(1u, static_cast<DWORD>(CharacterAttribute->ManaMax));
+    const DWORD curAG = CharacterAttribute->SkillMana;
+    const DWORD maxAG = (std::max<DWORD>)(1u, static_cast<DWORD>(CharacterAttribute->SkillManaMax));
+
+    DrawAndroidHudBarFill(kAndroidHudBarMainX, kAndroidHudBarMainY + 1.0f, kAndroidHudBarMainW, 10.0f,
+        GetAndroidSafeRatio(curHP, maxHP), 0.92f, 0.12f, 0.10f, 0.20f, 0.02f, 0.02f);
+    DrawAndroidHudBarFill(kAndroidHudBarMainX, kAndroidHudBarMainY + 14.0f, kAndroidHudBarMainW, 8.0f,
+        GetAndroidSafeRatio(curMP, maxMP), 0.16f, 0.34f, 0.95f, 0.02f, 0.06f, 0.20f);
+    DrawAndroidHudBarFill(kAndroidHudBarSubX, kAndroidHudBarSubY, kAndroidHudBarSubW, kAndroidHudBarSubH,
+        GetAndroidSafeRatio(curAG, maxAG), 0.90f, 0.78f, 0.16f, 0.14f, 0.12f, 0.02f);
+
+    if (g_uiTex_barMain.id != 0)
+    {
+        DrawIconButton(kAndroidHudBarMainX - 4.0f, kAndroidHudBarMainY - 3.0f, 130.0f, 37.0f, g_uiTex_barMain, 1.0f);
+    }
+    if (g_uiTex_barSub.id != 0)
+    {
+        DrawIconButton(kAndroidHudBarSubX - 2.0f, kAndroidHudBarSubY - 2.0f, 118.0f, 11.0f, g_uiTex_barSub, 1.0f);
+    }
+
+    const char* const mapName = gMapManager.GetMapName(gMapManager.WorldActive);
+    if (mapName != nullptr && mapName[0] != '\0')
+    {
+        TextDraw(
+            g_hFontBold != nullptr ? g_hFontBold : g_hFont,
+            static_cast<int>(kAndroidHudMapLabelX),
+            static_cast<int>(kAndroidHudMapLabelY),
+            0xFFFFD53A,
+            0x0,
+            130,
+            0,
+            1,
+            "%s",
+            mapName);
+    }
+
+    SEASON3B::RenderNumber(kAndroidHudBarMainX + 54.0f, kAndroidHudBarMainY + 2.0f, static_cast<int>(curHP), 0.68f);
+    SEASON3B::RenderNumber(kAndroidHudBarMainX + 54.0f, kAndroidHudBarMainY + 14.5f, static_cast<int>(curMP), 0.62f);
+    EndBitmap();
+}
+
+static void RenderAndroidBottomUtilityBar()
+{
+    if (SceneFlag != MAIN_SCENE || g_pNewUISystem == nullptr || AndroidHasFocusedTextInput())
+    {
+        return;
+    }
+
+    EnsureAndroidBottomBarAssets();
+
+    BeginBitmap();
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    for (const int action : kAndroidBottomMenuActions)
+    {
+        const AndroidUiRect rect = GetVirtualRightPanelGridRect(action);
+        const bool active = IsVirtualRightPanelUtilityActionActive(action);
+        const UITexture& texture =
+            active && g_uiTex_bottomButtonsActive[action].id != 0
+                ? g_uiTex_bottomButtonsActive[action]
+                : g_uiTex_bottomButtons[action];
+        DrawIconButton(rect.x, rect.y, rect.w, rect.h, texture, 1.0f);
+    }
+
+    EndBitmap();
 }
 
 static void DrawVirtualTopRightTextButton(const AndroidUiRect& rect, const TCHAR* label, bool active)
@@ -6169,6 +6720,11 @@ void RenderVirtualMirrorHotKeySlots()
         return;
     }
 
+    if (g_pNewUISystem != nullptr && g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MAINFRAME))
+    {
+        g_pNewUISystem->Hide(SEASON3B::INTERFACE_MAINFRAME);
+    }
+
     BeginBitmap();
     EnableAlphaTest();
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -6273,6 +6829,12 @@ void RenderVirtualMirrorHotKeySlots()
 
 void RenderVirtualPad()
 {
+    if (AndroidCashShop::Instance().IsVisible())
+    {
+        AndroidCashShop::Instance().Render();
+        return;
+    }
+
     // Keep only the virtual joystick overlay on mobile.
     // The rest of the custom Android HUD is intentionally disabled so the
     // original MU UI can render and handle input again.
@@ -6317,11 +6879,11 @@ void RenderVirtualPad()
         joystickActive ? 1.0f : 0.90f);
     EndBitmap();
 
-    DrawVirtualZoomButtons();
-    RenderVirtualTopRightControls();
+    RenderAndroidStatusHud();
 
     if (kUseLegacyMainHud && !kEnableVirtualCombatOverlay)
     {
+        RenderAndroidBottomUtilityBar();
         return;
     }
 
@@ -6331,14 +6893,14 @@ void RenderVirtualPad()
         EnsureUITextures();
         const VirtualButtonLayout& attackButton = kVirtualButtons[kVirtualAttackButton];
         const bool pressed = IsVirtualButtonPressed(kVirtualAttackButton);
-        DrawVirtualCombatButtonFrame(
+        DrawAndroidRoundButton(
             attackButton.cx,
             attackButton.cy,
-            attackButton.radius,
+            attackButton.radius * 2.10f,
             pressed,
-            false);
+            0.96f);
 
-        const float attackIconSize = attackButton.radius * 1.18f;
+        const float attackIconSize = attackButton.radius * 0.95f;
         DrawIconButton(
             attackButton.cx - attackIconSize * 0.5f,
             attackButton.cy - attackIconSize * 0.5f,
@@ -6352,11 +6914,10 @@ void RenderVirtualPad()
     if (kShowVirtualSkillButtons && !g_virtualRightPanelUtilityMode)
     {
         BeginBitmap();
-        const float skillIconScale = std::min(
-            kVirtualSkillFrameW / kVirtualSkillBaseFrameW,
-            kVirtualSkillFrameH / kVirtualSkillBaseFrameH);
-        const float renderSkillIconW = kVirtualSkillSourceIconW * skillIconScale;
-        const float renderSkillIconH = kVirtualSkillSourceIconH * skillIconScale;
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        const float renderSkillIconW = 22.0f;
+        const float renderSkillIconH = 22.0f;
         const bool assignModeActive = IsVirtualAssignModeActive()
             || IsVirtualOverlayHotKeySkillIndex(g_virtualAssignPickerSkillIndex);
         for (int visualSlot = 0; visualSlot < kVirtualVisibleSkillButtonCount; ++visualSlot)
@@ -6366,17 +6927,12 @@ void RenderVirtualPad()
             const bool pressed = IsVirtualButtonPressed(buttonIndex);
             const int hotKeySkillIndex = GetVirtualOverlayHotKeySkillIndex(visualSlot);
             const bool selected = (Hero != nullptr && Hero->CurrentSkill == hotKeySkillIndex);
-            const GLuint frameImage = (pressed || selected || assignModeActive)
-                ? SEASON3B::CNewUISkillList::IMAGE_SKILLBOX_USE
-                : SEASON3B::CNewUISkillList::IMAGE_SKILLBOX;
-
-            ConfigureVirtualSkillIconNoBlendState();
-            SEASON3B::RenderImage(
-                frameImage,
-                button.cx - (kVirtualSkillFrameW * 0.5f),
-                button.cy - (kVirtualSkillFrameH * 0.5f),
-                kVirtualSkillFrameW,
-                kVirtualSkillFrameH);
+            DrawAndroidRoundButton(
+                button.cx,
+                button.cy,
+                button.radius * 2.06f,
+                pressed || selected || assignModeActive,
+                0.94f);
 
             if (g_pSkillList != nullptr && hotKeySkillIndex >= 0)
             {
@@ -6393,23 +6949,7 @@ void RenderVirtualPad()
         EndBitmap();
     }
 
-    if (kShowVirtualAttackButton || kShowVirtualSkillButtons)
-    {
-        if (g_virtualRightPanelUtilityMode)
-        {
-            if (!ShouldYieldVirtualRightPanelUtilityOverlay())
-            {
-                RenderVirtualRightPanelUtilityMode();
-                RenderVirtualRightPanelModeButton();
-            }
-        }
-        else
-        {
-            RenderVirtualRightPanelModeButton();
-        }
-    }
-
-    RenderVirtualMirrorHotKeySlots();
+    RenderAndroidBottomUtilityBar();
     RenderAndroidTradePicker();
 
 #if 0

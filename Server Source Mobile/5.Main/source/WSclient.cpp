@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#if defined(__ANDROID__)
+#include "android/AndroidCashShop.h"
+#endif
 #include "UIManager.h"
 #include "GuildCache.h"
 #include "ZzzBMD.h"
@@ -14829,7 +14832,11 @@ BOOL TranslateProtocol( int HeadCode, BYTE *ReceiveBuffer, int Size, BOOL bEncry
 				}
 				break;
 
-#ifdef KJH_PBG_ADD_INGAMESHOP_SYSTEM
+#if defined(__ANDROID__)
+		case 0xD2:
+			AndroidCashShopHandlePacket(ReceiveBuffer, ReceiveBuffer[1]);
+			break;
+#elif defined(KJH_PBG_ADD_INGAMESHOP_SYSTEM)
 		case 0xD2:
 			{
 				PBMSG_HEADER2* Data = (PBMSG_HEADER2*)ReceiveBuffer;
@@ -14891,7 +14898,7 @@ BOOL TranslateProtocol( int HeadCode, BYTE *ReceiveBuffer, int Size, BOOL bEncry
 				}
 			}break;
 
-#endif // KJH_PBG_ADD_INGAMESHOP_SYSTEM	
+#endif // __ANDROID__ / KJH_PBG_ADD_INGAMESHOP_SYSTEM
 #ifdef PBG_ADD_NEWCHAR_MONK_SKILL
 		case 0x4A:
 			ReceiveStraightAttack(ReceiveBuffer, Size, bEncrypted);

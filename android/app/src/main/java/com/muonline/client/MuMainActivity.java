@@ -32,7 +32,6 @@ public class MuMainActivity extends SDLActivity {
     // Skips if the file already exists (avoids unnecessary I/O on every launch).
     // ─────────────────────────────────────────────────────────────────────────
     private void copyAssetFile(AssetManager assetMgr, String srcAssetPath, File destFile) {
-        if (destFile.exists()) return;   // already copied
         File parent = destFile.getParentFile();
         if (parent != null && !parent.exists()) {
             parent.mkdirs();

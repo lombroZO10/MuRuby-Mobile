@@ -1973,8 +1973,9 @@ bool MoveMainCamera()
 #if defined(__ANDROID__) || defined(MU_IOS)
         if (g_androidZoomOverride > 0.0f && SceneFlag == MAIN_SCENE)
         {
+            const float clampedZoom = (std::max)(1000.0f, (std::min)(g_androidZoomOverride, 1600.0f));
             const float defaultDist = 1000.0f;
-            const float ratio = g_androidZoomOverride / defaultDist;
+            const float ratio = clampedZoom / defaultDist;
             const float zoomScale = (ratio >= 1.0f) ? ratio : (1.0f / ratio);
             if (zoomScale > 1.01f)
             {
@@ -2139,7 +2140,7 @@ bool MoveMainCamera()
 #if defined(__ANDROID__) || defined(MU_IOS)
             if (g_androidZoomOverride > 0.0f)
             {
-                CameraDistanceTarget = g_androidZoomOverride;
+                CameraDistanceTarget = (std::max)(1000.0f, (std::min)(g_androidZoomOverride, 1600.0f));
             }
             else
 #endif
