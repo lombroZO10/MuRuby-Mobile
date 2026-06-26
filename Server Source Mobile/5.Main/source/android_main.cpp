@@ -566,26 +566,29 @@ struct VirtualButtonLayout
     float radius;
 };
 
-constexpr float kVirtualAttackButtonCx = 596.0f;
-constexpr float kVirtualAttackButtonCy = 350.0f;
-constexpr float kVirtualAttackButtonRadius = 29.0f;
-constexpr float kVirtualSkillButtonRadius = 19.0f;
+constexpr float kVirtualAttackButtonCx = 558.0f;
+constexpr float kVirtualAttackButtonCy = 348.0f;
+constexpr float kVirtualAttackButtonRadius = 34.0f;
+constexpr float kVirtualSkillButtonRadius = 18.0f;
 struct VirtualUiOffset
 {
     float x;
     float y;
 };
 constexpr std::array<VirtualUiOffset, kVirtualVisibleSkillButtonCount> kVirtualSkillCenters = {
-    // Lift the whole right-side skill cluster above the main action bar.
-    VirtualUiOffset{ 565.0f, 284.0f },
-    VirtualUiOffset{ 610.0f, 284.0f },
-    VirtualUiOffset{ 547.0f, 323.0f },
-    VirtualUiOffset{ 547.0f, 368.0f },
-    VirtualUiOffset{ 565.0f, 414.0f },
-    VirtualUiOffset{ 610.0f, 414.0f },
+    VirtualUiOffset{ 604.0f, 293.0f },
+    VirtualUiOffset{ 563.0f, 276.0f },
+    VirtualUiOffset{ 520.0f, 287.0f },
+    VirtualUiOffset{ 491.0f, 321.0f },
+    VirtualUiOffset{ 488.0f, 365.0f },
+    VirtualUiOffset{ 512.0f, 403.0f },
 };
-constexpr float kVirtualSkillFrameW = 22.0f;
-constexpr float kVirtualSkillFrameH = 28.0f;
+constexpr float kVirtualSkillFrameW = 38.0f;
+constexpr float kVirtualSkillFrameH = 38.0f;
+constexpr float kVirtualCombatConfigButtonCx = 590.0f;
+constexpr float kVirtualCombatResetButtonCx = 622.0f;
+constexpr float kVirtualCombatUtilityButtonCy = 405.0f;
+constexpr float kVirtualCombatUtilityButtonSize = 28.0f;
 constexpr float kVirtualSkillBaseFrameW = 32.0f;
 constexpr float kVirtualSkillBaseFrameH = 38.0f;
 constexpr float kVirtualSkillSourceIconW = 20.0f;
@@ -727,6 +730,10 @@ static UITexture g_uiTex_minimap;
 static UITexture g_uiTex_attack;
 static UITexture g_uiTex_skillbox;
 static UITexture g_uiTex_skillline;
+static UITexture g_uiTex_combatAttackFrame;
+static UITexture g_uiTex_combatSkillFrame;
+static UITexture g_uiTex_combatSkillConfig;
+static UITexture g_uiTex_combatSkillReset;
 static UITexture g_uiTex_joystick1;
 static UITexture g_uiTex_joystick2;
 static UITexture g_uiTex_balo;
@@ -1472,8 +1479,10 @@ int GetSkillTypeFromIndex(int skillIndex)
 }
 
 int GetHeroCharacterIndex();
+int GetVirtualOverlayHotKeySlot(int visualSlot);
 void SyncVirtualSlotsToMainFrame();
 void SaveVirtualSkillSlots();
+void DeactivateVirtualAssignMode(const char* reason);
 void ClearVirtualPickerTouch();
 
 void SanitizeVirtualSkillSlots()
@@ -1802,7 +1811,7 @@ void LoadVirtualSkillSlots()
         RefreshVirtualSkillTypesFromSlots();
     }
     bool autoFilled = false;
-    if (!HasAnyAssignedVirtualSkillSlot() || (savedCountLoaded > 0 && savedCountLoaded < kVirtualSkillSlotCount))
+    if (loadedVersion == 0 || (savedCountLoaded > 0 && savedCountLoaded < kVirtualSkillSlotCount))
     {
         autoFilled = AutoFillVirtualSkillSlotsFromCharacter();
     }
@@ -1857,6 +1866,40 @@ void SaveVirtualSkillSlots()
     g_virtualSkillSlotsDirty = false;
     const std::string slotText = BuildVirtualSkillArrayString(g_virtualSkillSlots);
     LOGI("VirtualPad: slots saved idx=%s", slotText.c_str());
+}
+
+void ResetVirtualSkillSlots()
+{
+    for (int slot = 0; slot < kVirtualSkillSlotCount; ++slot)
+    {
+        g_virtualSkillSlots[slot] = -1;
+        g_virtualSkillTypes[slot] = 0;
+
+        if (g_pSkillList != nullptr)
+        {
+            const int hotKeySlot = GetVirtualOverlayHotKeySlot(slot);
+            if (hotKeySlot >= 0)
+            {
+                g_pSkillList->SetHotKey(hotKeySlot, -1);
+            }
+        }
+    }
+
+    g_virtualSkillSlotsLoaded = true;
+    g_virtualSkillSlotsDirty = true;
+    SaveVirtualSkillSlots();
+    DeactivateVirtualAssignMode("reset");
+    g_virtualAssignPickerSkillIndex = -1;
+    g_virtualAssignConsumedForPickerSkill = false;
+    g_virtualAssignConsumedForPickerSession = false;
+
+    if (g_pSkillList != nullptr)
+    {
+        g_pSkillList->SetAndroidTouchAssignSkillIndex(-1);
+        g_pSkillList->SetSkillPickerOpen(false);
+    }
+
+    LOGI("VirtualPad: all mobile skill slots reset");
 }
 
 void SetVirtualSkillSlot(int slot, int skillIndex)
@@ -3660,13 +3703,13 @@ int GetVirtualOverlayHotKeySlot(int visualSlot)
 
 int GetVirtualOverlayHotKeySkillIndex(int visualSlot)
 {
-    if (g_pSkillList == nullptr)
+    if (visualSlot < 0 || visualSlot >= kVirtualSkillSlotCount)
     {
         return -1;
     }
 
-    const int hotKeySlot = GetVirtualOverlayHotKeySlot(visualSlot);
-    return (hotKeySlot >= 0) ? g_pSkillList->GetHotKey(hotKeySlot) : -1;
+    LoadVirtualSkillSlots();
+    return g_virtualSkillSlots[visualSlot];
 }
 
 void ClearVirtualCombatTouches()
@@ -3958,6 +4001,30 @@ int HitTestVirtualSkillButton(float uiX, float uiY)
         {
             return buttonIndex;
         }
+    }
+
+    return -1;
+}
+
+int HitTestVirtualCombatUtilityButton(float uiX, float uiY)
+{
+    if (!IsVirtualPadAvailable() || g_virtualRightPanelUtilityMode)
+    {
+        return -1;
+    }
+
+    constexpr float radius = kVirtualCombatUtilityButtonSize * 0.5f;
+    const float dy = uiY - kVirtualCombatUtilityButtonCy;
+    const float configDx = uiX - kVirtualCombatConfigButtonCx;
+    if ((configDx * configDx) + (dy * dy) <= radius * radius)
+    {
+        return 0;
+    }
+
+    const float resetDx = uiX - kVirtualCombatResetButtonCx;
+    if ((resetDx * resetDx) + (dy * dy) <= radius * radius)
+    {
+        return 1;
     }
 
     return -1;
@@ -4986,6 +5053,20 @@ bool HandleVirtualFingerDown(const SDL_TouchFingerEvent& touch)
         return HandleVirtualJoystickFingerDown(touch);
     }
 
+    const int combatUtilityButton = HitTestVirtualCombatUtilityButton(uiX, uiY);
+    if (combatUtilityButton == 0)
+    {
+        ToggleVirtualSkillPickerByTouch();
+        PlayBuffer(SOUND_CLICK01);
+        return true;
+    }
+    if (combatUtilityButton == 1)
+    {
+        ResetVirtualSkillSlots();
+        PlayBuffer(SOUND_CLICK01);
+        return true;
+    }
+
     if (HitTestVirtualAttackButton(uiX, uiY) == kVirtualAttackButton)
     {
         const uint32_t nowMs = MU_MobileGetTicks();
@@ -5013,6 +5094,7 @@ bool HandleVirtualFingerDown(const SDL_TouchFingerEvent& touch)
         if (hotKeySlot >= 0 && IsVirtualOverlayHotKeySkillIndex(pendingSkill) && g_pSkillList != nullptr)
         {
             g_pSkillList->SetHotKey(hotKeySlot, pendingSkill);
+            SetVirtualSkillSlot(skillSlot, pendingSkill);
             if (Hero != nullptr)
             {
                 Hero->CurrentSkill = static_cast<BYTE>(pendingSkill);
@@ -5584,6 +5666,10 @@ static void EnsureUITextures()
     g_uiTex_attack    = LoadUITextureAsset("ui/attack.png");
     g_uiTex_skillbox  = LoadUITextureAsset("ui/skillbox.png");
     g_uiTex_skillline = LoadUITextureAsset("ui/skillline.png");
+    g_uiTex_combatAttackFrame = LoadUITextureAsset("ui/combat/attack_frame.png");
+    g_uiTex_combatSkillFrame = LoadUITextureAsset("ui/combat/skill_frame.png");
+    g_uiTex_combatSkillConfig = LoadUITextureAsset("ui/combat/skill_config.png");
+    g_uiTex_combatSkillReset = LoadUITextureAsset("ui/combat/skill_reset.png");
     g_uiTex_joystick1 = LoadUITextureAsset("ui/joystick1.png");
     g_uiTex_joystick2 = LoadUITextureAsset("ui/joystick2.png");
     g_uiTex_balo      = LoadUITextureAsset("ui/balo.png");
@@ -6992,21 +7078,57 @@ void RenderVirtualPad()
         EnsureUITextures();
         const VirtualButtonLayout& attackButton = kVirtualButtons[kVirtualAttackButton];
         const bool pressed = IsVirtualButtonPressed(kVirtualAttackButton);
-        DrawAndroidRoundButton(
+        const float attackFrameSize = pressed ? 74.0f : 78.0f;
+        DrawIconButton(
+            attackButton.cx - attackFrameSize * 0.5f,
+            attackButton.cy - attackFrameSize * 0.5f,
+            attackFrameSize,
+            attackFrameSize,
+            g_uiTex_combatAttackFrame,
+            pressed ? 1.0f : 0.96f);
+
+        glDisable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        const float targetAlpha = pressed ? 1.0f : 0.86f;
+        DrawVirtualCircle(
             attackButton.cx,
             attackButton.cy,
-            attackButton.radius * 2.10f,
-            pressed,
-            0.96f);
-
-        const float attackIconSize = attackButton.radius * 0.95f;
-        DrawIconButton(
-            attackButton.cx - attackIconSize * 0.5f,
-            attackButton.cy - attackIconSize * 0.5f,
-            attackIconSize,
-            attackIconSize,
-            g_uiTex_attack,
-            pressed ? 1.0f : 0.94f);
+            13.0f,
+            0.98f,
+            0.74f,
+            0.24f,
+            targetAlpha,
+            false);
+        DrawVirtualCircle(
+            attackButton.cx,
+            attackButton.cy,
+            4.5f,
+            1.0f,
+            0.90f,
+            0.52f,
+            targetAlpha,
+            false);
+        DrawAndroidBottomButtonIconStroke(
+            attackButton.cx - 16.0f,
+            attackButton.cy,
+            attackButton.cx + 16.0f,
+            attackButton.cy,
+            1.0f,
+            0.82f,
+            0.32f,
+            targetAlpha,
+            1.4f);
+        DrawAndroidBottomButtonIconStroke(
+            attackButton.cx,
+            attackButton.cy - 16.0f,
+            attackButton.cx,
+            attackButton.cy + 16.0f,
+            1.0f,
+            0.82f,
+            0.32f,
+            targetAlpha,
+            1.4f);
         EndBitmap();
     }
 
@@ -7026,15 +7148,19 @@ void RenderVirtualPad()
             const bool pressed = IsVirtualButtonPressed(buttonIndex);
             const int hotKeySkillIndex = GetVirtualOverlayHotKeySkillIndex(visualSlot);
             const bool selected = (Hero != nullptr && Hero->CurrentSkill == hotKeySkillIndex);
-            DrawAndroidRoundButton(
-                button.cx,
-                button.cy,
-                button.radius * 2.06f,
-                pressed || selected || assignModeActive,
-                0.94f);
+            const bool highlighted = pressed || selected || assignModeActive;
+            const float frameSize = highlighted ? 41.0f : 39.0f;
+            DrawIconButton(
+                button.cx - frameSize * 0.5f,
+                button.cy - frameSize * 0.5f,
+                frameSize,
+                frameSize,
+                g_uiTex_combatSkillFrame,
+                highlighted ? 1.0f : 0.92f);
 
             if (g_pSkillList != nullptr && hotKeySkillIndex >= 0)
             {
+                ConfigureVirtualSkillIconNoBlendState();
                 g_pSkillList->RenderSkillIcon(
                     hotKeySkillIndex,
                     button.cx - renderSkillIconW * 0.5f,
@@ -7044,7 +7170,25 @@ void RenderVirtualPad()
                     0,
                     false);
             }
+
         }
+
+        const bool pickerOpen = g_pSkillList != nullptr && g_pSkillList->IsSkillPickerOpen();
+        const float configSize = pickerOpen ? 30.0f : kVirtualCombatUtilityButtonSize;
+        DrawIconButton(
+            kVirtualCombatConfigButtonCx - configSize * 0.5f,
+            kVirtualCombatUtilityButtonCy - configSize * 0.5f,
+            configSize,
+            configSize,
+            g_uiTex_combatSkillConfig,
+            pickerOpen ? 1.0f : 0.94f);
+        DrawIconButton(
+            kVirtualCombatResetButtonCx - kVirtualCombatUtilityButtonSize * 0.5f,
+            kVirtualCombatUtilityButtonCy - kVirtualCombatUtilityButtonSize * 0.5f,
+            kVirtualCombatUtilityButtonSize,
+            kVirtualCombatUtilityButtonSize,
+            g_uiTex_combatSkillReset,
+            0.94f);
         EndBitmap();
     }
 
