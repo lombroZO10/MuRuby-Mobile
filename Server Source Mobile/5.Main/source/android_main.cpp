@@ -1524,6 +1524,7 @@ void SaveVirtualSkillSlots();
 void DeactivateVirtualAssignMode(const char* reason);
 void ClearVirtualPickerTouch();
 void ClearVirtualCombatTouches();
+void ClearAndroidLongPressRightClick(bool releaseRightButton);
 bool ShouldHideVirtualCombatHud();
 
 void SanitizeVirtualSkillSlots()
@@ -5177,6 +5178,8 @@ bool HandleVirtualFingerDown(const SDL_TouchFingerEvent& touch)
     {
         ClearVirtualCombatTouches();
         ClearVirtualPickerTouch();
+        ClearVirtualJoystick();
+        ClearAndroidLongPressRightClick(true);
         if (g_pSkillList != nullptr && g_pSkillList->IsSkillPickerOpen())
         {
             g_pSkillList->SetSkillPickerOpen(false);
@@ -5374,7 +5377,7 @@ bool IsAndroidLongPressRightClickTarget(int characterIndex)
 
 void StartAndroidLongPressRightClick(const SDL_TouchFingerEvent& touch)
 {
-    if (!IsVirtualPadAvailable())
+    if (!IsVirtualPadAvailable() || ShouldHideVirtualCombatHud())
     {
         ClearAndroidLongPressRightClick(false);
         return;
@@ -5434,7 +5437,7 @@ void UpdateAndroidLongPressRightClick()
         return;
     }
 
-    if (!IsVirtualPadAvailable())
+    if (!IsVirtualPadAvailable() || ShouldHideVirtualCombatHud())
     {
         ClearAndroidLongPressRightClick(false);
         return;
@@ -7400,6 +7403,7 @@ void RenderVirtualPad()
     {
         ClearVirtualCombatTouches();
         ClearVirtualPickerTouch();
+        RenderAndroidTradePicker();
         if (g_pSkillList != nullptr && g_pSkillList->IsSkillPickerOpen())
         {
             g_pSkillList->SetSkillPickerOpen(false);
