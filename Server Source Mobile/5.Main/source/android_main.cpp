@@ -756,6 +756,7 @@ static UITexture g_uiTex_bottomBarCenter;
 static UITexture g_uiTex_bottomBarRight;
 static std::array<UITexture, kVirtualRightPanelUtilityActionCount> g_uiTex_bottomButtons;
 static std::array<UITexture, kVirtualRightPanelUtilityActionCount> g_uiTex_bottomButtonsActive;
+static std::unordered_map<int, UITexture> g_uiTex_virtualSkillSlotIcons;
 static bool g_uiTexturesLoaded = false;
 
 constexpr GLuint kAndroidBottomBarMainbarBitmap = 111100;
@@ -2814,16 +2815,27 @@ void ToggleVirtualSkillPickerByTouch()
         return;
     }
 
-    if (!g_pSkillList->IsSkillPickerOpen())
+    const bool openNow = !g_pSkillList->IsSkillPickerOpen();
+    if (openNow)
     {
         // Each picker open starts a fresh "pick one skill -> assign one slot" flow.
         g_pSkillList->SetAndroidTouchAssignSkillIndex(-1);
         g_virtualAssignPickerSkillIndex = -1;
+        g_virtualAssignConsumedForPickerSkill = false;
+        g_virtualAssignConsumedForPickerSession = false;
         DeactivateVirtualAssignMode("picker-reset");
     }
+    else
+    {
+        g_virtualAssignPickerSkillIndex = -1;
+        g_virtualAssignConsumedForPickerSkill = false;
+        g_virtualAssignConsumedForPickerSession = false;
+        DeactivateVirtualAssignMode("picker-close");
+    }
+
     ClearVirtualPickerTouch();
 
-    g_pSkillList->ToggleSkillPicker();
+    g_pSkillList->SetSkillPickerOpen(openNow);
     UpdateVirtualAssignMode();
 }
 
@@ -4013,16 +4025,20 @@ int HitTestVirtualCombatUtilityButton(float uiX, float uiY)
         return -1;
     }
 
-    constexpr float radius = kVirtualCombatUtilityButtonSize * 0.5f;
+    constexpr float radius = (kVirtualCombatUtilityButtonSize * 0.5f) + 4.0f;
+    constexpr float radiusSq = radius * radius;
     const float dy = uiY - kVirtualCombatUtilityButtonCy;
     const float configDx = uiX - kVirtualCombatConfigButtonCx;
-    if ((configDx * configDx) + (dy * dy) <= radius * radius)
+    const float configDistSq = (configDx * configDx) + (dy * dy);
+    const float resetDx = uiX - kVirtualCombatResetButtonCx;
+    const float resetDistSq = (resetDx * resetDx) + (dy * dy);
+
+    if (configDistSq <= radiusSq && (configDistSq <= resetDistSq || resetDistSq > radiusSq))
     {
         return 0;
     }
 
-    const float resetDx = uiX - kVirtualCombatResetButtonCx;
-    if ((resetDx * resetDx) + (dy * dy) <= radius * radius)
+    if (resetDistSq <= radiusSq)
     {
         return 1;
     }
@@ -6782,6 +6798,198 @@ static void ConfigureVirtualSkillIconNoBlendState()
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+static bool ResolveVirtualSkillSlotIconAsset(int skillIndex, int& outKind, int& outCol, int& outRow)
+{
+    if (CharacterAttribute == nullptr || skillIndex < 0)
+    {
+        return false;
+    }
+
+    WORD bySkillType = 0;
+    if (skillIndex >= AT_PET_COMMAND_DEFAULT)
+    {
+        bySkillType = static_cast<WORD>(skillIndex);
+    }
+    else if (skillIndex < MAX_MAGIC)
+    {
+        bySkillType = CharacterAttribute->Skill[skillIndex];
+    }
+
+    if (bySkillType == 0)
+    {
+        return false;
+    }
+
+    const BYTE bySkillUseType = SkillAttribute[bySkillType].SkillUseType;
+    const int skillIcon = SkillAttribute[bySkillType].Magic_Icon;
+    int kind = -1;
+    int col = -1;
+    int row = -1;
+
+    if (bySkillType >= AT_PET_COMMAND_DEFAULT && bySkillType <= AT_PET_COMMAND_END)
+    {
+        kind = 0; // command.ozj
+        col = (bySkillType - AT_PET_COMMAND_DEFAULT) % 8;
+        row = (bySkillType - AT_PET_COMMAND_DEFAULT) / 8;
+    }
+    else if (bySkillType == AT_SKILL_PLASMA_STORM_FENRIR)
+    {
+        kind = 0;
+        col = 4;
+        row = 0;
+    }
+    else if (bySkillType >= AT_SKILL_ALICE_DRAINLIFE && bySkillType <= AT_SKILL_ALICE_THORNS)
+    {
+        kind = 2;
+        col = (bySkillType - AT_SKILL_ALICE_DRAINLIFE) % 8;
+        row = 3;
+    }
+    else if (bySkillType >= AT_SKILL_ALICE_SLEEP && bySkillType <= AT_SKILL_ALICE_BLIND)
+    {
+        kind = 2;
+        col = (bySkillType - AT_SKILL_ALICE_SLEEP + 4) % 8;
+        row = 3;
+    }
+    else if (bySkillType == AT_SKILL_ALICE_BERSERKER)
+    {
+        kind = 2;
+        col = 10;
+        row = 3;
+    }
+    else if (bySkillType >= AT_SKILL_ALICE_WEAKNESS && bySkillType <= AT_SKILL_ALICE_ENERVATION)
+    {
+        kind = 2;
+        col = bySkillType - AT_SKILL_ALICE_WEAKNESS + 8;
+        row = 3;
+    }
+    else if (bySkillType >= AT_SKILL_SUMMON_EXPLOSION && bySkillType <= AT_SKILL_SUMMON_REQUIEM)
+    {
+        kind = 2;
+        col = (bySkillType - AT_SKILL_SUMMON_EXPLOSION + 6) % 8;
+        row = 3;
+    }
+    else if (bySkillType == AT_SKILL_SUMMON_POLLUTION)
+    {
+        kind = 2;
+        col = 11;
+        row = 3;
+    }
+    else if (bySkillType == AT_SKILL_BLOW_OF_DESTRUCTION)
+    {
+        kind = 2;
+        col = 7;
+        row = 2;
+    }
+    else if (bySkillType == AT_SKILL_GAOTIC)
+    {
+        kind = 2;
+        col = 3;
+        row = 8;
+    }
+    else if (bySkillType == AT_SKILL_RECOVER)
+    {
+        kind = 2;
+        col = 9;
+        row = 2;
+    }
+    else if (bySkillType == AT_SKILL_MULTI_SHOT)
+    {
+        kind = 2;
+        col = 0;
+        row = 8;
+    }
+    else if (bySkillType == AT_SKILL_FLAME_STRIKE)
+    {
+        kind = 2;
+        col = 1;
+        row = 8;
+    }
+    else if (bySkillType == AT_SKILL_GIGANTIC_STORM)
+    {
+        kind = 2;
+        col = 2;
+        row = 8;
+    }
+    else if (bySkillType == AT_SKILL_LIGHTNING_SHOCK)
+    {
+        kind = 2;
+        col = 2;
+        row = 3;
+    }
+    else if (AT_SKILL_LIGHTNING_SHOCK_UP <= bySkillType && bySkillType <= AT_SKILL_LIGHTNING_SHOCK_UP + 4)
+    {
+        kind = 2;
+        col = 6;
+        row = 8;
+    }
+    else if (bySkillType == AT_SKILL_SWELL_OF_MAGICPOWER)
+    {
+        kind = 2;
+        col = 8;
+        row = 2;
+    }
+    else if (bySkillUseType == 4)
+    {
+        kind = 2;
+        col = skillIcon % 12;
+        row = (skillIcon / 12) + 4;
+    }
+#ifdef PBG_ADD_NEWCHAR_MONK_SKILL
+    else if (bySkillType >= AT_SKILL_THRUST)
+    {
+        kind = 3;
+        col = (bySkillType - 260) % 12;
+        row = (bySkillType - 260) / 12;
+    }
+#endif
+    else if (bySkillType >= 57)
+    {
+        kind = 2;
+        col = (bySkillType - 57) % 8;
+        row = (bySkillType - 57) / 8;
+    }
+    else
+    {
+        kind = 1;
+        col = (bySkillType - 1) % 8;
+        row = (bySkillType - 1) / 8;
+    }
+
+    if (kind < 0 || col < 0 || row < 0 || col >= 12 || row >= 9)
+    {
+        return false;
+    }
+
+    outKind = kind;
+    outCol = col;
+    outRow = row;
+    return true;
+}
+
+static const UITexture* GetVirtualSkillSlotIconTexture(int skillIndex)
+{
+    int kind = -1;
+    int col = -1;
+    int row = -1;
+    if (!ResolveVirtualSkillSlotIconAsset(skillIndex, kind, col, row))
+    {
+        return nullptr;
+    }
+
+    const int key = (kind * 10000) + (row * 100) + col;
+    auto it = g_uiTex_virtualSkillSlotIcons.find(key);
+    if (it != g_uiTex_virtualSkillSlotIcons.end())
+    {
+        return it->second.id != 0 ? &it->second : nullptr;
+    }
+
+    char path[96];
+    std::snprintf(path, sizeof(path), "ui/skill_slots/k%d_c%02d_r%02d.png", kind, col, row);
+    UITexture tex = LoadUITextureAsset(path);
+    auto inserted = g_uiTex_virtualSkillSlotIcons.emplace(key, tex);
+    return inserted.first->second.id != 0 ? &inserted.first->second : nullptr;
+}
+
 // Draw one 7-segment digit at screen coordinates (sx,sy) with size (sw,sh).
 // In OpenGL y-up: sy = bottom of digit box, sy+sh = top.
 // Each segment is rendered as a filled rectangle â€” always crisp on any DPI.
@@ -7137,8 +7345,8 @@ void RenderVirtualPad()
         BeginBitmap();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        const float renderSkillIconW = 22.0f;
-        const float renderSkillIconH = 22.0f;
+        const float renderSkillIconW = 30.0f;
+        const float renderSkillIconH = 30.0f;
         const bool assignModeActive = IsVirtualAssignModeActive()
             || IsVirtualOverlayHotKeySkillIndex(g_virtualAssignPickerSkillIndex);
         for (int visualSlot = 0; visualSlot < kVirtualVisibleSkillButtonCount; ++visualSlot)
@@ -7160,15 +7368,17 @@ void RenderVirtualPad()
 
             if (g_pSkillList != nullptr && hotKeySkillIndex >= 0)
             {
-                ConfigureVirtualSkillIconNoBlendState();
-                g_pSkillList->RenderSkillIcon(
-                    hotKeySkillIndex,
-                    button.cx - renderSkillIconW * 0.5f,
-                    button.cy - renderSkillIconH * 0.5f,
-                    renderSkillIconW,
-                    renderSkillIconH,
-                    0,
-                    false);
+                const UITexture* skillIcon = GetVirtualSkillSlotIconTexture(hotKeySkillIndex);
+                if (skillIcon != nullptr)
+                {
+                    DrawIconButton(
+                        button.cx - renderSkillIconW * 0.5f,
+                        button.cy - renderSkillIconH * 0.5f,
+                        renderSkillIconW,
+                        renderSkillIconH,
+                        *skillIcon,
+                        highlighted ? 1.0f : 0.96f);
+                }
             }
 
         }

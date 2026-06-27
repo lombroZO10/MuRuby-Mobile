@@ -51,7 +51,35 @@ extern int DisplayHeightExt;
 extern int DisplayWinExt;
 extern int DisplayWinReal;
 
-static void GetLegacySkillPickerCellRect(int order, float& x, float& y, float& width, float& height)
+static int CountLegacySkillPickerSkills()
+{
+	if (CharacterAttribute == NULL)
+	{
+		return 0;
+	}
+
+	int count = 0;
+	for (int i = 0; i < MAX_MAGIC; ++i)
+	{
+		const WORD skillType = CharacterAttribute->Skill[i];
+		if (skillType == 0 || (skillType >= AT_SKILL_STUN && skillType <= AT_SKILL_REMOVAL_BUFF))
+		{
+			continue;
+		}
+
+		const BYTE skillUseType = SkillAttribute[skillType].SkillUseType;
+		if (skillUseType == SKILL_USE_TYPE_MASTER || skillUseType == SKILL_USE_TYPE_MASTERLEVEL)
+		{
+			continue;
+		}
+
+		count++;
+	}
+
+	return count;
+}
+
+static void GetLegacySkillPickerCellRect(int order, float& x, float& y, float& width, float& height, int totalSkills = 0)
 {
 	float fixX = 0.0f;
 	if (gProtect.m_MainInfo.IsVersion == 1)
@@ -59,10 +87,31 @@ static void GetLegacySkillPickerCellRect(int order, float& x, float& y, float& w
 		fixX = 75.0f;
 	}
 
-	const float fOrigX = 385.f - fixX + DisplayWinExt;
 	width = 32.f;
 	height = 38.f;
 	y = 390.f + DisplayHeightExt;
+
+#if defined(__ANDROID__) || defined(MU_IOS)
+	const float fOrigX = 285.f - fixX + DisplayWinExt;
+	const int skillsPerRow = 12;
+	const int column = order % skillsPerRow;
+	const int row = order / skillsPerRow;
+	int skillsInRow = skillsPerRow;
+	if (totalSkills > 0)
+	{
+		const int lastRow = (totalSkills - 1) / skillsPerRow;
+		const int lastRowCount = totalSkills - (lastRow * skillsPerRow);
+		if (row == lastRow && lastRowCount > 0)
+		{
+			skillsInRow = lastRowCount;
+		}
+	}
+	const float rowStartX = (fOrigX - (6.f * width)) + ((skillsPerRow - skillsInRow) * width * 0.5f);
+	x = rowStartX + (column * width);
+	y -= row * height;
+	return;
+#else
+	const float fOrigX = 385.f - fixX + DisplayWinExt;
 
 	if (order >= 18)
 	{
@@ -91,6 +140,7 @@ static void GetLegacySkillPickerCellRect(int order, float& x, float& y, float& w
 	{
 		x = fOrigX - (12 * width) + ((order - 17) * width);
 	}
+#endif
 }
 
 static WORD GetCurrentSkillTypeForPrior()
@@ -2336,6 +2386,128 @@ bool SEASON3B::CNewUISkillList::UpdateMouseEvent()
 	{
 		FixX = 0;
 	}
+
+#if defined(__ANDROID__) || defined(MU_IOS)
+	{
+	if (m_EventState == EVENT_BTN_HOVER_CURRENTSKILL
+		|| m_EventState == EVENT_BTN_DOWN_CURRENTSKILL
+		|| m_EventState == EVENT_BTN_HOVER_SKILLHOTKEY
+		|| m_EventState == EVENT_BTN_DOWN_SKILLHOTKEY)
+	{
+		m_EventState = EVENT_NONE;
+	}
+
+	if (m_bSkillList == false)
+	{
+		return true;
+	}
+
+	WORD bySkillType = 0;
+
+	int iSkillCount = 0;
+	const int iSkillTotal = CountLegacySkillPickerSkills();
+	bool bMouseOnSkillList = false;
+
+	EVENT_STATE PrevEventState = m_EventState;
+
+	for (int i = 0; i < MAX_MAGIC; ++i)
+	{
+		bySkillType = CharacterAttribute->Skill[i];
+
+		if (bySkillType == 0 || (bySkillType >= AT_SKILL_STUN && bySkillType <= AT_SKILL_REMOVAL_BUFF))
+			continue;
+
+		BYTE bySkillUseType = SkillAttribute[bySkillType].SkillUseType;
+
+		if (bySkillUseType == SKILL_USE_TYPE_MASTER || bySkillUseType == SKILL_USE_TYPE_MASTERLEVEL)
+		{
+			continue;
+		}
+
+		GetLegacySkillPickerCellRect(iSkillCount, x, y, width, height, iSkillTotal);
+
+		iSkillCount++;
+
+		if (SEASON3B::CheckMouseIn(x, y, width, height) == true)
+		{
+			bMouseOnSkillList = true;
+			if (m_EventState == EVENT_NONE && MouseLButtonPush == false)
+			{
+				m_bRenderSkillInfo = true;
+				m_iRenderSkillInfoType = i;
+				m_iRenderSkillInfoPosX = x;
+				m_iRenderSkillInfoPosY = y - 15;
+				m_EventState = EVENT_BTN_HOVER_SKILLLIST;
+				break;
+			}
+		}
+
+		if (m_EventState == EVENT_BTN_HOVER_SKILLLIST && MouseLButtonPush == true
+			&& SEASON3B::CheckMouseIn(x, y, width, height) == true)
+		{
+			m_bRenderSkillInfo = true;
+			m_iRenderSkillInfoType = i;
+			m_iRenderSkillInfoPosX = x;
+			m_iRenderSkillInfoPosY = y - 15;
+			m_EventState = EVENT_BTN_DOWN_SKILLLIST;
+			break;
+		}
+
+		if (m_EventState == EVENT_BTN_HOVER_SKILLLIST && MouseLButtonPush == false
+			&& SEASON3B::CheckMouseIn(x, y, width, height) == true)
+		{
+			m_bRenderSkillInfo = true;
+			m_iRenderSkillInfoType = i;
+			m_iRenderSkillInfoPosX = x;
+			m_iRenderSkillInfoPosY = y - 15;
+		}
+
+		if (m_EventState == EVENT_BTN_DOWN_SKILLLIST && MouseLButtonPush == false
+			&& m_iRenderSkillInfoType == i && SEASON3B::CheckMouseIn(x, y, width, height) == true)
+		{
+			m_EventState = EVENT_NONE;
+			m_wHeroPriorSkill = GetCurrentSkillTypeForPrior();
+			Hero->CurrentSkill = i;
+			SetAndroidTouchAssignSkillIndex(i);
+			SetSkillPickerOpen(false);
+			PlayBuffer(SOUND_CLICK01);
+			return false;
+		}
+	}
+
+	if (bMouseOnSkillList == false && m_EventState == EVENT_BTN_HOVER_SKILLLIST)
+	{
+		m_EventState = EVENT_NONE;
+	}
+
+	if (bMouseOnSkillList == false && MouseLButtonPush == false
+		&& m_EventState == EVENT_BTN_DOWN_SKILLLIST)
+	{
+		m_EventState = EVENT_NONE;
+	}
+
+	if (m_EventState == EVENT_BTN_DOWN_SKILLLIST)
+	{
+		if (MouseLButtonPush == false)
+		{
+			m_EventState = EVENT_NONE;
+		}
+		return false;
+	}
+
+	if (PrevEventState != m_EventState)
+	{
+		if (m_EventState == EVENT_NONE || m_EventState == EVENT_BTN_HOVER_SKILLLIST)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	return true;
+	}
+#endif
+
 	x = 385.f - FixX + DisplayWinExt;
 	y = 431.f + DisplayHeightExt;
 	width = 32.f; height = 38.f;
@@ -2907,6 +3079,7 @@ int SEASON3B::CNewUISkillList::HitTestAndroidTouchSkillPicker(float uiX, float u
 	float width = 0.0f;
 	float height = 0.0f;
 	WORD bySkillType = 0;
+	const int iSkillTotal = CountLegacySkillPickerSkills();
 
 	for (int i = 0; i < MAX_MAGIC; ++i)
 	{
@@ -2918,12 +3091,12 @@ int SEASON3B::CNewUISkillList::HitTestAndroidTouchSkillPicker(float uiX, float u
 		}
 
 		const BYTE bySkillUseType = SkillAttribute[bySkillType].SkillUseType;
-		if (bySkillUseType == SKILL_USE_TYPE_MASTERLEVEL)
+		if (bySkillUseType == SKILL_USE_TYPE_MASTER || bySkillUseType == SKILL_USE_TYPE_MASTERLEVEL)
 		{
 			continue;
 		}
 
-		GetLegacySkillPickerCellRect(iSkillCount, x, y, width, height);
+		GetLegacySkillPickerCellRect(iSkillCount, x, y, width, height, iSkillTotal);
 		iSkillCount++;
 
 		if (uiX >= x && uiX <= (x + width)
@@ -3107,6 +3280,7 @@ bool SEASON3B::CNewUISkillList::RenderMuHelper(float X, float Y, int SkillSelect
 			float fOrigX = X - 35;
 			int iSkillType = 0;
 			int iSkillCount = 0;
+			const int iSkillTotal = CountLegacySkillPickerSkills();
 
 			for (i = 0; i < MAX_MAGIC; ++i)
 			{
@@ -3226,10 +3400,18 @@ bool SEASON3B::CNewUISkillList::Render()
 	{
 		if (m_bSkillList == true)
 		{
+#if defined(__ANDROID__) || defined(MU_IOS)
+			x = 285 - FixX + DisplayWinExt; y = 390 + DisplayHeightExt; width = 32; height = 38;
+			float fOrigX = 285.f - FixX + DisplayWinExt;
+#else
 			x = 385 - FixX + DisplayWinExt; y = 390 + DisplayHeightExt; width = 32; height = 38;
 			float fOrigX = 385.f - FixX + DisplayWinExt;
+#endif
 			int iSkillType = 0;
 			int iSkillCount = 0;
+#if defined(__ANDROID__) || defined(MU_IOS)
+			const int iSkillTotal = CountLegacySkillPickerSkills();
+#endif
 
 			for (i = 0; i < MAX_MAGIC; ++i)
 			{
@@ -3247,6 +3429,9 @@ bool SEASON3B::CNewUISkillList::Render()
 						continue;
 					}
 
+#if defined(__ANDROID__) || defined(MU_IOS)
+					GetLegacySkillPickerCellRect(iSkillCount, x, y, width, height, iSkillTotal);
+#else
 					if (iSkillCount == 18)
 					{
 						y -= height;
@@ -3274,6 +3459,7 @@ bool SEASON3B::CNewUISkillList::Render()
 					{
 						x = fOrigX - (12 * width) + ((iSkillCount - 17) * width);
 					}
+#endif
 
 					iSkillCount++;
 
