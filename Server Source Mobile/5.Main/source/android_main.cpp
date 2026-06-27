@@ -1137,6 +1137,7 @@ uint32_t g_virtualLastMiniMapTapMs = 0;
 uint32_t g_virtualLastZoomTapMs = 0;
 uint32_t g_virtualLastUtilityTapMs = 0;
 bool g_virtualRightPanelUtilityMode = false;
+bool g_androidVirtualMoveMapWindowOpened = false;
 bool g_virtualHudChatPinned = false;
 PendingAndroidLongPressRightClick g_androidLongPressRightClick{};
 AndroidTradePickerState g_androidTradePicker{};
@@ -1429,6 +1430,43 @@ bool IsValidSkillIndex(int skillIndex)
     return skillType > 0 && skillType < MAX_SKILLS;
 }
 
+bool HasAnyVirtualSkillPickerSkill()
+{
+    if (CharacterAttribute == nullptr)
+    {
+        return false;
+    }
+
+    if (CharacterAttribute->SkillNumber > 0 || CharacterAttribute->SkillMasterNumber > 0)
+    {
+        return true;
+    }
+
+    for (int i = 0; i < MAX_MAGIC; ++i)
+    {
+        const int skillType = CharacterAttribute->Skill[i];
+        if (skillType <= 0 || skillType >= MAX_SKILLS)
+        {
+            continue;
+        }
+
+        if (skillType >= AT_SKILL_STUN && skillType <= AT_SKILL_REMOVAL_BUFF)
+        {
+            continue;
+        }
+
+        const BYTE skillUseType = SkillAttribute[skillType].SkillUseType;
+        if (skillUseType == SKILL_USE_TYPE_MASTER || skillUseType == SKILL_USE_TYPE_MASTERLEVEL)
+        {
+            continue;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 int FindSkillIndexByType(int skillType)
 {
     if (CharacterAttribute == nullptr || skillType <= 0 || skillType >= MAX_SKILLS)
@@ -1485,6 +1523,8 @@ void SyncVirtualSlotsToMainFrame();
 void SaveVirtualSkillSlots();
 void DeactivateVirtualAssignMode(const char* reason);
 void ClearVirtualPickerTouch();
+void ClearVirtualCombatTouches();
+bool ShouldHideVirtualCombatHud();
 
 void SanitizeVirtualSkillSlots()
 {
@@ -2212,6 +2252,17 @@ bool HandleVirtualPickerFingerDown(const SDL_TouchFingerEvent& touch)
         return false;
     }
 
+    if (ShouldHideVirtualCombatHud())
+    {
+        ClearVirtualPickerTouch();
+        if (g_pSkillList != nullptr && g_pSkillList->IsSkillPickerOpen())
+        {
+            g_pSkillList->SetSkillPickerOpen(false);
+            g_pSkillList->SetAndroidTouchAssignSkillIndex(-1);
+        }
+        return false;
+    }
+
     if (g_pSkillList == nullptr || !g_pSkillList->IsSkillPickerOpen())
     {
         return false;
@@ -2239,6 +2290,12 @@ bool HandleVirtualPickerFingerMotion(const SDL_TouchFingerEvent& touch)
         return false;
     }
 
+    if (ShouldHideVirtualCombatHud())
+    {
+        ClearVirtualPickerTouch();
+        return false;
+    }
+
     return IsVirtualPickerTouchCaptured(touch.fingerId);
 }
 
@@ -2246,6 +2303,12 @@ bool HandleVirtualPickerFingerUp(const SDL_TouchFingerEvent& touch)
 {
     if (!kShowVirtualSkillButtons)
     {
+        return false;
+    }
+
+    if (ShouldHideVirtualCombatHud())
+    {
+        ClearVirtualPickerTouch();
         return false;
     }
 
@@ -2559,6 +2622,7 @@ void ToggleMapListByVirtualButton()
     if (g_androidTradePicker.autoMoving)
         return;
     g_pNewUISystem->Toggle(SEASON3B::INTERFACE_MOVEMAP);
+    g_androidVirtualMoveMapWindowOpened = g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MOVEMAP);
     LOGI("VirtualPad: map list toggled");
 }
 
@@ -2810,8 +2874,21 @@ void ToggleVirtualSkillPickerByTouch()
         return;
     }
 
-    if (CharacterAttribute->SkillNumber <= 0 && CharacterAttribute->SkillMasterNumber <= 0)
+    if (!HasAnyVirtualSkillPickerSkill())
     {
+        if (g_pSkillList != nullptr)
+        {
+            g_pSkillList->SetSkillPickerOpen(false);
+            g_pSkillList->SetAndroidTouchAssignSkillIndex(-1);
+        }
+        g_virtualAssignPickerSkillIndex = -1;
+        g_virtualAssignConsumedForPickerSkill = false;
+        g_virtualAssignConsumedForPickerSession = false;
+        DeactivateVirtualAssignMode("picker-no-skills");
+        LOGI(
+            "VirtualPad: skill picker blocked, no skills attrSkillNumber=%d master=%d",
+            CharacterAttribute != nullptr ? static_cast<int>(CharacterAttribute->SkillNumber) : -1,
+            CharacterAttribute != nullptr ? static_cast<int>(CharacterAttribute->SkillMasterNumber) : -1);
         return;
     }
 
@@ -2834,6 +2911,7 @@ void ToggleVirtualSkillPickerByTouch()
     }
 
     ClearVirtualPickerTouch();
+    ClearVirtualCombatTouches();
 
     g_pSkillList->SetSkillPickerOpen(openNow);
     UpdateVirtualAssignMode();
@@ -3786,6 +3864,60 @@ bool IsVirtualRightPanelUtilityWindowVisible()
             || g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_GUILDINFO));
 }
 
+bool ShouldHideVirtualCombatHud()
+{
+    if (g_pNewUISystem == nullptr)
+    {
+        return false;
+    }
+
+    const char* reason = nullptr;
+
+    if (g_androidTradePicker.visible) reason = "android-trade-picker";
+    else if (gInterface.Data[eRankPANEL_MAIN].OnShow) reason = "custom-rank";
+    else if (AndroidCashShop::Instance().IsVisible()) reason = "android-cashshop";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_INGAMESHOP)) reason = "ingameshop";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MuHelper)) reason = "muhelper";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_INVENTORY)) reason = "inventory";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_ExpandInventory)) reason = "expand-inventory";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_CHARACTER)) reason = "character";
+    else if (g_androidVirtualMoveMapWindowOpened
+        && g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MOVEMAP)) reason = "move-map-window";
+    else if (g_androidVirtualMoveMapWindowOpened
+        && !g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MOVEMAP)) g_androidVirtualMoveMapWindowOpened = false;
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_OPTION)) reason = "option";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_COMMAND)) reason = "command";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_FRIEND)) reason = "friend";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_GUILDINFO)) reason = "guild";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_PET)) reason = "pet";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_NPCSHOP)) reason = "npcshop";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MYSHOP_INVENTORY)) reason = "myshop";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_PURCHASESHOP_INVENTORY)) reason = "purchaseshop";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_STORAGE)) reason = "storage";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_TRADE)) reason = "trade";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_PARTY)) reason = "party";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MYQUEST)) reason = "myquest";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_NPCQUEST)) reason = "npcquest";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MIXINVENTORY)) reason = "mixinventory";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_NPC_DIALOGUE)) reason = "npc-dialogue";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_QUEST_PROGRESS)) reason = "quest-progress";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_QUEST_PROGRESS_ETC)) reason = "quest-progress-etc";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_MASTER_LEVEL)) reason = "master-level";
+    else if (g_pNewUISystem->IsVisible(SEASON3B::INTERFACE_HELP)) reason = "help";
+
+    static bool s_lastHide = false;
+    static const char* s_lastReason = nullptr;
+    const bool hide = reason != nullptr;
+    if (hide != s_lastHide || reason != s_lastReason)
+    {
+        LOGI("VirtualPad: hud hide state=%d reason=%s", hide ? 1 : 0, reason != nullptr ? reason : "none");
+        s_lastHide = hide;
+        s_lastReason = reason;
+    }
+
+    return hide;
+}
+
 bool ShouldYieldVirtualRightPanelUtilityOverlay()
 {
     if (!g_virtualRightPanelUtilityMode || g_pNewUISystem == nullptr)
@@ -4020,12 +4152,12 @@ int HitTestVirtualSkillButton(float uiX, float uiY)
 
 int HitTestVirtualCombatUtilityButton(float uiX, float uiY)
 {
-    if (!IsVirtualPadAvailable() || g_virtualRightPanelUtilityMode)
+    if (!IsVirtualPadAvailable())
     {
         return -1;
     }
 
-    constexpr float radius = (kVirtualCombatUtilityButtonSize * 0.5f) + 4.0f;
+    constexpr float radius = (kVirtualCombatUtilityButtonSize * 0.5f) + 10.0f;
     constexpr float radiusSq = radius * radius;
     const float dy = uiY - kVirtualCombatUtilityButtonCy;
     const float configDx = uiX - kVirtualCombatConfigButtonCx;
@@ -5041,6 +5173,35 @@ bool HandleVirtualFingerDown(const SDL_TouchFingerEvent& touch)
         return false;
     }
 
+    if (ShouldHideVirtualCombatHud())
+    {
+        ClearVirtualCombatTouches();
+        ClearVirtualPickerTouch();
+        if (g_pSkillList != nullptr && g_pSkillList->IsSkillPickerOpen())
+        {
+            g_pSkillList->SetSkillPickerOpen(false);
+            g_pSkillList->SetAndroidTouchAssignSkillIndex(-1);
+        }
+        DeactivateVirtualAssignMode("hud-hidden-window");
+        return false;
+    }
+
+    const int combatUtilityButton = HitTestVirtualCombatUtilityButton(uiX, uiY);
+    if (combatUtilityButton == 0)
+    {
+        g_virtualRightPanelUtilityMode = false;
+        ToggleVirtualSkillPickerByTouch();
+        PlayBuffer(SOUND_CLICK01);
+        return true;
+    }
+    if (combatUtilityButton == 1)
+    {
+        g_virtualRightPanelUtilityMode = false;
+        ResetVirtualSkillSlots();
+        PlayBuffer(SOUND_CLICK01);
+        return true;
+    }
+
     const int zoomButton = HitTestVirtualZoomButton(uiX, uiY);
     if (zoomButton >= 0)
     {
@@ -5067,20 +5228,6 @@ bool HandleVirtualFingerDown(const SDL_TouchFingerEvent& touch)
     if (!kShowVirtualAttackButton && !kShowVirtualSkillButtons)
     {
         return HandleVirtualJoystickFingerDown(touch);
-    }
-
-    const int combatUtilityButton = HitTestVirtualCombatUtilityButton(uiX, uiY);
-    if (combatUtilityButton == 0)
-    {
-        ToggleVirtualSkillPickerByTouch();
-        PlayBuffer(SOUND_CLICK01);
-        return true;
-    }
-    if (combatUtilityButton == 1)
-    {
-        ResetVirtualSkillSlots();
-        PlayBuffer(SOUND_CLICK01);
-        return true;
     }
 
     if (HitTestVirtualAttackButton(uiX, uiY) == kVirtualAttackButton)
@@ -7246,6 +7393,19 @@ void RenderVirtualPad()
                 g_pMainFrame != nullptr ? 1 : 0,
                 AndroidHasFocusedTextInput() ? 1 : 0);
         }
+        return;
+    }
+
+    if (ShouldHideVirtualCombatHud())
+    {
+        ClearVirtualCombatTouches();
+        ClearVirtualPickerTouch();
+        if (g_pSkillList != nullptr && g_pSkillList->IsSkillPickerOpen())
+        {
+            g_pSkillList->SetSkillPickerOpen(false);
+            g_pSkillList->SetAndroidTouchAssignSkillIndex(-1);
+        }
+        DeactivateVirtualAssignMode("hud-hidden-window");
         return;
     }
 

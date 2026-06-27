@@ -245,7 +245,12 @@ const SQuestRequestReward* CQuestMng::GetRequestReward(DWORD dwQuestIndex)
 void CQuestMng::SetNPC(int nNPCIndex)
 {
 	m_nNPCIndex = nNPCIndex;
-	::strcpy(m_szNPCName, ::getMonsterName(nNPCIndex));
+	::memset(m_szNPCName, 0, sizeof(m_szNPCName));
+	const char* npcName = ::getMonsterName(nNPCIndex);
+	if (npcName != NULL)
+	{
+		::strncpy(m_szNPCName, npcName, sizeof(m_szNPCName) - 1);
+	}
 }
 
 int CQuestMng::GetNPCIndex()

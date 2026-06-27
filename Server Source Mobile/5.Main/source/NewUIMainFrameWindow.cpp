@@ -2369,12 +2369,17 @@ bool SEASON3B::CNewUISkillList::UpdateMouseEvent()
 	}
 
 	BYTE bySkillNumber = CharacterAttribute->SkillNumber;
+#if defined(__ANDROID__) || defined(MU_IOS)
+	const int iAndroidPickerSkillTotal = CountLegacySkillPickerSkills();
+#else
+	const int iAndroidPickerSkillTotal = 0;
+#endif
 
 	float x, y, width, height, FixX;
 
 	m_bRenderSkillInfo = false;
 
-	if (bySkillNumber <= 0)
+	if (bySkillNumber <= 0 && iAndroidPickerSkillTotal <= 0)
 	{
 		return true;
 	}
@@ -3393,10 +3398,15 @@ bool SEASON3B::CNewUISkillList::Render()
 		FixX = 0;
 	}
 	BYTE bySkillNumber = CharacterAttribute->SkillNumber;
+#if defined(__ANDROID__) || defined(MU_IOS)
+	const int iAndroidPickerSkillTotal = CountLegacySkillPickerSkills();
+#else
+	const int iAndroidPickerSkillTotal = 0;
+#endif
 
 	gInterface.HidenCustom = m_bSkillList;
 
-	if (bySkillNumber > 0)
+	if (bySkillNumber > 0 || iAndroidPickerSkillTotal > 0)
 	{
 		if (m_bSkillList == true)
 		{
